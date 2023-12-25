@@ -1,0 +1,30 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    text-decoration: none; 
+}
+
+li {
+    list-style: none;
+}
+
+.navbar {
+    background-color: aliceblue;
+    min-height: 5%;
+}
+
+.container {
+    display: flex;
+}
+
+.nav-brand {
+    
+}
+
+.nav-item {
+    padding: 1.2rem 1.8rem;
+}
