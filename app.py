@@ -3,18 +3,19 @@ from flask import Flask, render_template, request, redirect, session
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from helpers import login_required
+from helpers import login_required, parseQuery
 
 app = Flask(__name__)
 app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
 
-con = sqlite3.connect("planner.db", isolation_level=None, check_same_thread=False)
-db = con.cursor()
+conn = sqlite3.connect("planner.db", isolation_level=None, check_same_thread=False)
+conn.row_factory = sqlite3.Row
+db = conn.cursor()
+
 
 @app.route("/")
 def index():
-    print(session["user_id"])
     return render_template("index.html")
 
 
@@ -47,14 +48,20 @@ def register():
 def login():
     if request.method == "POST":
         username = request.form.get("username")
+        password = request.form.get("password")
         session.clear()
         if not username:
             return
-        elif not request.form.get("password"):
+        elif not password:
             return
         
-        session["user_id"] = db.execute("SELECT id FROM users WHERE username = ?", username).fetchall()[0]
-        return render_template("/profile")
+        user = parseQuery(db, db.execute("SELECT * FROM users WHERE username = ?", (username,)).fetchone())
+        if user["username"] != username or not check_password_hash(user["hash"], password):
+            return
+
+        session["user_id"] = user["id"]
+        
+        return render_template("profile.html")
     else:
         return render_template("login.html")
 
@@ -104,6 +111,8 @@ def pomodoro_progress():
     
 
 
+@app.route("/logout")
+def logout():
+    session.clear()
 
-
-
+    return redirect("/")
