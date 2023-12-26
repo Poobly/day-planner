@@ -1,13 +1,14 @@
 CREATE TABLE plans (
-    id INTEGER NOT NULL,
+    id INTEGER,
     time TEXT DEFAULT CURRENT_TIMESTAMP NOT NULL,
     PRIMARY KEY(id)
 );
 
 CREATE TABLE users (
-    id INTEGER NOT NULL,
+    id INTEGER,
     username TEXT NOT NULL,
-    hash TEXT NOT NULL
+    hash TEXT NOT NULL,
+    PRIMARY KEY(id)
 );
 
 CREATE TABLE assignment_table (

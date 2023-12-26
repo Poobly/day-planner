@@ -17,17 +17,18 @@
                     <a class="nav-item" href="/profile">
                         <img class="user-image"></img>            
                     </a>
-                    {% endif %}
+                    {% else %}
                     <a class="nav-item user-login" href="/login">Log in</a>
                     <a class="nav-item user-signup" href="/register">Sign up</a>
+                    {% endif %}
                 <nav/>
-                {% if session["user_id"] and request.path == "/planner" %}
+                {% if session["user_id"] and request.path.startswith("/planner") %}
                     <nav>
                         <a class="lower-nav-item" href="/planner/calendar">Calendar</a>
                         <a class="lower-nav-item" href="/planner/edit">Edit</a>
                     </nav>
                 {% endif %}
-                {% if session["user_id"] and request.path == "/pomodoro" %}
+                {% if session["user_id"] and request.path.startswith("/pomodoro") %}
                     <nav>
                         <a class="lower-nav-item" href="/pomodoro/timer">Timer</a>
                         <a class="lower-nav-item" href="/pomodoro/progress">Pomodoro</a>

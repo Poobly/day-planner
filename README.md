@@ -1,1 +1,2 @@
-# day-planner
+# Study Buddy
+

@@ -5,8 +5,9 @@
 {% endblock %}
 
 {% block main %}
-<form>
-    <input type="text" name="username" placeholder="Username" autocomplete="off" autofocus>
-    <input type="password" name="password" placeholder="Password" autocomplete="off" autofocus>
+<form action="/login" method="post">
+    <input class="input-form" type="text" name="username" placeholder="Username" autocomplete="off" autofocus>
+    <input class="input-form" type="password" name="password" placeholder="Password" autocomplete="off" autofocus>
+    <button class="form-button" type="submit">Submit</button>
 </form>
 {% endblock %}
