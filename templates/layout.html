@@ -7,20 +7,34 @@
         <link href="/static/styles.css" rel="stylesheet">
     </head>
     <body>
-        <nav class="navbar">
-            <div class="container">
-                <a class="nav-brand " href="/">Planner</a>
-                <div class="">
+        <div class="container">
+            <header class="">
+                <nav class="nav-bar">
+                    <a class="header-brand " href="/">Study Buddy</a>
                     {% if session["user_id"] %}
-                        <a class="nav-item" href="/profile">
-                            <img class="user-image"></img>            
-                        </a>
+                    <a class="nav-item" href="/planner">Planner</a>
+                    <a class="nav-item" href="/pomodoro">Pomodoro</a>
+                    <a class="nav-item" href="/profile">
+                        <img class="user-image"></img>            
+                    </a>
                     {% endif %}
                     <a class="nav-item user-login" href="/login">Log in</a>
                     <a class="nav-item user-signup" href="/register">Sign up</a>
-                </div>
-            </div>
-        </nav>
+                <nav/>
+                {% if session["user_id"] and request.path == "/planner" %}
+                    <nav>
+                        <a class="lower-nav-item" href="/planner/calendar">Calendar</a>
+                        <a class="lower-nav-item" href="/planner/edit">Edit</a>
+                    </nav>
+                {% endif %}
+                {% if session["user_id"] and request.path == "/pomodoro" %}
+                    <nav>
+                        <a class="lower-nav-item" href="/pomodoro/timer">Timer</a>
+                        <a class="lower-nav-item" href="/pomodoro/progress">Pomodoro</a>
+                    </nav>
+                {% endif %}
+            </header>
+        </div>
         <main>
             {% block main %}{% endblock %}
         </main>

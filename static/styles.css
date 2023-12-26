@@ -4,6 +4,10 @@
     padding: 0;
 }
 
+body, html, head {
+    height: 100vh;
+}
+
 a {
     text-decoration: none; 
 }
@@ -12,16 +16,26 @@ li {
     list-style: none;
 }
 
-.navbar {
+.header {
     background-color: aliceblue;
-    min-height: 5%;
+    min-height: max-content;
 }
 
 .container {
-    display: flex;
+
 }
 
-.nav-brand {
+.flex-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.header-brand {
     
 }
 
