@@ -23,7 +23,7 @@ document.getElementById("timer-button").addEventListener("click", (e) => {
 const timer = (function () {
     let _timer;
     let _timer_button;
-    let _minutes = starting_time.slice(0, 2) * 1;
+    let _minutes = starting_time.slice(0, starting_time.indexOf(":")) * 1;
     let _seconds = starting_time.slice(3) * 1;
     let _timer_type = "work";
     const _set_timer_button = (timer_button) => _timer_button = timer_button;
