@@ -32,13 +32,13 @@ def register():
         elif request.form.get("confirmation") != password:
             return
         
-        rows = db.execute("SELECT * FROM users WHERE username = ?", (username,)).fetchall()
+        rows = parseQuery(db, db.execute("SELECT * FROM users WHERE username = ?", (username,)).fetchall())
         if len(rows) > 0:
-            return
+            return render_template("register.html", username_taken=True)
         
         hash = generate_password_hash(password)
         db.execute("INSERT INTO users (username, hash) VALUES (?, ?)", (username, hash))
-        session["user_id"] = db.execute("SELECT id FROM users WHERE username = ?", (username,)).fetchall()[0][0]
+        session["user_id"] = parseQuery(db, db.execute("SELECT id FROM users WHERE username = ?", (username,)).fetchone())["id"]
         return render_template("profile.html")
     else:
         return render_template("register.html")
