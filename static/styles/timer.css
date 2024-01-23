@@ -1,0 +1,21 @@
+.timer-con {
+    width: max-content;
+}
+
+.timer-text {
+    font-size: 10rem;
+    text-align: center;
+    user-select: none;
+}
+
+.timer-text:hover {
+    cursor: pointer;
+}
+
+.timer-text-focus {
+    color: green;
+}
+
+.timer-text-focus:hover {
+    cursor: text;
+}

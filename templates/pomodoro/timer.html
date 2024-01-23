@@ -4,13 +4,14 @@
     Pomodoro Timer
 {% endblock %}
 
-{% block script %} 
+{% block head %} 
+    <link href="/static/styles/timer.css" rel="stylesheet"></link>
     <script src="/static/scripts/timer.js" defer></script>
 {% endblock %}
 
 {% block main %}
-    <div>
-        <p id="timer-string"></p>
+    <div class="timer-con">
+        <p class="timer-text" id="timer-string"></p>
         <button id="timer-button" class="timer-button" type="button">Start</button>
     </div>
 {% endblock %}
