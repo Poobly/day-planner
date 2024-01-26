@@ -1,28 +1,29 @@
-const timer_button = document.getElementById("timer-button");
-const timer_text_con = document.getElementById("timer-text-con");
-const digits = Array.from(document.querySelectorAll(".timer-digit"));
-let is_paused = true;
-let timer_focused = false;
-let digit_focused = false;
-let time = digits.map(digit => digit.textContent);
-let digit_selection;
-
 let work_time = "2500";
 let break_time = "0500";
 let long_break_time = "3000";
 
-let timer_digit_index = time.length;
 
 const timer = (function () {
-    let _counter = 1;
+    const _timer_button = document.getElementById("timer-button");
+    const _timer_text_con = document.getElementById("timer-text-con");
+    const _digits = Array.from(document.querySelectorAll(".timer-digit"));
+    
+    let _time = _digits.map(digit => digit.textContent);
     let _timer;
-    let _minutes = (time[0] + time[1]) * 1;
-    let _seconds = (time[2] + time[3]) * 1;
+    let _minutes = (_time[0] + _time[1]) * 1;
+    let _seconds = (_time[2] + _time[3]) * 1;
     let _timer_type = "work";
+    let _counter = 1;
+    let _timer_digit_index = _time.length - 1;
+    
+    let _timer_focused = false;
+    let _is_paused = true;
+    let _digit_editing = false;
+    let _digit_selection;
 
-    function startTimer() {
+    function _startTimer() {
         _timer = setInterval(_tick, 1000);
-        is_paused = false;
+        _is_paused = false;
     }
 
     function _tick() {
@@ -36,9 +37,9 @@ const timer = (function () {
                 _setTime();
             }
             else {
-                pauseTimer();
+                _pauseTimer();
                 _timer_type = _timer_type === "work" ? (_counter === 4 ? "long break" : "break") : "work";
-                time = _getNextSequence(_timer_type);
+                _time = _getNextSequence(_timer_type);
                 
                 updateTime();
 
@@ -59,7 +60,7 @@ const timer = (function () {
         _seconds--;
     }
     
-    // gets the correct time for current timer sequence
+    // gets the correct _time for current timer sequence
     function _getNextSequence(_timer_type) {
         switch (_timer_type) {
             case "work":
@@ -72,27 +73,27 @@ const timer = (function () {
     }
 
     function updateTime() {
-        _minutes = (time[0] + time[1]) * 1;
-        _seconds = (time[2] + time[3]) * 1;
+        _minutes = (_time[0] + _time[1]) * 1;
+        _seconds = (_time[2] + _time[3]) * 1;
 
         _setTime();
     }
 
     function _setTime() {
-        time = `${_minutes.toString().padStart(2, "0")}${_seconds.toString().padStart(2, "0")}`;
-        digits[0].textContent = time[0]
-        digits[1].textContent = time[1]
-        digits[2].textContent = time[2]
-        digits[3].textContent = time[3]
+        _time = `${_minutes.toString().padStart(2, "0")}${_seconds.toString().padStart(2, "0")}`;
+        _digits[0].textContent = _time[0]
+        _digits[1].textContent = _time[1]
+        _digits[2].textContent = _time[2]
+        _digits[3].textContent = _time[3]
     }
 
-    function pauseTimer() {
+    function _pauseTimer() {
         clearInterval(_timer);
-        timer_button.textContent = "Start";
-        is_paused = true;
+        _timer_button.textContent = "Start";
+        _is_paused = true;
     }
 
-    function checkSeconds() {
+    function _checkSeconds() {
         if (_seconds >= 60) {
             _minutes += Math.floor(_seconds / 60);
             _seconds = _seconds % 60;
@@ -100,102 +101,115 @@ const timer = (function () {
         }
     }
 
-
-
-    // replaces the timer digits
-    function replaceDigits(e) {
+    // replaces the timer _digits
+    function _replaceDigits(e) {
 
         if (isFinite(e.key)) {
-            if (timer_digit_index === 0) {
-                timer_digit_index = time.length;
+            // checks if the digit index is under 0 to reset position to the current digit and if it isn't then 
+            if (_timer_digit_index < 0) {
+                _timer_digit_index = _digit_selection;
             }
-            // else if (timer_digit_index === time.length) {
-            //     time = "0000";
-            // }
-            // console.log(); 
-            if (digit_selection < 3 && digit_focused) {
-                time = time.substring(0, digit_selection) + e.key + time.substring(digit_selection + 1);
-                digits[digit_selection].classList.remove("timer-digit-temp");
-                digit_focused = false;
+            else if (_timer_digit_index === _time.length - 1 ||  _digit_selection < 3 && _digit_editing) {
+                _time = _time.substring(_digit_selection + 1).padStart(4, "0");
+            }
+            
+
+            if (_digit_selection < 3 && _digit_editing) {
+                _time = _time.substring(0, _digit_selection) + e.key + _time.substring(_digit_selection + 1);
+                _digit_editing = false;
             }
             else {
-                time = time.substring(1);
-                time = time.substring(0, digit_selection) + e.key + time.substring(digit_selection);
-                timer_digit_index--;
-                digits[timer_digit_index].classList.remove("timer-digit-temp");
+                _time = _time.substring(1);
+                _time = _time.substring(0, _digit_selection) + e.key + _time.substring(_digit_selection);
             }
-            console.log(time);
+
+            _digits[_timer_digit_index].classList.remove("timer-digit-temp");
+            _timer_digit_index--;
+            
 
 
             updateTime();
         } 
     }
 
+    // unfocuses the editing function
+    document.addEventListener("mousedown", (e) => {
+        if (!_timer_text_con.contains(e.target)) {
+            _digits.forEach(digit => {
+                digit.classList.remove("timer-digit-temp");
+                digit.removeEventListener("click", selectDigits);
+            });
+            
+            document.removeEventListener("keydown", _replaceDigits);
+            _digits.forEach(d => d.classList.remove("timer-digit-select"));
+            _timer_text_con.classList.remove("timer-text-focus");
+            
+            _timer_focused = false;
+            _digit_editing = false;
+            
+            _checkSeconds();
+        }
+    });
+
+    // allows editing of timer when clicking the _digits, also pauses the timer 
+    _timer_text_con.addEventListener("click", (e) => {
+        if (!_is_paused) {
+            _pauseTimer();
+        }
+        // checks if timer is currently focused
+        if (!_timer_focused) {
+            _timer_text_con.classList.add("timer-text-focus");
+            
+            // adds eventlistener for each digit and class for temp _digits.
+            _digits.forEach(digit => {
+                digit.addEventListener("click", selectDigits);
+                digit.classList.add("timer-digit-temp");
+            });
+            
+            console.log("test");
+            _digit_selection = 3;
+            _timer_focused = true;
+
+            _timer_digit_index = _digit_selection;
+
+            document.addEventListener("keydown", _replaceDigits);
+        }
+    });
+
+    //
+    function selectDigits(e) {
+        _digit_editing = true;
+        _digit_selection = _digits.indexOf(e.target);
+
+        _timer_digit_index = _digit_selection;
+
+        _digits.forEach((d) => {
+            d.classList.remove("timer-digit-select");
+
+            if (_digits.indexOf(d) > _digit_selection) d.classList.remove("timer-digit-temp");
+            else d.classList.add("timer-digit-temp");
+        });
+        
+        e.target.classList.add("timer-digit-select");
+    }
+
+    // start/pause button
+    _timer_button.addEventListener("click", (e) => {
+        if (_is_paused) {
+            _startTimer();
+            _timer_button.textContent = "Pause";
+        }
+        else {
+            _pauseTimer();
+        }
+    });
+
+
     return {      
-        pauseTimer, 
-        startTimer,
-        replaceDigits,
         updateTime,
-        checkSeconds
     }
 }());
 
 timer.updateTime();
 
-
-// unfocuses the editing function
-document.addEventListener("mousedown", (e) => {
-    if (!timer_text_con.contains(e.target)) {
-        digits.forEach(element => element.classList.remove("timer-digit-temp"));
-
-        timer_text_con.classList.remove("timer-text-focus");
-        timer.checkSeconds();
-        timer_digit_index = digit_selection;
-        document.removeEventListener("keydown", timer.replaceDigits);
-        timer_focused = false;
-
-        digits.forEach(d => d.classList.remove("timer-digit-select"));
-        digit_focused = false;
-
-    }
-});
-
-// allows editing of timer when clicking the digits, also pauses the timer.
-timer_text_con.addEventListener("click", (e) => {
-    if (!is_paused) {
-        timer.pauseTimer();
-    }
-    
-    if (!timer_focused) {
-        timer_text_con.classList.add("timer-text-focus");
-        timer_focused = true;
-        digit_selection = 3;
-        digits.forEach(digit => {
-            digit.classList.add("timer-digit-temp");
-            digit.addEventListener("click", (e) => {
-                if (digit_focused) {
-                    digits.forEach(d => d.classList.remove("timer-digit-select"));
-                }
-                digit.classList.add("timer-digit-select");
-                digit_selection = digits.indexOf(digit);
-                digit_focused = true;
-
-            });
-        });
-        // timer_digit_index = digit_selection;
-        document.addEventListener("keydown", timer.replaceDigits);
-    }
-});
-
-
-
-timer_button.addEventListener("click", (e) => {
-    if (is_paused) {
-        timer.startTimer();
-        timer_button.textContent = "Pause";
-    }
-    else {
-        timer.pauseTimer();
-    }
-});
 
