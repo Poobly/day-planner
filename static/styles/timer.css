@@ -2,10 +2,19 @@
     width: max-content;
 }
 
-.timer-text {
+.timer-digit, .timer-colon {
     font-size: 10rem;
     text-align: center;
     user-select: none;
+    color: rgba(0, 0, 0);
+}
+
+.timer-digit-select {
+    border-right: 5px solid blue;
+}
+
+.timer-digit-temp {
+    color: rgba(0, 0, 0, 0.5);
 }
 
 .timer-text:hover {

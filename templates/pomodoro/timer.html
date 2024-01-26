@@ -11,7 +11,14 @@
 
 {% block main %}
     <div class="timer-con">
-        <p class="timer-text" id="timer-string"></p>
+        <p id="timer-string" class="timer-text"></p>
+        <div id="timer-text-con" class="timer-text-con">
+            <span class="timer-digit">1</span>
+            <span class="timer-digit">2</span>
+            <span class="timer-colon">:</span>
+            <span class="timer-digit">3</span>
+            <span class="timer-digit">4</span>
+        </div>
         <button id="timer-button" class="timer-button" type="button">Start</button>
     </div>
 {% endblock %}
