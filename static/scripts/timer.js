@@ -1,6 +1,8 @@
 let work_time = "2500";
 let break_time = "0500";
 let long_break_time = "3000";
+const xhttp = new XMLHttpRequest();
+
 
 
 const timer = (function () {
@@ -20,6 +22,8 @@ const timer = (function () {
     let _is_paused = true;
     let _digit_editing = false;
     let _digit_selection;
+    
+    let data = {"time" : _time};
 
     function _startTimer() {
         _timer = setInterval(_tick, 1000);
@@ -27,6 +31,17 @@ const timer = (function () {
     }
 
     function _tick() {
+        data = {"time" : _time};
+        xhttp.open("POST", "/api/data", true);
+        xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+        xhttp.send(JSON.stringify(data));
+        console.log(data);
+
+
+
+
+        
         if (_seconds > 0) {
             _nextSecond();
             _setTime();
@@ -39,6 +54,7 @@ const timer = (function () {
             else {
                 _pauseTimer();
                 _timer_type = _timer_type === "work" ? (_counter === 4 ? "long break" : "break") : "work";
+                document.cookie = `timer_type=${_timer_type}; sessionCookie=sessionValue`;
                 _time = _getNextSequence(_timer_type);
                 
                 updateTime();
@@ -85,6 +101,7 @@ const timer = (function () {
         _digits[1].textContent = _time[1]
         _digits[2].textContent = _time[2]
         _digits[3].textContent = _time[3]
+        document.cookie = `time=${_time}`;
     }
 
     function _pauseTimer() {
@@ -104,7 +121,7 @@ const timer = (function () {
     // replaces the timer _digits
     function _replaceDigits(e) {
 
-        if (isFinite(e.key)) {
+        if (isFinite(parseInt(e.key))) {
             // checks if the digit index is under 0 to reset position to the current digit and if it isn't then 
             if (_timer_digit_index < 0) {
                 _timer_digit_index = _digit_selection;
@@ -166,7 +183,6 @@ const timer = (function () {
                 digit.classList.add("timer-digit-temp");
             });
             
-            console.log("test");
             _digit_selection = 3;
             _timer_focused = true;
 
@@ -213,3 +229,7 @@ const timer = (function () {
 timer.updateTime();
 
 
+// xhttp.onload = () => {
+//     let data = JSON.parse(this.responseText)
+//     console.log(data);
+// }

@@ -1,5 +1,5 @@
 import sqlite3
-from flask import Flask, render_template, request, redirect, session
+from flask import Flask, render_template, request, redirect, session, make_response
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -96,6 +96,8 @@ def planner_edit():
 @login_required
 def pomodoro():
     if request.method == "POST":
+        timer_type = request.form.get("timer_type")
+        print("hello");
         return redirect("/")
     else:
         return render_template("pomodoro/timer.html")
@@ -103,7 +105,6 @@ def pomodoro():
 @app.route("/pomodoro/progress", methods=["GET", "POST"])
 @login_required
 def pomodoro_progress():
-    print(request.path)
     if request.method == "POST":
         return redirect("/")
     else:
@@ -116,3 +117,11 @@ def logout():
     session.clear()
 
     return redirect("/")
+
+
+
+@app.route("/api/data", methods=["GET", "POST"])
+def data():
+    data = request.get_json()
+    print(data)
+    return data
