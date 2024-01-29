@@ -9,13 +9,15 @@ const timer = (function () {
     const _timer_button = document.getElementById("timer-button");
     const _timer_text_con = document.getElementById("timer-text-con");
     const _digits = Array.from(document.querySelectorAll(".timer-digit"));
+    let _timer_data = {
+        "timer_type" : "work",
+        "timer_counter" : 1,
+    }
     
     let _time = _digits.map(digit => digit.textContent);
     let _timer;
     let _minutes = (_time[0] + _time[1]) * 1;
     let _seconds = (_time[2] + _time[3]) * 1;
-    let _timer_type = "work";
-    let _counter = 1;
     let _timer_digit_index = _time.length - 1;
     
     let _timer_focused = false;
@@ -53,14 +55,16 @@ const timer = (function () {
             }
             else {
                 _pauseTimer();
-                _timer_type = _timer_type === "work" ? (_counter === 4 ? "long break" : "break") : "work";
-                document.cookie = `timer_type=${_timer_type}; sessionCookie=sessionValue`;
-                _time = _getNextSequence(_timer_type);
+                _timer_data.timer_type = _timer_data.timer_type === "work" ? (_timer_data.timer_counter === 4 ? "long break" : "break") : "work";
+
+                _time = _getNextSequence();
                 
                 updateTime();
 
-                if (_counter === 4) _counter = 0;
-                if (_timer_type === "work") _counter++;
+                if (_timer_data.timer_counter === 4) _timer_data.timer_counter = 0;
+                if (_timer_data.timer_type === "work") _timer_data.timer_counter++;
+
+                localStorage.setItem("timer_data", JSON.stringify(_timer_data));
 
             }
         }
@@ -77,8 +81,9 @@ const timer = (function () {
     }
     
     // gets the correct _time for current timer sequence
-    function _getNextSequence(_timer_type) {
-        switch (_timer_type) {
+    function _getNextSequence() {
+        localStorage.setItem("timer_data", JSON.stringify(_timer_data));
+        switch (_timer_data.timer_type) {
             case "work":
                 return work_time;
             case "break":
@@ -86,6 +91,16 @@ const timer = (function () {
             case "long break":
                 return long_break_time;
         }
+    }
+
+    window.onload = () => {
+        let stored_data = JSON.parse(localStorage.getItem("timer_data"));
+
+        if (stored_data == null) stored_data = _timer_data;
+        _timer_data = stored_data;
+        
+        _time = _getNextSequence();
+        updateTime()
     }
 
     function updateTime() {
@@ -101,7 +116,7 @@ const timer = (function () {
         _digits[1].textContent = _time[1]
         _digits[2].textContent = _time[2]
         _digits[3].textContent = _time[3]
-        document.cookie = `time=${_time}`;
+        localStorage.setItem("time", _time);
     }
 
     function _pauseTimer() {
@@ -226,7 +241,7 @@ const timer = (function () {
     }
 }());
 
-timer.updateTime();
+// timer.updateTime();
 
 
 // xhttp.onload = () => {
