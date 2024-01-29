@@ -1,8 +1,43 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Pomodoro
+    Progress
+{% endblock %}
+
+{% block head %} 
+    <link href="/static/styles/progress.css" rel="stylesheet"></link>
+    <script src="/static/scripts/progress.js" defer></script>
 {% endblock %}
 
 {% block main %}
+    <div>
+        <table id="progress-table" class="progress-table">
+            <thead>
+                <th>Progress</th>
+            </thead>
+            <tbody>
+                <tr id="row-day-1" class="daily-rows">
+                    
+                </tr>
+                <tr id="row-day-2" class="daily-rows">
+                    
+                </tr>
+                <tr id="row-day-3" class="daily-rows">
+                    
+                </tr>
+                <tr id="row-day-4" class="daily-rows">
+                    
+                </tr>
+                <tr id="row-day-5" class="daily-rows">
+                    
+                </tr>
+                <tr id="row-day-6" class="daily-rows">
+                    
+                </tr>
+                <tr id="row-day-7" class="daily-rows">
+                    
+                </tr>
+            </tbody>
+        </table>
+    </div>
 {% endblock %}
