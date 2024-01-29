@@ -6,7 +6,9 @@ const xhttp = new XMLHttpRequest();
 
 
 const timer = (function () {
-    const _timer_button = document.getElementById("timer-button");
+    const _timer_button = document.getElementById("timer-main-button");
+    const _skip_button = document.getElementById("timer-skip-button");
+    const _reset_button = document.getElementById("timer-reset-button");
     const _timer_text_con = document.getElementById("timer-text-con");
     const _digits = Array.from(document.querySelectorAll(".timer-digit"));
     let _timer_data = {
@@ -54,20 +56,25 @@ const timer = (function () {
                 _setTime();
             }
             else {
-                _pauseTimer();
-                _timer_data.timer_type = _timer_data.timer_type === "work" ? (_timer_data.timer_counter === 4 ? "long break" : "break") : "work";
 
-                _time = _getNextSequence();
-                
-                updateTime();
-
-                if (_timer_data.timer_counter === 4) _timer_data.timer_counter = 0;
-                if (_timer_data.timer_type === "work") _timer_data.timer_counter++;
-
-                localStorage.setItem("timer_data", JSON.stringify(_timer_data));
+                _endTimer();
 
             }
         }
+    }
+    
+    function _endTimer() {
+        _pauseTimer();
+        _timer_data.timer_type = _timer_data.timer_type === "work" ? (_timer_data.timer_counter === 4 ? "long break" : "break") : "work";
+
+        _time = _getNextSequence();
+        
+        _updateTime();
+
+        if (_timer_data.timer_counter === 4) _timer_data.timer_counter = 0;
+        if (_timer_data.timer_type === "work") _timer_data.timer_counter++;
+
+        localStorage.setItem("timer_data", JSON.stringify(_timer_data));
     }
 
     // sets the next minute
@@ -100,10 +107,10 @@ const timer = (function () {
         _timer_data = stored_data;
         
         _time = _getNextSequence();
-        updateTime()
+        _updateTime()
     }
 
-    function updateTime() {
+    function _updateTime() {
         _minutes = (_time[0] + _time[1]) * 1;
         _seconds = (_time[2] + _time[3]) * 1;
 
@@ -160,7 +167,7 @@ const timer = (function () {
             
 
 
-            updateTime();
+            _updateTime();
         } 
     }
 
@@ -236,12 +243,22 @@ const timer = (function () {
     });
 
 
-    return {      
-        updateTime,
-    }
+    // skip button
+    _skip_button.addEventListener("click", (e) => {
+        _endTimer();
+    });
+
+    // reset button
+    _reset_button.addEventListener("click", (e) => {
+        _time = _getNextSequence();
+        _pauseTimer();
+        _updateTime();
+    });
+
+
 }());
 
-// timer.updateTime();
+// timer._updateTime();
 
 
 // xhttp.onload = () => {
