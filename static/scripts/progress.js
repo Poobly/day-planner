@@ -15,14 +15,14 @@ const days_object = {
     4 : document.getElementById("row-thursday"),
     5 : document.getElementById("row-friday"),
     6 : document.getElementById("row-saturday") 
-}
+};
 
 const days = []
 while (date.getUTCFullYear() === year) {
     let current_day = date.getUTCDay();
     if (date.getUTCMonth() == 0 && date.getUTCDate() == 1 && current_day > 0) {
         for (let i = 0; i < current_day; i++) {
-            console.log(i, current_day)
+
             days_object[i].appendChild(document.createElement("td"));
         }
     }
