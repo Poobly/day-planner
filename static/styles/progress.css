@@ -5,8 +5,27 @@
 .progress-tile {
     width: 25px;
     height: 25px;
-    border: 1px solid blue;
+    border-radius: 2px;
+    background-color: rgba(0, 0, 0, 0.1);
+    /* border: 1px solid blue; */
 }
+
+.progress-tile-1 {
+    background-color: rgba(41, 41, 255, 0.2);
+}
+
+.progress-tile-2 {
+    background-color: rgba(41, 41, 255, 0.2);
+}
+
+.progress-tile-3 {
+    background-color: rgba(41, 41, 255, 0.2);
+}
+
+.progress-tile-4 {
+    background-color: rgba(75, 75, 150, 0.2);
+}
+
 
 .table-header-month {
     text-align: left;

@@ -16,6 +16,7 @@ const timer = (function () {
         "timer_counter" : 1,
     }
     
+    let _elapsed_sessions = 0;
     let _time = _digits.map(digit => digit.textContent);
     let _timer;
     let _minutes = (_time[0] + _time[1]) * 1;
@@ -64,6 +65,9 @@ const timer = (function () {
     }
     
     function _endTimer() {
+        if (_timer_data.timer_type === "work") _elapsed_sessions++;
+        localStorage.setItem("elapsed_sessions", JSON.stringify(_elapsed_sessions));
+
         _pauseTimer();
         _timer_data.timer_type = _timer_data.timer_type === "work" ? (_timer_data.timer_counter === 4 ? "long break" : "break") : "work";
 
@@ -73,7 +77,6 @@ const timer = (function () {
 
         if (_timer_data.timer_counter === 4) _timer_data.timer_counter = 0;
         if (_timer_data.timer_type === "work") _timer_data.timer_counter++;
-
         localStorage.setItem("timer_data", JSON.stringify(_timer_data));
     }
 
@@ -102,6 +105,10 @@ const timer = (function () {
 
     window.onload = () => {
         let stored_data = JSON.parse(localStorage.getItem("timer_data"));
+        let elapsed_sessions_data = JSON.parse(localStorage.getItem("elapsed_sessions"));
+
+        if (elapsed_sessions_data == null) elapsed_sessions_data = _elapsed_sessions;
+        _elapsed_sessions = elapsed_sessions_data;
 
         if (stored_data == null) stored_data = _timer_data;
         _timer_data = stored_data;
