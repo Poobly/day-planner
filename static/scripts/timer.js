@@ -1,3 +1,8 @@
+// WIP:
+// Update work_time, break_time, long_break_time based on entered/set time
+// backend integration
+
+
 let work_time = "2500";
 let break_time = "0500";
 let long_break_time = "3000";

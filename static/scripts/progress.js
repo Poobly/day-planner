@@ -1,3 +1,11 @@
+// WIP: 
+// Make dates transfer to users timezone.
+// if user is logged in get data from backend else use local storage
+// add tooltip on hover showing number of contributions for each day
+
+
+
+
 const progress_table = document.getElementById("progress-table");
 const day_rows = progress_table.querySelectorAll("tbody > tr");
 const current_date = new Date; 
