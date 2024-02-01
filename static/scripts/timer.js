@@ -1,5 +1,4 @@
 // WIP:
-// Update work_time, break_time, long_break_time based on entered/set time
 // backend integration
 
 
@@ -19,6 +18,9 @@ const timer = (function () {
     let _timer_data = {
         "timer_type" : "work",
         "timer_counter" : 1,
+        "work" : "2500",
+        "break" : "0500",
+        "long_break" : "3000"
     }
     
     let _elapsed_sessions = 0;
@@ -49,9 +51,6 @@ const timer = (function () {
         console.log(data);
 
 
-
-
-        
         if (_seconds > 0) {
             _nextSecond();
             _setTime();
@@ -68,13 +67,14 @@ const timer = (function () {
             }
         }
     }
+
     
     function _endTimer() {
         if (_timer_data.timer_type === "work") _elapsed_sessions++;
         localStorage.setItem("elapsed_sessions", JSON.stringify(_elapsed_sessions));
 
         _pauseTimer();
-        _timer_data.timer_type = _timer_data.timer_type === "work" ? (_timer_data.timer_counter === 4 ? "long break" : "break") : "work";
+        _timer_data.timer_type = _timer_data.timer_type === "work" ? (_timer_data.timer_counter === 4 ? "long_break" : "break") : "work";
 
         _time = _getNextSequence();
         
@@ -84,6 +84,7 @@ const timer = (function () {
         if (_timer_data.timer_type === "work") _timer_data.timer_counter++;
         localStorage.setItem("timer_data", JSON.stringify(_timer_data));
     }
+    
 
     // sets the next minute
     function _nextMinute() {
@@ -98,14 +99,7 @@ const timer = (function () {
     // gets the correct _time for current timer sequence
     function _getNextSequence() {
         localStorage.setItem("timer_data", JSON.stringify(_timer_data));
-        switch (_timer_data.timer_type) {
-            case "work":
-                return work_time;
-            case "break":
-                return break_time;
-            case "long break":
-                return long_break_time;
-        }
+        return _timer_data[_timer_data.timer_type];
     }
 
     window.onload = () => {
@@ -118,8 +112,11 @@ const timer = (function () {
         if (stored_data == null) stored_data = _timer_data;
         _timer_data = stored_data;
         
-        _time = _getNextSequence();
+        _time = _timer_data[_timer_data.timer_type];
+        
+        console.log(_timer_data);
         _updateTime()
+        _checkSeconds();
     }
 
     function _updateTime() {
@@ -178,7 +175,9 @@ const timer = (function () {
             _timer_digit_index--;
             
 
-
+            _timer_data[_timer_data.timer_type] = _time;
+            localStorage.setItem("timer_data", JSON.stringify(_timer_data))
+            // console.log(_timer_data)
             _updateTime();
         } 
     }
@@ -199,6 +198,7 @@ const timer = (function () {
             _digit_editing = false;
             
             _checkSeconds();
+            _setTime();
         }
     });
 
