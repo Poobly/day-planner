@@ -3,6 +3,7 @@
 }
 
 .progress-tile {
+    position: relative;
     width: 25px;
     height: 25px;
     border-radius: 2px;
@@ -29,4 +30,12 @@
 
 .table-header-month {
     text-align: left;
+}
+
+.tool-tip {
+    position: absolute;
+    background-color: rgba(128, 128, 128, 1);
+    width: 120px;
+    border-radius: 6px;
+    text-align: center;
 }
