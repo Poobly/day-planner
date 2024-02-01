@@ -9,7 +9,7 @@
 const progress_table = document.getElementById("progress-table");
 const day_rows = progress_table.querySelectorAll("tbody > tr");
 const current_date = new Date; 
-let year = current_date.getUTCFullYear();
+let year = current_date.getFullYear();
 // let year = 2023;
 let total_days = (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0)) ? 366 : 365;
 
@@ -40,20 +40,19 @@ const months_object = {
     11 : document.getElementById("header-dec")
 };
 
-
 const days = {}
-const today = new Intl.DateTimeFormat('en-CA', {timeZone: "UTC"}).format(new Date());
-let date = new Date(Date.UTC(year, 0, 1));
+const today = new Date().toLocaleString(undefined, {year: "numeric", month: "2-digit", day: "2-digit"});
+let date = new Date(year, 0, 1);
 
 
-let current_month = date.getUTCMonth();
-let next_month = date.getUTCMonth() + 1;
+let current_month = date.getMonth();
+let next_month = date.getMonth() + 1;
 let colspan_count = 0;
-while (date.getUTCFullYear() === year) {
-    let current_day = date.getUTCDay();
+while (date.getFullYear() === year) {
+    let current_day = date.getDay();
     
     // adds empty td elements to start of table/graph if the first day of the year starts on a day other than sunday
-    if (date.getUTCMonth() == 0 && date.getUTCDate() == 1 && current_day > 0) {
+    if (date.getMonth() == 0 && date.getDate() == 1 && current_day > 0) {
         for (let i = 0; i < current_day; i++) {
             days_object[i].appendChild(document.createElement("td"));
         }
@@ -62,9 +61,9 @@ while (date.getUTCFullYear() === year) {
     // check if it's first day of week and same month.
     if (current_month == next_month) {
         colspan_count = 0;
-        next_month = date.getUTCMonth() + 1;
+        next_month = date.getMonth() + 1;
     }
-    if (date.getUTCDay() == 0 || current_month == 0 && date.getUTCDate() == 1) {
+    if (date.getDay() == 0 || current_month == 0 && date.getDate() == 1) {
         // set colspan to amount of weeks in month that starts with a day from that month
         colspan_count++;
     }
@@ -72,10 +71,10 @@ while (date.getUTCFullYear() === year) {
     months_object[current_month].colSpan = colspan_count;
 
     
-    let new_date = new Intl.DateTimeFormat('en-CA', {timeZone: "UTC"}).format(date);
+    let new_date = date.toLocaleString(undefined, {year: "numeric", month: "2-digit", day: "2-digit"});
     days[new_date] = 0;
-    date.setUTCDate(date.getUTCDate() + 1);
-    current_month = date.getUTCMonth();
+    date.setDate(date.getDate() + 1);
+    current_month = date.getMonth();
    
 
     let day = document.createElement("td");
@@ -87,11 +86,13 @@ while (date.getUTCFullYear() === year) {
 
     // check if user logged in and get data from db and insert into days object e.g. days[new_date] = database_data[new_date] 
     if (today == new_date) {
+
         days[new_date] = JSON.parse(localStorage.getItem("elapsed_sessions")); 
-        if (days[new_date] < 2) day.classList.add("progress-tile-1");
-        else if (days[new_date] < 4) day.classList.add("progress-tile-2");
-        else if (days[new_date] < 6) day.classList.add("progress-tile-3");
-        else if (days[new_date] > 5) day.classList.add("progress-tile-4");
+
+        if (days[new_date] > 5) day.classList.add("progress-tile-4");
+        else if (days[new_date] > 4) day.classList.add("progress-tile-3");
+        else if (days[new_date] > 2) day.classList.add("progress-tile-2");
+        else if (days[new_date] > 0) day.classList.add("progress-tile-1");
     }
 }
 
