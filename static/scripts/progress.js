@@ -1,17 +1,12 @@
 // WIP: 
 // if user is logged in get data from backend else use local storage
-// add tooltip on hover showing number of contributions for each day
-
-
-
 
 const progress_table = document.getElementById("progress-table");
 const day_rows = progress_table.querySelectorAll("tbody > tr");
 const current_date = new Date; 
 let year = current_date.getFullYear();
-// let year = 2023;
-let total_days = (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0)) ? 366 : 365;
 
+let total_days = (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0)) ? 366 : 365;
 
 const days_object = {
     0 : document.getElementById("row-sunday"),
@@ -22,7 +17,6 @@ const days_object = {
     5 : document.getElementById("row-friday"),
     6 : document.getElementById("row-saturday")
 };
-
 
 const months_object = {
     0 : document.getElementById("header-jan"),
@@ -45,10 +39,11 @@ const days = {}
 const today = new Date().toLocaleString(undefined, {year: "numeric", month: "2-digit", day: "2-digit"});
 let date = new Date(year, 0, 1);
 
-
 let current_month = date.getMonth();
 let next_month = date.getMonth() + 1;
 let colspan_count = 0;
+
+
 while (date.getFullYear() === year) {
     let current_day = date.getDay();
     
@@ -71,12 +66,10 @@ while (date.getFullYear() === year) {
 
     months_object[current_month].colSpan = colspan_count;
 
-    
     let new_date = date.toLocaleString(undefined, {year: "numeric", month: "2-digit", day: "2-digit"});
     days[new_date] = 0;
     date.setDate(date.getDate() + 1);
     current_month = date.getMonth();
-   
 
     let day = document.createElement("td");
     day.classList.add("progress-tile");
@@ -86,7 +79,6 @@ while (date.getFullYear() === year) {
     
     // check if user logged in and get data from db and insert into days object e.g. days[new_date] = database_data[new_date] 
     if (today == new_date) {
-        
         days[new_date] = JSON.parse(localStorage.getItem("elapsed_sessions")); 
         
         if (days[new_date] > 5) day.classList.add("progress-tile-4");
@@ -97,21 +89,30 @@ while (date.getFullYear() === year) {
 
 
     day.addEventListener("mouseenter", (e) => {
-        if (active_element) {
-            active_element.textContent = "";
-        }
-        const tool_tip = document.createElement("span");
+        const tool_tip = document.createElement("tool-tip");
         day.appendChild(tool_tip);
         tool_tip.classList.add("tool-tip");
+
         if (days[new_date] > 0) tool_tip.textContent = `You have done ${days[new_date]} work sessions.`; 
         else tool_tip.textContent = `You have done no work sessions.`; 
+
         active_element = day;
     });
+
     day.addEventListener("mouseleave", (e) => {
-        console.log("test");
         day.textContent = "";
     });
+    
 }
 
-// adds data to days object if not logged in WIP
 
+
+class Tooltip extends HTMLElement {
+    constructor() {
+        super();
+    }
+    connectedCallback() {
+
+    }
+}
+customElements.define("tool-tip", Tooltip);

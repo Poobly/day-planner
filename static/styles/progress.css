@@ -1,14 +1,24 @@
-.progress-table {
+:root {
+    --tool-tip-color: rgb(200, 200, 200);
+}
 
+body {
+    font-family: Roboto;
+}
+
+
+.progress-table, .daily-rows {
+    border-collapse: separate;
+    border-spacing: 3px;
 }
 
 .progress-tile {
     position: relative;
-    width: 25px;
-    height: 25px;
-    border-radius: 2px;
+    width: 30px;
+    height: 30px;
+    border-radius: 3px;
     background-color: rgba(0, 0, 0, 0.1);
-    /* border: 1px solid blue; */
+
 }
 
 .progress-tile-1 {
@@ -34,8 +44,38 @@
 
 .tool-tip {
     position: absolute;
-    background-color: rgba(128, 128, 128, 1);
-    width: 120px;
-    border-radius: 6px;
     text-align: center;
+    background-color: var(--tool-tip-color);
+    padding: 5px 10px;
+    width: max-content;
+    bottom: 75%;
+    left: 50%;
+
+    border-radius: 6px;
+    transform: translate(-50%, -50%);
+    z-index: 1;
 }
+
+/* .tool-tip::before {
+    content: " ";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translate(-50%);
+    border-color: black transparent transparent transparent;
+    border-width: 6px;
+    border-style: solid;
+
+  } */
+
+.tool-tip::after {
+    content: " ";
+    position: absolute;
+    top: 99%;
+    left: 50%;
+    transform: translate(-50%);
+    border-color: var(--tool-tip-color) transparent transparent transparent;
+    border-width: 5px;
+    border-style: solid;
+
+  }
