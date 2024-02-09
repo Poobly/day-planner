@@ -18,6 +18,12 @@ const weeks_obj = {
     5 : week_rows[5]
 }
 
+const days_object = {}
+
+function day (day, month, year, element, plans) {
+    return {day, month, year, element, plans};
+}
+
 let date = new Date(year, month, 1);
 let new_date = new Date(year, month, 1);
 
@@ -55,23 +61,30 @@ while (date.getFullYear() === year && date.getMonth() === month) {
      */
     if (date.getDate() === 1 && date.getDay() !== 0 ) {
         for (let i = date.getDay(); i > 0; i--) {
-            const last_month_element_con = document.createElement("td");
             new_date.setDate(date.getDate() - i);
+            
+            const last_month_element_con = document.createElement("td");
+            const str_date = new_date.toLocaleString(undefined, {year: "numeric", month: "2-digit", day: "2-digit"});
             last_month_element_con.textContent = new_date.getDate();
             last_month_element_con.classList.add("day-con");
-            last_month_element_con.dataset.date = new_date.toLocaleString(undefined, {year: "numeric", month: "2-digit", day: "2-digit"});
+            last_month_element_con.dataset.date = str_date;
+            days_object[str_date] = day(new_date.getDate(), new_date.getMonth(), new_date.getFullYear(), last_month_element_con);
+
             weeks_obj[weeks].appendChild(last_month_element_con);
+
             new_date.setDate(new_date.getDate() + i);
         }
     }
 
     const day_element_con = document.createElement("td");
+    const str_date = date.toLocaleString(undefined, {year: "numeric", month: "2-digit", day: "2-digit"});
     day_element_con.textContent = date.getDate();
     day_element_con.classList.add("day-con");
-    day_element_con.dataset.date = date.toLocaleString(undefined, {year: "numeric", month: "2-digit", day: "2-digit"});
+    day_element_con.dataset.date = str_date;
 
     weeks_obj[weeks].appendChild(day_element_con);
 
+    days_object[str_date] = day(date.getDate(), date.getMonth(), date.getFullYear(), day_element_con);
 
     date.setDate(date.getDate() + 1);
 }
@@ -85,9 +98,11 @@ if (date.getMonth() !== month) {
         for (let j = new_date.getDay(); j < 7; j++) {
 
             const new_month_element_con  = document.createElement("td");
+            str_date = new_date.toLocaleString(undefined, {year: "numeric", month: "2-digit", day: "2-digit"});
             new_month_element_con.textContent = new_date.getDate();
             new_month_element_con.classList.add("day-con");
-            new_month_element_con.dataset.date = new_date.toLocaleString(undefined, {year: "numeric", month: "2-digit", day: "2-digit"});
+            new_month_element_con.dataset.date = str_date;
+            days_object[str_date] = day(new_date.getDate(), new_date.getMonth(), new_date.getFullYear(), new_month_element_con);
             
             
             weeks_obj[i].appendChild(new_month_element_con);
@@ -97,3 +112,6 @@ if (date.getMonth() !== month) {
         }
     }
 }
+
+
+console.log(days_object);
