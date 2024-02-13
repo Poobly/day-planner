@@ -166,19 +166,13 @@ function checkYear() {
 }
 
 let active_element = false;
+let active_modal = false;
 
 function createTableCell(date, str_date) {
     const td = document.createElement("td");
     const span = document.createElement("span");
 
-    td.addEventListener("click", (e) => {
-        if (active_element) {
-            active_element.classList.remove("active-day");
-        }
-        createModal(date, td);
-        td.classList.add("active-day");
-        active_element = td;
-    });
+    td.addEventListener("click", selectElement);
 
     td.classList.add("day-con");
     span.classList.add("day-date")
@@ -198,16 +192,20 @@ function createModal(date, td) {
         let modal_con = document.createElement("div");
         let modal_form = document.createElement("form");
 
+
         modal_con.classList.add("modal-con");
         modal_form.classList.add("modal-form");
         
-        window.addEventListener("mousedown", function modalCheck(e) {
+        main_con.addEventListener("mousedown", function modalCheck(e) {
+            console.log("parent");
             if (!modal_con.contains(e.target) && e.target !== td) {
+                active_modal = true;
                 main_con.removeChild(modal_con);
                 td.classList.remove("active-day");
-                removeEventListener("mousedown", modalCheck);
+                main_con.removeEventListener("mousedown", modalCheck);
                 active_element = false;
             }
+        
         });
         
         main_con.appendChild(modal_con);
@@ -215,3 +213,16 @@ function createModal(date, td) {
     }
 
 }
+
+
+function selectElement(e) {
+    console.log("child");
+    if (!active_modal) {
+        createModal(date, e.target);
+        
+        e.target.classList.add("active-day");
+        active_element = e.target;
+    }
+    active_modal = false;
+}
+
