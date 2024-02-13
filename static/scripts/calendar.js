@@ -7,7 +7,8 @@ const table = document.getElementById("calendar-table");
 
 const current_date = new Date;
 let year = current_date.getFullYear();
-let month = current_date.getMonth();  
+let month = current_date.getMonth();
+let current_day = current_date.toLocaleString(undefined, {year: "numeric", month: "2-digit", day: "2-digit"});
 
 const week_rows = Array.from(document.getElementsByClassName("table-week-row"));
 
@@ -22,8 +23,8 @@ const weeks_obj = {
 
 const days_object = {}
 
-function day (day, month, year, element, plans) {
-    return {day, month, year, element, plans};
+function createDayObj(date, month, year, element, plans) {
+    return {date, month, year, element, plans};
 }
 
 let date = new Date(year, month, 1);
@@ -38,7 +39,7 @@ const table_title = document.getElementById("table-title")
 
 
 
-function loadCalendar () {
+function loadCalendar() {
     table_title.textContent = date.toLocaleString(undefined, {month : "long", year: "numeric"});
     while (date.getFullYear() === year && date.getMonth() === month) {
 
@@ -57,7 +58,12 @@ function loadCalendar () {
                 
                 const last_month_element_con = createTableCell(new_date, str_date);
 
-                days_object[str_date] = day(new_date.getDate(), new_date.getMonth(), new_date.getFullYear(), last_month_element_con);
+                days_object[str_date] = createDayObj(
+                    new_date.getDate(), 
+                    new_date.getMonth(), 
+                    new_date.getFullYear(), 
+                    last_month_element_con
+                    );
     
                 weeks_obj[weeks].appendChild(last_month_element_con);
     
@@ -72,7 +78,7 @@ function loadCalendar () {
         
         weeks_obj[weeks].appendChild(day_element_con);
     
-        days_object[str_date] = day(date.getDate(), date.getMonth(), date.getFullYear(), day_element_con);
+        days_object[str_date] = createDayObj(date.getDate(), date.getMonth(), date.getFullYear(), day_element_con);
     
         if (date.getDay() === 6) {
             weeks++;
@@ -97,7 +103,12 @@ function loadCalendar () {
                     
                     const new_month_element_con = createTableCell(new_date, str_date);
 
-                    days_object[str_date] = day(new_date.getDate(), new_date.getMonth(), new_date.getFullYear(), new_month_element_con);
+                    days_object[str_date] = createDayObj(
+                        new_date.getDate(), 
+                        new_date.getMonth(), 
+                        new_date.getFullYear(), 
+                        new_month_element_con
+                        );
                     
                     
                     weeks_obj[i].appendChild(new_month_element_con);
@@ -163,6 +174,9 @@ function createTableCell(date, str_date) {
     td.dataset.date = str_date;
 
     span.textContent = date.getDate();
+    
+    if (str_date === current_day) td.classList.add("current-day");
+    
     td.appendChild(span);
     return td;
 }
