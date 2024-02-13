@@ -23,7 +23,7 @@ const days_object = {}
 function day (day, month, year, element, plans) {
     return {day, month, year, element, plans};
 }
-console.log(month);
+
 
 let date = new Date(year, month, 1);
 let new_date = new Date(year, month, 1);
@@ -41,13 +41,8 @@ const previous_month_button = document.getElementById("calendar-desc-button");
 function loadCalendar () {
     while (date.getFullYear() === year && date.getMonth() === month) {
 
-        if (date.getDay() === 0) {
-            weeks++;
-        }
-        if (date.getDate() === 0) {
-            weeks = 0;
-        }
-        
+
+
         /**
          * checks if it's first day of a month and if it isn't the first day of the week,
          * then it loops over how many days into the week the first day of the current month is
@@ -80,32 +75,46 @@ function loadCalendar () {
     
         days_object[str_date] = day(date.getDate(), date.getMonth(), date.getFullYear(), day_element_con);
     
+        if (date.getDay() === 6) {
+            weeks++;
+        }
         date.setDate(date.getDate() + 1);
+
     }
+
+
     
     // checks if current month is not the same as starting month, and it will fill in the spaces in the calendar that belong to next month.
-    // if (date.getMonth() !== month) {
-    //     new_date.setDate(date.getDate());
-    //     new_date.setMonth(date.getMonth());
+    if (date.getMonth() !== month) {
+        new_date.setDate(date.getDate());
+        new_date.setMonth(date.getMonth());
+
+        if (new_date.getMonth() === 0) new_date.setFullYear(new_date.getFullYear() + 1);
+
+        for (let i = weeks; i < 6 && new_date.getDay() <= 6; i++) {
+            for (let j = 0; j < 7; j++) {
+                if (new_date.getDay() >= j) {
+
+
+                    const new_month_element_con  = document.createElement("td");
+                    str_date = new_date.toLocaleString(undefined, {year: "numeric", month: "2-digit", day: "2-digit"});
+                    new_month_element_con.textContent = new_date.getDate();
+                    new_month_element_con.classList.add("day-con");
+                    new_month_element_con.dataset.date = str_date;
+
+                    days_object[str_date] = day(new_date.getDate(), new_date.getMonth(), new_date.getFullYear(), new_month_element_con);
+                    
+                    
+                    weeks_obj[i].appendChild(new_month_element_con);
+
+
+
+                    new_date.setDate(new_date.getDate() + 1); 
+                }
     
-    //     for (let i = weeks; i < 6; i++) {
-    //         for (let j = new_date.getDay(); j < 7; j++) {
-    
-    //             const new_month_element_con  = document.createElement("td");
-    //             str_date = new_date.toLocaleString(undefined, {year: "numeric", month: "2-digit", day: "2-digit"});
-    //             new_month_element_con.textContent = new_date.getDate();
-    //             new_month_element_con.classList.add("day-con");
-    //             new_month_element_con.dataset.date = str_date;
-    //             days_object[str_date] = day(new_date.getDate(), new_date.getMonth(), new_date.getFullYear(), new_month_element_con);
-                
-                
-    //             weeks_obj[i].appendChild(new_month_element_con);
-    
-    //             new_date.setDate(new_date.getDate() + 1); 
-    
-    //         }
-    //     }
-    // }
+            }
+        }
+    }
 }
 
 
@@ -120,8 +129,7 @@ previous_month_button.addEventListener("click", (e) => {
     });
     date = new Date(year, month, 1);
     new_date = new Date(year, month, 1);
-    console.log(date, new_date);
-    console.log(month, year);
+
     loadCalendar();
 })
 
@@ -134,8 +142,7 @@ next_month_button.addEventListener("click", (e) => {
     });
     date = new Date(year, month, 1);
     new_date = new Date(year, month, 1);
-    console.log(date, new_date);
-    console.log(month, year);
+
     loadCalendar();
 })
 
