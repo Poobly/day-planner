@@ -1,6 +1,7 @@
 // WIP
 // Display events from backend or from local storage
 
+const table = document.getElementById("calendar-table");
 
 const current_date = new Date;
 let year = current_date.getFullYear();
@@ -35,10 +36,13 @@ let weeks = 0;
 const next_month_button = document.getElementById("calendar-asc-button");
 const previous_month_button = document.getElementById("calendar-desc-button");
 
+const table_title = document.createElement("caption")
+table.appendChild(table_title);
 
 
 
 function loadCalendar () {
+    table_title.textContent = date.toLocaleString(undefined, {month : "long", year: "numeric"});
     while (date.getFullYear() === year && date.getMonth() === month) {
 
 
@@ -123,7 +127,7 @@ loadCalendar();
 previous_month_button.addEventListener("click", (e) => {
     month--;
     weeks = 0;
-    checkYear()
+    checkYear();
     week_rows.forEach(element => {
         element.textContent = "";
     });
@@ -136,7 +140,7 @@ previous_month_button.addEventListener("click", (e) => {
 next_month_button.addEventListener("click", (e) => {
     month++;
     weeks = 0;
-    checkYear()
+    checkYear();
     week_rows.forEach(element => {
         element.textContent = "";
     });
