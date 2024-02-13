@@ -1,12 +1,13 @@
-// WIP
-// Display events from backend or from local storage
-
+/**
+ * TODO: - Add backend support, localstorage if not logged in
+ * - create class or object for each day to add plans and store/display the time ranges
+ * maybe locations as well
+ */ 
 const table = document.getElementById("calendar-table");
 
 const current_date = new Date;
 let year = current_date.getFullYear();
 let month = current_date.getMonth();  
-
 
 const week_rows = Array.from(document.getElementsByClassName("table-week-row"));
 
@@ -25,19 +26,15 @@ function day (day, month, year, element, plans) {
     return {day, month, year, element, plans};
 }
 
-
 let date = new Date(year, month, 1);
 let new_date = new Date(year, month, 1);
-
-
 
 let weeks = 0;
 
 const next_month_button = document.getElementById("calendar-asc-button");
 const previous_month_button = document.getElementById("calendar-desc-button");
 
-const table_title = document.createElement("caption")
-table.appendChild(table_title);
+const table_title = document.getElementById("table-title")
 
 
 
@@ -161,6 +158,8 @@ function createTableCell(date, str_date) {
     const span = document.createElement("span");
     
     td.classList.add("day-con");
+    span.classList.add("day-date")
+
     td.dataset.date = str_date;
 
     span.textContent = date.getDate();

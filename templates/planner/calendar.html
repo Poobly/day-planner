@@ -10,27 +10,32 @@
 {% endblock %}
 
 {% block main %}
-    <button id="calendar-desc-button" type="button"><</button>
-    <button id="calendar-asc-button" type="button">></button>
-    <table id="calendar-table">
-        <thead>
-            <tr>
-                <th class="calendar-header-days">Sunday</th>
-                <th class="calendar-header-days">Monday</th>
-                <th class="calendar-header-days">Tuesday</th>
-                <th class="calendar-header-days">Wednesday</th>
-                <th class="calendar-header-days">Thursday</th>
-                <th class="calendar-header-days">Friday</th>
-                <th class="calendar-header-days">Saturday</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="table-week-row"></tr>
-            <tr class="table-week-row"></tr>
-            <tr class="table-week-row"></tr>
-            <tr class="table-week-row"></tr>
-            <tr class="table-week-row"></tr>
-            <tr class="table-week-row"></tr>
-        </tbody>
-    </table>
+    <div id="calendar-table-con" class="calendar-table-con">
+        <div id="calendar-table-header" class="calendar-table-header">
+            <button id="calendar-desc-button" class="calendar-button" type="button"><</button>
+            <h2 id="table-title" class="table-title"></h2>
+            <button id="calendar-asc-button" class="calendar-button" type="button">></button>
+        </div>
+        <table id="calendar-table">
+            <thead>
+                <tr>
+                    <th class="calendar-header-days">Sunday</th>
+                    <th class="calendar-header-days">Monday</th>
+                    <th class="calendar-header-days">Tuesday</th>
+                    <th class="calendar-header-days">Wednesday</th>
+                    <th class="calendar-header-days">Thursday</th>
+                    <th class="calendar-header-days">Friday</th>
+                    <th class="calendar-header-days">Saturday</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="table-week-row"></tr>
+                <tr class="table-week-row"></tr>
+                <tr class="table-week-row"></tr>
+                <tr class="table-week-row"></tr>
+                <tr class="table-week-row"></tr>
+                <tr class="table-week-row"></tr>
+            </tbody>
+        </table>
+    </div>
 {% endblock %}
