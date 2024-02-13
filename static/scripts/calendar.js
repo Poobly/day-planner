@@ -56,11 +56,10 @@ function loadCalendar () {
             for (let i = date.getDay(); i > 0; i--) {
                 new_date.setDate(date.getDate() - i);
                 
-                const last_month_element_con = document.createElement("td");
                 const str_date = new_date.toLocaleString(undefined, {year: "numeric", month: "2-digit", day: "2-digit"});
-                last_month_element_con.textContent = new_date.getDate();
-                last_month_element_con.classList.add("day-con");
-                last_month_element_con.dataset.date = str_date;
+                
+                const last_month_element_con = createTableCell(new_date, str_date);
+
                 days_object[str_date] = day(new_date.getDate(), new_date.getMonth(), new_date.getFullYear(), last_month_element_con);
     
                 weeks_obj[weeks].appendChild(last_month_element_con);
@@ -69,12 +68,11 @@ function loadCalendar () {
             }
         }
     
-        const day_element_con = document.createElement("td");
         const str_date = date.toLocaleString(undefined, {year: "numeric", month: "2-digit", day: "2-digit"});
-        day_element_con.textContent = date.getDate();
-        day_element_con.classList.add("day-con");
-        day_element_con.dataset.date = str_date;
-    
+        
+
+        const day_element_con = createTableCell(date, str_date);
+        
         weeks_obj[weeks].appendChild(day_element_con);
     
         days_object[str_date] = day(date.getDate(), date.getMonth(), date.getFullYear(), day_element_con);
@@ -98,13 +96,9 @@ function loadCalendar () {
         for (let i = weeks; i < 6 && new_date.getDay() <= 6; i++) {
             for (let j = 0; j < 7; j++) {
                 if (new_date.getDay() >= j) {
-
-
-                    const new_month_element_con  = document.createElement("td");
                     str_date = new_date.toLocaleString(undefined, {year: "numeric", month: "2-digit", day: "2-digit"});
-                    new_month_element_con.textContent = new_date.getDate();
-                    new_month_element_con.classList.add("day-con");
-                    new_month_element_con.dataset.date = str_date;
+                    
+                    const new_month_element_con = createTableCell(new_date, str_date);
 
                     days_object[str_date] = day(new_date.getDate(), new_date.getMonth(), new_date.getFullYear(), new_month_element_con);
                     
@@ -162,3 +156,14 @@ function checkYear() {
     }
 }
 
+function createTableCell(date, str_date) {
+    const td = document.createElement("td");
+    const span = document.createElement("span");
+    
+    td.classList.add("day-con");
+    td.dataset.date = str_date;
+
+    span.textContent = date.getDate();
+    td.appendChild(span);
+    return td;
+}
