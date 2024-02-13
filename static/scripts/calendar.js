@@ -164,10 +164,20 @@ function checkYear() {
     }
 }
 
+let active_element = false;
+
 function createTableCell(date, str_date) {
     const td = document.createElement("td");
     const span = document.createElement("span");
-    
+
+    td.addEventListener("click", (e) => {
+        if (active_element) {
+            active_element.classList.remove("active-day");
+        }
+        td.classList.add("active-day");
+        active_element = td;
+    });
+
     td.classList.add("day-con");
     span.classList.add("day-date")
 

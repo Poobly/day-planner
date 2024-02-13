@@ -16,9 +16,6 @@
     border-radius: 10px;
 }
 
-.current-day {
-    background-color: rgb(216, 247, 255);
-}
 
 
 .day-con {
@@ -26,5 +23,18 @@
     height: 100px;
     box-shadow: rgba(0, 0, 0, 0.4) 0 0 1px;
     vertical-align: top;
+    cursor: pointer;
 }
 
+.day-date {
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.current-day {
+    background-color: rgb(216, 247, 255);
+}
+
+.active-day {
+    background-color: rgb(255, 150, 150);
+}
