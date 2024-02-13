@@ -38,3 +38,15 @@
 .active-day {
     background-color: rgb(255, 150, 150);
 }
+
+.modal-con {
+    background-color: yellow;
+    height: 200px;
+    width: 200px;
+}
+
+.modal-form {
+    background-color: aqua;
+    height: 100px;
+    width: 100px;
+}

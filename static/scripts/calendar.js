@@ -3,6 +3,7 @@
  * - create class or object for each day to add plans and store/display the time ranges
  * maybe locations as well
  */ 
+const main_con = document.querySelector("main");
 const table = document.getElementById("calendar-table");
 
 const current_date = new Date;
@@ -174,6 +175,7 @@ function createTableCell(date, str_date) {
         if (active_element) {
             active_element.classList.remove("active-day");
         }
+        createModal(date, td);
         td.classList.add("active-day");
         active_element = td;
     });
@@ -189,4 +191,27 @@ function createTableCell(date, str_date) {
     
     td.appendChild(span);
     return td;
+}
+
+function createModal(date, td) {
+    if (!active_element) {
+        let modal_con = document.createElement("div");
+        let modal_form = document.createElement("form");
+
+        modal_con.classList.add("modal-con");
+        modal_form.classList.add("modal-form");
+        
+        window.addEventListener("mousedown", function modalCheck(e) {
+            if (!modal_con.contains(e.target) && e.target !== td) {
+                main_con.removeChild(modal_con);
+                td.classList.remove("active-day");
+                removeEventListener("mousedown", modalCheck);
+                active_element = false;
+            }
+        });
+        
+        main_con.appendChild(modal_con);
+        modal_con.appendChild(modal_form);
+    }
+
 }
