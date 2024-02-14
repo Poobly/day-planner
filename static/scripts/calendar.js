@@ -187,7 +187,18 @@ function createTableCell(date, str_date) {
     return td;
 }
 
+function selectElement(e) {
+    if (!active_modal) {
+        createModal(date, e.target);
+        
+        e.target.classList.add("active-day");
+        active_element = e.target;
+    }
+    active_modal = false;
+}
+
 function createModal(date, td) {
+    let pos1, pos2, pos3, pos4 = 0;
     if (!active_element) {
         let modal_con = document.createElement("div");
         let modal_form = document.createElement("form");
@@ -195,9 +206,10 @@ function createModal(date, td) {
 
         modal_con.classList.add("modal-con");
         modal_form.classList.add("modal-form");
+
+        dragElement(modal_con);
         
         main_con.addEventListener("mousedown", function modalCheck(e) {
-            console.log("parent");
             if (!modal_con.contains(e.target) && e.target !== td) {
                 active_modal = true;
                 main_con.removeChild(modal_con);
@@ -208,21 +220,54 @@ function createModal(date, td) {
         
         });
         
+        
         main_con.appendChild(modal_con);
         modal_con.appendChild(modal_form);
+
     }
 
 }
 
 
-function selectElement(e) {
-    console.log("child");
-    if (!active_modal) {
-        createModal(date, e.target);
+function dragElement(element) {
+    let pos1, pos2, pos3, pos4 = 0;
+    element.addEventListener("mousedown", (e) => {
+        e.preventDefault();
+        pos3 = e.clientX;
+        pos4 = e.clientY;
         
-        e.target.classList.add("active-day");
-        active_element = e.target;
-    }
-    active_modal = false;
-}
+        
+        document.addEventListener("mousemove", moveElement);
+        document.addEventListener("mouseup", removeListeners);
+    })
+    
 
+
+    function moveElement(e) {
+        e.preventDefault();
+        pos1 = pos3 - e.clientX;
+        pos2 = pos4 - e.clientY;
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+
+        let new_left = element.offsetLeft - pos1;
+        let new_top = element.offsetTop - pos2;
+
+        if (
+            window.innerWidth >= new_left + element.offsetWidth && 
+            window.innerHeight >= new_top + element.offsetHeight &&
+            new_top >= 0 &&
+            new_left >= 0
+            ) {
+            element.style.left = new_left + "px";
+            element.style.top = new_top + "px";
+            
+        }
+    }
+
+    function removeListeners() {
+        document.removeEventListener("mousemove", moveElement);
+        document.removeEventListener("mouseup", removeListeners);
+    }
+
+}

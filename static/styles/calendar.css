@@ -40,9 +40,13 @@
 }
 
 .modal-con {
+    position: absolute;
     background-color: yellow;
     height: 200px;
     width: 200px;
+    z-index: 100;
+    top: 200px;
+    left: 400px;
 }
 
 .modal-form {
