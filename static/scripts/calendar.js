@@ -230,12 +230,11 @@ function createModal(date, td) {
 
 
 function dragElement(element) {
-    let pos1, pos2, pos3, pos4 = 0;
+    let offsetX = 0, offsetY = 0;
     element.addEventListener("mousedown", (e) => {
         e.preventDefault();
-        pos3 = e.clientX;
-        pos4 = e.clientY;
-        
+        offsetX = e.clientX - element.offsetLeft;
+        offsetY = e.clientY - element.offsetTop;
         
         document.addEventListener("mousemove", moveElement);
         document.addEventListener("mouseup", removeListeners);
@@ -245,24 +244,16 @@ function dragElement(element) {
 
     function moveElement(e) {
         e.preventDefault();
-        pos1 = pos3 - e.clientX;
-        pos2 = pos4 - e.clientY;
-        pos3 = e.clientX;
-        pos4 = e.clientY;
+        let x = e.clientX - offsetX;
+        let y = e.clientY - offsetY;
 
-        let new_left = element.offsetLeft - pos1;
-        let new_top = element.offsetTop - pos2;
+        console.log(x, y);
 
-        if (
-            window.innerWidth >= new_left + element.offsetWidth && 
-            window.innerHeight >= new_top + element.offsetHeight &&
-            new_top >= 0 &&
-            new_left >= 0
-            ) {
-            element.style.left = new_left + "px";
-            element.style.top = new_top + "px";
-            
-        }
+        x = Math.min(Math.max(x, 0), window.innerWidth - element.offsetWidth);
+        y = Math.min(Math.max(y, 0), window.innerHeight - element.offsetHeight);
+
+        element.style.left = x + "px";
+        element.style.top = y + "px";
     }
 
     function removeListeners() {
