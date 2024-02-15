@@ -165,8 +165,7 @@ function checkYear() {
     }
 }
 
-let active_element = false;
-let active_modal = false;
+
 
 function createTableCell(date, str_date) {
     const td = document.createElement("td");
@@ -187,45 +186,61 @@ function createTableCell(date, str_date) {
     return td;
 }
 
+let active_modal = false;
+let active_element = false;
+
+
 function selectElement(e) {
+
     if (!active_modal) {
-        createModal(date, e.target);
-        
-        e.target.classList.add("active-day");
-        active_element = e.target;
+        e.currentTarget.classList.add("active-day");
     }
-    active_modal = false;
+
+    createModal(e.currentTarget);
+
 }
 
-function createModal(date, td) {
-    let pos1, pos2, pos3, pos4 = 0;
-    if (!active_element) {
+
+
+function createModal(td) {
+    if (!active_modal) {
+
         let modal_con = document.createElement("div");
         let modal_form = document.createElement("form");
-
-
+        
         modal_con.classList.add("modal-con");
         modal_form.classList.add("modal-form");
-
+        
         dragElement(modal_con);
-        
+
         main_con.addEventListener("mousedown", function modalCheck(e) {
-            if (!modal_con.contains(e.target) && e.target !== td) {
-                active_modal = true;
-                main_con.removeChild(modal_con);
-                td.classList.remove("active-day");
-                main_con.removeEventListener("mousedown", modalCheck);
-                active_element = false;
+            if (!modal_con.contains(e.target)) {
+
+                if (e.target.nodeName !== "TD" && 
+                e.target.parentNode.nodeName !== "TD") {
+
+                    active_modal = false;
+                    console.log("test");
+                }
+                else {
+                    active_modal = true;
+                }
+                
+                if (e.target !== td && e.target.parentNode !== td) {
+                    
+                    main_con.removeChild(modal_con);
+                    td.classList.remove("active-day");
+                    main_con.removeEventListener("mousedown", modalCheck);
+                }
             }
-        
         });
-        
-        
+
         main_con.appendChild(modal_con);
         modal_con.appendChild(modal_form);
-
     }
-
+    else {
+        active_modal = false;
+    }
 }
 
 
@@ -246,8 +261,6 @@ function dragElement(element) {
         e.preventDefault();
         let x = e.clientX - offsetX;
         let y = e.clientY - offsetY;
-
-        console.log(x, y);
 
         x = Math.min(Math.max(x, 0), window.innerWidth - element.offsetWidth);
         y = Math.min(Math.max(y, 0), window.innerHeight - element.offsetHeight);

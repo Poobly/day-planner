@@ -41,7 +41,7 @@
 
 .modal-con {
     position: absolute;
-    background-color: yellow;
+    background-color: black;
     height: 200px;
     width: 200px;
     z-index: 100;
@@ -50,7 +50,7 @@
 }
 
 .modal-form {
-    background-color: aqua;
+    background-color: black;
     height: 100px;
     width: 100px;
 }
