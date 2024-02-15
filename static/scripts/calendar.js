@@ -191,19 +191,22 @@ let active_element = false;
 
 
 function selectElement(e) {
+    let x = e.currentTarget.offsetLeft + e.currentTarget.offsetWidth + 10;
+    let y = e.currentTarget.offsetTop + 25;
 
     if (!active_modal) {
         e.currentTarget.classList.add("active-day");
     }
 
-    createModal(e.currentTarget);
+    createModal(e.currentTarget, x, y);
 
 }
 
 
 
-function createModal(td) {
+function createModal(td, x, y) {
     if (!active_modal) {
+
 
         let modal_con = document.createElement("div");
         let modal_form = document.createElement("form");
@@ -213,21 +216,22 @@ function createModal(td) {
         
         dragElement(modal_con);
 
+        modal_con.style.left = x + "px";
+        modal_con.style.top = y + "px";
+
         main_con.addEventListener("mousedown", function modalCheck(e) {
             if (!modal_con.contains(e.target)) {
 
                 if (e.target.nodeName !== "TD" && 
                 e.target.parentNode.nodeName !== "TD") {
-
                     active_modal = false;
-                    console.log("test");
                 }
                 else {
                     active_modal = true;
                 }
                 
                 if (e.target !== td && e.target.parentNode !== td) {
-                    
+
                     main_con.removeChild(modal_con);
                     td.classList.remove("active-day");
                     main_con.removeEventListener("mousedown", modalCheck);
