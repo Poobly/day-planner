@@ -1,12 +1,3 @@
-:root {
-    --tool-tip-color: rgb(200, 200, 200);
-}
-
-body {
-    font-family: Roboto;
-}
-
-
 .progress-table, .daily-rows {
     border-collapse: separate;
     border-spacing: 3px;

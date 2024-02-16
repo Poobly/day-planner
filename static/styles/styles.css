@@ -4,6 +4,14 @@
     padding: 0;
 }
 
+:root {
+    --tool-tip-color: rgb(200, 200, 200);
+}
+
+body {
+    font-family: Roboto;
+}
+
 body, html, head {
     height: 100vh;
 }

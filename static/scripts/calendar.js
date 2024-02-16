@@ -44,8 +44,6 @@ function loadCalendar() {
     table_title.textContent = date.toLocaleString(undefined, {month : "long", year: "numeric"});
     while (date.getFullYear() === year && date.getMonth() === month) {
 
-
-
         /**
          * checks if it's first day of a month and if it isn't the first day of the week,
          * then it loops over how many days into the week the first day of the current month is
@@ -58,6 +56,7 @@ function loadCalendar() {
                 const str_date = new_date.toLocaleString(undefined, {year: "numeric", month: "2-digit", day: "2-digit"});
                 
                 const last_month_element_con = createTableCell(new_date, str_date);
+                last_month_element_con.classList.add("unactive-date");
 
                 days_object[str_date] = createDayObj(
                     new_date.getDate(), 
@@ -176,10 +175,10 @@ function createTableCell(date, str_date) {
     td.classList.add("day-con");
     span.classList.add("day-date")
 
-    td.dataset.date = str_date;
-
+    td.dataset.current_date = str_date;
     span.textContent = date.getDate();
-    
+
+    if (date.getMonth() !== month) span.classList.add("unactive-date");
     if (str_date === current_day) td.classList.add("current-day");
     
     td.appendChild(span);
