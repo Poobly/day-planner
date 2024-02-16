@@ -191,33 +191,40 @@ let active_element = false;
 
 
 function selectElement(e) {
-    let x = e.currentTarget.offsetLeft + e.currentTarget.offsetWidth + 10;
-    let y = e.currentTarget.offsetTop + 25;
+    const td = e.currentTarget;
+    const margin = 10;
+
+    let x = td.offsetLeft + td.offsetParent.offsetLeft + td.offsetWidth + margin;
+    let y = td.offsetTop + td.offsetParent.offsetTop + td.offsetHeight + margin;
+
+
 
     if (!active_modal) {
-        e.currentTarget.classList.add("active-day");
+        td.classList.add("active-day");
     }
 
-    createModal(e.currentTarget, x, y);
+    createModal(td, x, y, margin);
 
 }
 
 
 
-function createModal(td, x, y) {
+function createModal(td, x, y, margin) {
     if (!active_modal) {
 
-
-        let modal_con = document.createElement("div");
-        let modal_form = document.createElement("form");
+        const modal_con = document.createElement("div");
+        const modal_form = document.createElement("form");
+        const form_title = document.createElement("input");
+        const form_time_con = document.createElement("div");
+        const form_time = document.createElement("input");
+        const form_date = document.createElement("input");
         
         modal_con.classList.add("modal-con");
         modal_form.classList.add("modal-form");
         
-        dragElement(modal_con);
 
-        modal_con.style.left = x + "px";
-        modal_con.style.top = y + "px";
+
+        dragElement(modal_con);
 
         main_con.addEventListener("mousedown", function modalCheck(e) {
             if (!modal_con.contains(e.target)) {
@@ -241,6 +248,26 @@ function createModal(td, x, y) {
 
         main_con.appendChild(modal_con);
         modal_con.appendChild(modal_form);
+
+        const right_boundary = table.offsetLeft + table.offsetWidth;
+
+        const max_left = right_boundary - modal_con.offsetWidth;
+        
+        if (x + modal_con.offsetWidth > right_boundary) {
+            x = td.offsetLeft - modal_con.offsetWidth - margin;
+        }
+        else {
+            x = Math.min(Math.max(x, table.offsetLeft), max_left);
+        }
+
+        y = Math.min(
+            Math.max(y, table.offsetTop), 
+                table.offsetHeight + table.offsetTop - modal_con.offsetHeight
+                );
+
+        modal_con.style.left = x + "px";
+        modal_con.style.top = y + "px";
+
     }
     else {
         active_modal = false;
@@ -266,8 +293,8 @@ function dragElement(element) {
         let x = e.clientX - offsetX;
         let y = e.clientY - offsetY;
 
-        x = Math.min(Math.max(x, 0), window.innerWidth - element.offsetWidth);
-        y = Math.min(Math.max(y, 0), window.innerHeight - element.offsetHeight);
+        x = Math.min(Math.max(x, table.offsetLeft), (table.offsetWidth + table.offsetLeft) - element.offsetWidth);
+        y = Math.min(Math.max(y, table.offsetTop), (table.offsetHeight + table.offsetTop) - element.offsetHeight);
 
         element.style.left = x + "px";
         element.style.top = y + "px";
