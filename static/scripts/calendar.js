@@ -167,13 +167,10 @@ function checkYear() {
 
 
 function createTableCell(date, str_date) {
-    const td = document.createElement("td");
-    const span = document.createElement("span");
+    const td = createElementWithClass("td", ["day-con"]);
+    const span = createElementWithClass("span", ["day-date"]);
 
-    td.addEventListener("click", selectElement);
-
-    td.classList.add("day-con");
-    span.classList.add("day-date")
+    td.addEventListener("click", selectCalendarElement);
 
     td.dataset.current_date = str_date;
     span.textContent = date.getDate();
@@ -189,9 +186,9 @@ let active_modal = false;
 let active_element = false;
 
 
-function selectElement(e) {
+function selectCalendarElement(e) {
     const td = e.currentTarget;
-    const margin = 10;
+    const margin = 3;
 
     let x = td.offsetLeft + td.offsetParent.offsetLeft + td.offsetWidth + margin;
     let y = td.offsetTop + td.offsetParent.offsetTop + td.offsetHeight + margin;
@@ -210,20 +207,40 @@ function selectElement(e) {
 
 function createModal(td, x, y, margin) {
     if (!active_modal) {
+        const modal_con = createElementWithClass("div", ["modal-con"]);
+        const modal_header = createElementWithClass("div", ["modal-header"]);
+        const modal_form = createElementWithClass("form", ["modal-form"]);
+        const form_title = createElementWithClass("input", ["modal-title"]);
+        const form_start_time_label = createElementWithClass("label", ["modal-label"]);
+        const form_start_time_con = createElementWithClass("div", ["modal-time-con"]);
+        const form_date_start = createElementWithClass("input", ["modal-date"]);
+        const form_time_start = createElementWithClass("input", ["modal-time"]);
+        const form_end_time_label = createElementWithClass("label", ["modal-label"]);
+        const form_end_time_con = createElementWithClass("div", ["modal-time-con"]);
+        const form_date_end = createElementWithClass("input", ["modal-date"]);
+        const form_time_end = createElementWithClass("input", ["modal-time"]);
 
-        const modal_con = document.createElement("div");
-        const modal_form = document.createElement("form");
-        const form_title = document.createElement("input");
-        const form_time_con = document.createElement("div");
-        const form_time = document.createElement("input");
-        const form_date = document.createElement("input");
+        const element_date = new Date(td.dataset.current_date);
+        const current_time = new Date().getTime();
+
+        element_date.setTime(current_time);
         
-        modal_con.classList.add("modal-con");
-        modal_form.classList.add("modal-form");
+        form_start_time_label.textContent = "Starts";
+        form_end_time_label.textContent = "Ends";
+
+        form_title.placeholder = "Add title";
+
+        form_date_start.placeholder = 
+        form_date_end.placeholder = 
+        element_date.toLocaleDateString(undefined, {month:"short", day:"2-digit", year:"numeric"});
         
+        form_time_start.placeholder = 
+        form_time_end.placeholder = 
+        element_date.toLocaleString(undefined, {hour: "2-digit", minute: "2-digit"});
 
 
-        dragElement(modal_con);
+
+        dragElement(modal_con, modal_header);
 
         main_con.addEventListener("mousedown", function modalCheck(e) {
             if (!modal_con.contains(e.target)) {
@@ -246,7 +263,21 @@ function createModal(td, x, y, margin) {
         });
 
         main_con.appendChild(modal_con);
+        
+        modal_con.appendChild(modal_header);
         modal_con.appendChild(modal_form);
+        
+        modal_form.appendChild(form_title);
+        modal_form.appendChild(form_start_time_con);
+        modal_form.appendChild(form_end_time_con);
+        
+        form_start_time_con.appendChild(form_start_time_label);
+        form_start_time_con.appendChild(form_date_start);
+        form_start_time_con.appendChild(form_time_start);
+        
+        form_end_time_con.appendChild(form_end_time_label);
+        form_end_time_con.appendChild(form_date_end);
+        form_end_time_con.appendChild(form_time_end);
 
         const right_boundary = table.offsetLeft + table.offsetWidth;
 
@@ -274,9 +305,9 @@ function createModal(td, x, y, margin) {
 }
 
 
-function dragElement(element) {
+function dragElement(element, element_header) {
     let offsetX = 0, offsetY = 0;
-    element.addEventListener("mousedown", (e) => {
+    element_header.addEventListener("mousedown", (e) => {
         e.preventDefault();
         offsetX = e.clientX - element.offsetLeft;
         offsetY = e.clientY - element.offsetTop;
@@ -304,4 +335,12 @@ function dragElement(element) {
         document.removeEventListener("mouseup", removeListeners);
     }
 
+}
+
+
+
+function createElementWithClass(tag, classes) {
+    const element = document.createElement(tag);
+    element.classList.add(classes);
+    return element;
 }

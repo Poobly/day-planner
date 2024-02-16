@@ -23,7 +23,7 @@
 .day-con {
     width: 100px;
     height: 100px;
-    box-shadow: rgba(0, 0, 0, 0.4) 0 0 1px;
+    outline: rgba(0, 0, 0, 0.05) solid 1px;
     vertical-align: top;
     cursor: pointer;
 }
@@ -47,14 +47,48 @@
 
 .modal-con {
     position: absolute;
-    background-color: black;
+    background-color: white;
     height: 200px;
-    width: 200px;
+    width: 300px;
+    border-radius: 5px;
     z-index: 100;
+    box-shadow: rgba(0, 0, 0, 0.3) 0 0 15px 10px;
 
 }
 
-.modal-form {
-    background-color: black;
+.modal-header {
+    height: 25px;
+    cursor: pointer;
+    background-color: rgb(4, 0, 252);
+    border-radius: 5px 5px 0 0;
+}
 
+.modal-form {
+    padding: 25px;
+}
+
+.modal-title {
+    font-size: 1.8rem;
+    width: 100%;
+}
+
+.modal-time-con {
+    display: flex;
+    gap: 15px;
+}
+
+.modal-label {
+    margin-right: auto;
+}
+
+.modal-date {
+
+}
+
+.modal-time {
+
+}
+
+.modal-date, .modal-time {
+    width: 35%;
 }
