@@ -37,15 +37,15 @@ function dragElement(element, element_header, border_element) {
 
 function toIsoStringLocale(date) {
     return date.getFullYear() + 
-    "-" + padNumber(date.getMonth() + 1) + 
-    "-" + padNumber(date.getDate()) + 
-    "T" + padNumber(date.getHours()) + 
-    ":" + padNumber(date.getMinutes());
+    "-" + padDigit(date.getMonth() + 1) + 
+    "-" + padDigit(date.getDate()) + 
+    "T" + padDigit(date.getHours()) + 
+    ":" + padDigit(date.getMinutes());
 }
 
-function padNumber(number) {
+function padDigit(number) {
     return String(number).padStart(2, "0");
 }
 
 
-export { createElementWithClass, dragElement, toIsoStringLocale, padNumber}
+export { createElementWithClass, dragElement, toIsoStringLocale, padDigit}
