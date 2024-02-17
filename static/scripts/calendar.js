@@ -238,9 +238,10 @@ function createModal(td, x, y, margin) {
                 <input class="modal-date" placeholder="${active_element_date}">
                 <input class="modal-time" placeholder="${active_element_time}">
             </div>
+            <button class="modal-submit"></button>
         </form>
         `;
-        
+
         main_con.appendChild(modal_con);
 
         const modal_header = document.getElementById("modal-header");
