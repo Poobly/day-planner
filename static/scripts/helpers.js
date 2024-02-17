@@ -37,10 +37,10 @@ function dragElement(element, element_header, border_element) {
 
 function toIsoStringLocale(date) {
     return date.getFullYear() + 
-    "-" + padNumber(date.getMonth()) + 
+    "-" + padNumber(date.getMonth() + 1) + 
     "-" + padNumber(date.getDate()) + 
-    "T" + padNumber(date.getMinutes()) + 
-    ":" + padNumber(date.getSeconds());
+    "T" + padNumber(date.getHours()) + 
+    ":" + padNumber(date.getMinutes());
 }
 
 function padNumber(number) {

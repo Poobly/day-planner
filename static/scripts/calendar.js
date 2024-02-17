@@ -185,7 +185,6 @@ function createTableCell(date, str_date) {
 }
 
 let active_modal = false;
-let active_element = false;
 
 
 function selectCalendarElement(e) {
@@ -206,7 +205,6 @@ function selectCalendarElement(e) {
 }
 
 
-
 function createModal(td, x, y, margin) {
     if (!active_modal) {
         const modal_con = createElementWithClass("div", ["modal-con"]);
@@ -216,8 +214,7 @@ function createModal(td, x, y, margin) {
         element_date.setMinutes(current_time.getMinutes());
         element_date.setHours(current_time.getHours());
     
-
-        const iso_date = `${element_date.getFullYear()}-${String(element_date.getMonth() + 1).padStart(2, "0")}-${String(element_date.getDate()).padStart(2, "0")}T${element_date.getHours()}:${String(element_date.getMinutes()).padStart(2, "0")}`
+        const iso_date = toIsoStringLocale(element_date);
 
         modal_con.innerHTML = `
         <div id="modal-header" class="modal-header">
@@ -277,12 +274,10 @@ function createModal(td, x, y, margin) {
         }
 
         function closeModal(e) {
-            console.log("button");
             main_con.removeChild(modal_con);
             td.classList.remove("active-day");
             main_con.removeEventListener("click", closeModal);
             main_con.removeEventListener("mousedown", modalCheck);
-
         }
 
         const right_boundary = table.offsetLeft + table.offsetWidth;
@@ -309,19 +304,3 @@ function createModal(td, x, y, margin) {
     }
 }
 
-
-
-
-// function createElementWithClass(tag, classes) {
-//     const element = document.createElement(tag);
-//     element.classList.add(classes);
-//     return element;
-// }
-
-
-// function toIsoStringLocale(date) {
-//     return 
-//     date.getFullYear() + "-" +
-//     date.getMonth().padStart(2, "0") + "-" +
-//     date.getDate().padStart(2, "0") + 
-// }
