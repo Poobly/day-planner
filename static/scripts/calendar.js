@@ -3,6 +3,9 @@
  * - create class or object for each day to add plans and store/display the time ranges
  * maybe locations as well
  */ 
+
+import { createElementWithClass, dragElement, toIsoStringLocale } from "./helpers.js";
+
 const main_con = document.querySelector("main");
 const table = document.getElementById("calendar-table");
 
@@ -37,7 +40,6 @@ const next_month_button = document.getElementById("calendar-asc-button");
 const previous_month_button = document.getElementById("calendar-desc-button");
 
 const table_title = document.getElementById("table-title")
-
 
 
 function loadCalendar() {
@@ -99,7 +101,7 @@ function loadCalendar() {
         for (let i = weeks; i < 6 && new_date.getDay() <= 6; i++) {
             for (let j = 0; j < 7; j++) {
                 if (new_date.getDay() >= j) {
-                    str_date = new_date.toLocaleString(undefined, {year: "numeric", month: "2-digit", day: "2-digit"});
+                    const str_date = new_date.toLocaleString(undefined, {year: "numeric", month: "2-digit", day: "2-digit"});
                     
                     const new_month_element_con = createTableCell(new_date, str_date);
 
@@ -210,12 +212,12 @@ function createModal(td, x, y, margin) {
         const modal_con = createElementWithClass("div", ["modal-con"]);
 
         const element_date = new Date(td.dataset.current_date);
-        const current_time = new Date().getTime();
+        const current_time = new Date();
+        element_date.setMinutes(current_time.getMinutes());
+        element_date.setHours(current_time.getHours());
+    
 
-        element_date.setTime(current_time);
-
-        const active_element_date = element_date.toLocaleDateString(undefined, {month:"short", day:"2-digit", year:"numeric"});
-        const active_element_time = element_date.toLocaleString(undefined, {hour: "2-digit", minute: "2-digit"});
+        const iso_date = `${element_date.getFullYear()}-${String(element_date.getMonth() + 1).padStart(2, "0")}-${String(element_date.getDate()).padStart(2, "0")}T${element_date.getHours()}:${String(element_date.getMinutes()).padStart(2, "0")}`
 
         modal_con.innerHTML = `
         <div id="modal-header" class="modal-header">
@@ -230,29 +232,26 @@ function createModal(td, x, y, margin) {
             <input class="modal-title" placeholder="Add title">
             <div class="modal-time-con">
                 <label class="modal-label">Starts</label>
-                <input class="modal-date" placeholder="${active_element_date}">
-                <input class="modal-time" placeholder="${active_element_time}">
+                <input class="modal-date-time" type="datetime-local" value="${iso_date}">
             </div>
             <div class="modal-time-con">
                 <label class="modal-label">Ends</label>
-                <input class="modal-date" placeholder="${active_element_date}">
-                <input class="modal-time" placeholder="${active_element_time}">
+                <input class="modal-date-time" type="datetime-local" value="${iso_date}">
             </div>
-            <button class="modal-submit"></button>
+            <button id="modal-save" class="modal-save">Save</button>
         </form>
         `;
 
         main_con.appendChild(modal_con);
 
-        const close_button = document.getElementById("modal-header-close");
         const modal_header = document.getElementById("modal-header");
+        const close_button = document.getElementById("modal-header-close");
+        const save_button = document.getElementById("modal-save");
 
 
         
-        dragElement(modal_con, modal_header);
+        dragElement(modal_con, modal_header, table);
 
-
-        
         main_con.addEventListener("mousedown", modalCheck);
 
         close_button.addEventListener("click", (e) => {
@@ -287,7 +286,6 @@ function createModal(td, x, y, margin) {
         }
 
         const right_boundary = table.offsetLeft + table.offsetWidth;
-
         const max_left = right_boundary - modal_con.offsetWidth;
         
         if (x + modal_con.offsetWidth > right_boundary) {
@@ -312,42 +310,18 @@ function createModal(td, x, y, margin) {
 }
 
 
-function dragElement(element, element_header) {
-    let offsetX = 0, offsetY = 0;
-    element_header.addEventListener("mousedown", (e) => {
-        e.preventDefault();
-        offsetX = e.clientX - element.offsetLeft;
-        offsetY = e.clientY - element.offsetTop;
-        
-        document.addEventListener("mousemove", moveElement);
-        document.addEventListener("mouseup", removeListeners);
-    })
-    
 
 
-    function moveElement(e) {
-        e.preventDefault();
-        let x = e.clientX - offsetX;
-        let y = e.clientY - offsetY;
-
-        x = Math.min(Math.max(x, table.offsetLeft), (table.offsetWidth + table.offsetLeft) - element.offsetWidth);
-        y = Math.min(Math.max(y, table.offsetTop), (table.offsetHeight + table.offsetTop) - element.offsetHeight);
-
-        element.style.left = x + "px";
-        element.style.top = y + "px";
-    }
-
-    function removeListeners() {
-        document.removeEventListener("mousemove", moveElement);
-        document.removeEventListener("mouseup", removeListeners);
-    }
-
-}
+// function createElementWithClass(tag, classes) {
+//     const element = document.createElement(tag);
+//     element.classList.add(classes);
+//     return element;
+// }
 
 
-
-function createElementWithClass(tag, classes) {
-    const element = document.createElement(tag);
-    element.classList.add(classes);
-    return element;
-}
+// function toIsoStringLocale(date) {
+//     return 
+//     date.getFullYear() + "-" +
+//     date.getMonth().padStart(2, "0") + "-" +
+//     date.getDate().padStart(2, "0") + 
+// }
