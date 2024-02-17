@@ -63,6 +63,19 @@
     border-radius: 5px 5px 0 0;
 }
 
+.modal-header-close-button {
+    position: relative;
+    left: 100%;
+    border-radius: 25px;
+
+}
+
+.close-svg {
+    display: block;
+    width: 15px;
+    height: 15px;
+}
+
 .modal-form {
     padding: 25px;
 }
@@ -92,3 +105,4 @@
 .modal-date, .modal-time {
     width: 35%;
 }
+

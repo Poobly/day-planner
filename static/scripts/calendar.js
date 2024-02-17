@@ -208,37 +208,42 @@ function selectCalendarElement(e) {
 function createModal(td, x, y, margin) {
     if (!active_modal) {
         const modal_con = createElementWithClass("div", ["modal-con"]);
-        const modal_header = createElementWithClass("div", ["modal-header"]);
-        const modal_form = createElementWithClass("form", ["modal-form"]);
-        const form_title = createElementWithClass("input", ["modal-title"]);
-        const form_start_time_label = createElementWithClass("label", ["modal-label"]);
-        const form_start_time_con = createElementWithClass("div", ["modal-time-con"]);
-        const form_date_start = createElementWithClass("input", ["modal-date"]);
-        const form_time_start = createElementWithClass("input", ["modal-time"]);
-        const form_end_time_label = createElementWithClass("label", ["modal-label"]);
-        const form_end_time_con = createElementWithClass("div", ["modal-time-con"]);
-        const form_date_end = createElementWithClass("input", ["modal-date"]);
-        const form_time_end = createElementWithClass("input", ["modal-time"]);
 
         const element_date = new Date(td.dataset.current_date);
         const current_time = new Date().getTime();
 
         element_date.setTime(current_time);
+
+        const active_element_date = element_date.toLocaleDateString(undefined, {month:"short", day:"2-digit", year:"numeric"});
+        const active_element_time = element_date.toLocaleString(undefined, {hour: "2-digit", minute: "2-digit"});
+
+        modal_con.innerHTML = `
+        <div id="modal-header" class="modal-header">
+            <button class="modal-header-close-button">
+                <svg class="close-svg" mlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <title>window-close</title>
+                    <path d="M13.46,12L19,17.54V19H17.54L12,13.46L6.46,19H5V17.54L10.54,12L5,6.46V5H6.46L12,10.54L17.54,5H19V6.46L13.46,12Z"/>
+                </svg>
+            </button>
+        </div>
+        <form class="modal-form">
+            <input class="modal-title" placeholder="Add title">
+            <div class="modal-time-con">
+                <label class="modal-label">Starts</label>
+                <input class="modal-date" placeholder="${active_element_date}">
+                <input class="modal-time" placeholder="${active_element_time}">
+            </div>
+            <div class="modal-time-con">
+                <label class="modal-label">Ends</label>
+                <input class="modal-date" placeholder="${active_element_date}">
+                <input class="modal-time" placeholder="${active_element_time}">
+            </div>
+        </form>
+        `;
         
-        form_start_time_label.textContent = "Starts";
-        form_end_time_label.textContent = "Ends";
+        main_con.appendChild(modal_con);
 
-        form_title.placeholder = "Add title";
-
-        form_date_start.placeholder = 
-        form_date_end.placeholder = 
-        element_date.toLocaleDateString(undefined, {month:"short", day:"2-digit", year:"numeric"});
-        
-        form_time_start.placeholder = 
-        form_time_end.placeholder = 
-        element_date.toLocaleString(undefined, {hour: "2-digit", minute: "2-digit"});
-
-
+        const modal_header = document.getElementById("modal-header");
 
         dragElement(modal_con, modal_header);
 
@@ -261,23 +266,6 @@ function createModal(td, x, y, margin) {
                 }
             }
         });
-
-        main_con.appendChild(modal_con);
-        
-        modal_con.appendChild(modal_header);
-        modal_con.appendChild(modal_form);
-        
-        modal_form.appendChild(form_title);
-        modal_form.appendChild(form_start_time_con);
-        modal_form.appendChild(form_end_time_con);
-        
-        form_start_time_con.appendChild(form_start_time_label);
-        form_start_time_con.appendChild(form_date_start);
-        form_start_time_con.appendChild(form_time_start);
-        
-        form_end_time_con.appendChild(form_end_time_label);
-        form_end_time_con.appendChild(form_date_end);
-        form_end_time_con.appendChild(form_time_end);
 
         const right_boundary = table.offsetLeft + table.offsetWidth;
 
