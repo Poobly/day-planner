@@ -57,6 +57,9 @@
 }
 
 .modal-header {
+    display: flex;
+    justify-content: right;
+    align-items: center;
     height: 25px;
     cursor: pointer;
     background-color: rgb(4, 0, 252);
@@ -64,8 +67,7 @@
 }
 
 .modal-header-close-button {
-    position: relative;
-    left: 100%;
+    margin-right: 5px;
     border-radius: 25px;
 
 }
