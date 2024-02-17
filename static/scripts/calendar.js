@@ -219,7 +219,7 @@ function createModal(td, x, y, margin) {
 
         modal_con.innerHTML = `
         <div id="modal-header" class="modal-header">
-            <button class="modal-header-close-button">
+            <button id="modal-header-close" class="modal-header-close-button">
                 <svg class="close-svg" mlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <title>window-close</title>
                     <path d="M13.46,12L19,17.54V19H17.54L12,13.46L6.46,19H5V17.54L10.54,12L5,6.46V5H6.46L12,10.54L17.54,5H19V6.46L13.46,12Z"/>
@@ -244,13 +244,24 @@ function createModal(td, x, y, margin) {
 
         main_con.appendChild(modal_con);
 
+        const close_button = document.getElementById("modal-header-close");
         const modal_header = document.getElementById("modal-header");
 
+
+        
         dragElement(modal_con, modal_header);
 
-        main_con.addEventListener("mousedown", function modalCheck(e) {
-            if (!modal_con.contains(e.target)) {
 
+        
+        main_con.addEventListener("mousedown", modalCheck);
+
+        close_button.addEventListener("click", (e) => {
+            closeModal(e);
+            active_modal = false;
+        });
+
+        function modalCheck(e) {
+            if (!modal_con.contains(e.target)) {
                 if (e.target.nodeName !== "TD" && 
                 e.target.parentNode.nodeName !== "TD") {
                     active_modal = false;
@@ -261,12 +272,19 @@ function createModal(td, x, y, margin) {
                 
                 if (e.target !== td && e.target.parentNode !== td) {
 
-                    main_con.removeChild(modal_con);
-                    td.classList.remove("active-day");
-                    main_con.removeEventListener("mousedown", modalCheck);
+                    closeModal(e);
                 }
             }
-        });
+        }
+
+        function closeModal(e) {
+            console.log("button");
+            main_con.removeChild(modal_con);
+            td.classList.remove("active-day");
+            main_con.removeEventListener("click", closeModal);
+            main_con.removeEventListener("mousedown", modalCheck);
+
+        }
 
         const right_boundary = table.offsetLeft + table.offsetWidth;
 
