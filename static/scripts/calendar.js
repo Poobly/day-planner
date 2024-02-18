@@ -12,7 +12,7 @@ const table = document.getElementById("calendar-table");
 const current_date = new Date;
 let year = current_date.getFullYear();
 let month = current_date.getMonth();
-let current_day = current_date.toLocaleString(undefined, {year: "numeric", month: "2-digit", day: "2-digit"});
+let current_day = toIsoStringLocale(current_date).slice(0, 10);
 
 const week_rows = Array.from(document.getElementsByClassName("table-week-row"));
 
@@ -43,7 +43,7 @@ const table_title = document.getElementById("table-title")
 
 
 function loadCalendar() {
-    table_title.textContent = date.toLocaleString(undefined, {month : "long", year: "numeric"});
+    table_title.textContent = toIsoStringLocale(date).slice(0, 10);
     while (date.getFullYear() === year && date.getMonth() === month) {
 
         /**
@@ -55,7 +55,7 @@ function loadCalendar() {
             for (let i = date.getDay(); i > 0; i--) {
                 new_date.setDate(date.getDate() - i);
                 
-                const str_date = new_date.toLocaleString(undefined, {year: "numeric", month: "2-digit", day: "2-digit"});
+                const str_date = toIsoStringLocale(new_date).slice(0, 10);
                 
                 const last_month_element_con = createTableCell(new_date, str_date);
                 last_month_element_con.classList.add("unactive-date");
@@ -73,7 +73,7 @@ function loadCalendar() {
             }
         }
     
-        const str_date = date.toLocaleString(undefined, {year: "numeric", month: "2-digit", day: "2-digit"});
+        const str_date = toIsoStringLocale(date).slice(0, 10);
         
 
         const day_element_con = createTableCell(date, str_date);
@@ -101,7 +101,7 @@ function loadCalendar() {
         for (let i = weeks; i < 6 && new_date.getDay() <= 6; i++) {
             for (let j = 0; j < 7; j++) {
                 if (new_date.getDay() >= j) {
-                    const str_date = new_date.toLocaleString(undefined, {year: "numeric", month: "2-digit", day: "2-digit"});
+                    const str_date = toIsoStringLocale(new_date).slice(0, 10);
                     
                     const new_month_element_con = createTableCell(new_date, str_date);
 
