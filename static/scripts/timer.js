@@ -1,10 +1,12 @@
 // WIP:
 // backend integration
 
+import { toIsoStringLocale } from "./helpers.js";
 
 let work_time = "2500";
 let break_time = "0500";
 let long_break_time = "3000";
+const current_date = toIsoStringLocale(new Date()).slice(0, 10);
 const xhttp = new XMLHttpRequest();
 
 
@@ -25,7 +27,9 @@ const timer = (function () {
         "active_time" : "0000"
     }
     
-    let _elapsed_sessions = 0;
+    let _elapsed_sessions = {};
+
+
     let _time = _digits.map(digit => digit.textContent);
     let _timer;
     let _minutes = (_time[0] + _time[1]) * 1;
@@ -73,8 +77,7 @@ const timer = (function () {
 
     
     function _endTimer() {
-        if (_timer_data.timer_type === "work") _elapsed_sessions++;
-        localStorage.setItem("elapsed_sessions", JSON.stringify(_elapsed_sessions));
+        if (_timer_data.timer_type === "work") _elapseSession();
 
         _pauseTimer();
         _timer_data.timer_type = _timer_data.timer_type === "work" ? (_timer_data.timer_counter === 4 ? "long_break" : "break") : "work";
@@ -193,7 +196,7 @@ const timer = (function () {
         if (!_timer_text_con.contains(e.target)) {
             _digits.forEach(digit => {
                 digit.classList.remove("timer-digit-temp");
-                digit.removeEventListener("click", selectDigits);
+                digit.removeEventListener("click", _selectDigits);
             });
             
             document.removeEventListener("keydown", _replaceDigits);
@@ -219,7 +222,7 @@ const timer = (function () {
             
             // adds eventlistener for each digit and class for temp _digits.
             _digits.forEach(digit => {
-                digit.addEventListener("click", selectDigits);
+                digit.addEventListener("click", _selectDigits);
                 digit.classList.add("timer-digit-temp");
             });
             
@@ -233,7 +236,7 @@ const timer = (function () {
     });
 
     //
-    function selectDigits(e) {
+    function _selectDigits(e) {
         _digit_editing = true;
         _digit_selection = _digits.indexOf(e.target);
 
@@ -247,6 +250,14 @@ const timer = (function () {
         });
         
         e.target.classList.add("timer-digit-select");
+    }
+
+    function _elapseSession() {
+        if (!_elapsed_sessions[current_date]) _elapsed_sessions[current_date] = 1;
+        else _elapsed_sessions[current_date]++;
+        _elapsed_sessions[current_date] = String(_elapsed_sessions[current_date]);
+        
+        localStorage.setItem("elapsed_sessions", JSON.stringify(_elapsed_sessions));
     }
 
     // start/pause button
