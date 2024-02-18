@@ -125,7 +125,6 @@ function loadCalendar() {
     }
 }
 
-
 loadCalendar();
 
 previous_month_button.addEventListener("click", (e) => {
@@ -154,7 +153,6 @@ next_month_button.addEventListener("click", (e) => {
     loadCalendar();
 })
 
-
 function checkYear() {
     if (month > 11) {
         year++;
@@ -165,8 +163,6 @@ function checkYear() {
         month = 11;
     }
 }
-
-
 
 function createTableCell(date, str_date) {
     const td = createElementWithClass("td", ["day-con"]);
@@ -186,15 +182,12 @@ function createTableCell(date, str_date) {
 
 let active_modal = false;
 
-
 function selectCalendarElement(e) {
     const td = e.currentTarget;
     const margin = 3;
 
     let x = td.offsetLeft + td.offsetParent.offsetLeft + td.offsetWidth + margin;
     let y = td.offsetTop + td.offsetParent.offsetTop + td.offsetHeight + margin;
-
-
 
     if (!active_modal) {
         td.classList.add("active-day");
@@ -204,7 +197,6 @@ function selectCalendarElement(e) {
 
 }
 
-
 function createModal(td, x, y, margin) {
     if (!active_modal) {
         const modal_con = createElementWithClass("div", ["modal-con"]);
@@ -213,7 +205,7 @@ function createModal(td, x, y, margin) {
         const current_time = new Date();
         element_date.setMinutes(current_time.getMinutes());
         element_date.setHours(current_time.getHours());
-    
+
         const iso_date = toIsoStringLocale(element_date);
 
         modal_con.innerHTML = `
@@ -225,17 +217,17 @@ function createModal(td, x, y, margin) {
                 </svg>
             </button>
         </div>
-        <form class="modal-form">
-            <input class="modal-title" placeholder="Add title">
+        <form id="modal-form" class="modal-form">
+            <input id="modal-title" name="modal-title" class="modal-title" placeholder="Add title">
             <div class="modal-time-con">
-                <label class="modal-label">Starts</label>
-                <input class="modal-date-time" type="datetime-local" value="${iso_date}">
+                <label for="start-date-time" class="modal-label">Starts</label>
+                <input id="start-date-time" name="start-date-time" class="modal-date-time" type="datetime-local" value="${iso_date}">
             </div>
             <div class="modal-time-con">
-                <label class="modal-label">Ends</label>
-                <input class="modal-date-time" type="datetime-local" value="${iso_date}">
+                <label for="end-date-time" class="modal-label">Ends</label>
+                <input id="end-date-time" name="end-date-time" class="modal-date-time" type="datetime-local" value="${iso_date}">
             </div>
-            <button id="modal-save" class="modal-save">Save</button>
+            <button type="submit" id="modal-save" class="modal-save">Save</button>
         </form>
         `;
 
@@ -243,15 +235,25 @@ function createModal(td, x, y, margin) {
 
         const modal_header = document.getElementById("modal-header");
         const close_button = document.getElementById("modal-header-close");
-        const save_button = document.getElementById("modal-save");
+        const modal_form = document.getElementById("modal-form");
 
-
-        
         dragElement(modal_con, modal_header, table);
 
         main_con.addEventListener("mousedown", modalCheck);
 
         close_button.addEventListener("click", (e) => {
+            closeModal(e);
+            active_modal = false;
+        });
+
+        modal_form.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            const form_data = Object.fromEntries(new FormData(e.target));
+            console.log(form_data);
+
+
+            // saveDate(e);
             closeModal(e);
             active_modal = false;
         });
@@ -265,7 +267,7 @@ function createModal(td, x, y, margin) {
                 else {
                     active_modal = true;
                 }
-                
+        
                 if (e.target !== td && e.target.parentNode !== td) {
 
                     closeModal(e);
