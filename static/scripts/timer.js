@@ -20,7 +20,9 @@ const timer = (function () {
         "timer_counter" : 1,
         "work" : "2500",
         "break" : "0500",
-        "long_break" : "3000"
+        "long_break" : "3000",
+        "active" : "false",
+        "active_time" : "0000"
     }
     
     let _elapsed_sessions = 0;
@@ -38,6 +40,7 @@ const timer = (function () {
     let data = {"time" : _time};
 
     function _startTimer() {
+        _timer_data.active = "true";
         _timer = setInterval(_tick, 1000);
         _is_paused = false;
     }
@@ -48,7 +51,7 @@ const timer = (function () {
         xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
         xhttp.send(JSON.stringify(data));
-        console.log(data);
+
 
 
         if (_seconds > 0) {
@@ -112,9 +115,10 @@ const timer = (function () {
         if (stored_data == null) stored_data = _timer_data;
         _timer_data = stored_data;
         
-        _time = _timer_data[_timer_data.timer_type];
+
+        if (_timer_data.active === "true") _time = _timer_data.active_time;
+        else _time = _timer_data[_timer_data.timer_type];
         
-        console.log(_timer_data);
         _updateTime()
         _checkSeconds();
     }
@@ -132,7 +136,9 @@ const timer = (function () {
         _digits[1].textContent = _time[1]
         _digits[2].textContent = _time[2]
         _digits[3].textContent = _time[3]
-        localStorage.setItem("time", _time);
+
+        _timer_data.active_time = _time;
+        localStorage.setItem("timer_data", JSON.stringify(_timer_data))
     }
 
     function _pauseTimer() {
@@ -177,7 +183,7 @@ const timer = (function () {
 
             _timer_data[_timer_data.timer_type] = _time;
             localStorage.setItem("timer_data", JSON.stringify(_timer_data))
-            // console.log(_timer_data)
+
             _updateTime();
         } 
     }
