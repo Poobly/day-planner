@@ -43,7 +43,7 @@ const table_title = document.getElementById("table-title")
 
 
 function loadCalendar() {
-    table_title.textContent = toIsoStringLocale(date).slice(0, 10);
+    table_title.textContent = date.toLocaleString(undefined, {month: "long"});
     while (date.getFullYear() === year && date.getMonth() === month) {
 
         /**
@@ -169,7 +169,7 @@ function createTableCell(date, str_date) {
     const span = createElementWithClass("span", ["day-date"]);
 
     td.addEventListener("click", selectCalendarElement);
-
+    
     td.dataset.current_date = str_date;
     span.textContent = date.getDate();
 
@@ -201,7 +201,7 @@ function createModal(td, x, y, margin) {
     if (!active_modal) {
         const modal_con = createElementWithClass("div", ["modal-con"]);
 
-        const element_date = new Date(td.dataset.current_date);
+        const element_date = new Date(td.dataset.current_date + "T00:00");
         const current_time = new Date();
         element_date.setMinutes(current_time.getMinutes());
         element_date.setHours(current_time.getHours());
@@ -230,6 +230,7 @@ function createModal(td, x, y, margin) {
             <button type="submit" id="modal-save" class="modal-save">Save</button>
         </form>
         `;
+
 
         main_con.appendChild(modal_con);
 
