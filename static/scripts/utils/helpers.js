@@ -47,5 +47,13 @@ function padDigit(number) {
     return String(number).padStart(2, "0");
 }
 
+function appendChildren(parent, children) {
+    const frag = document.createDocumentFragment();
+    for (let i = 0; i < children.length; i++) frag.appendChild(children[i]);
+    parent.appendChild(frag);
+}
 
-export { createElementWithClass, dragElement, toIsoStringLocale, padDigit}
+
+
+
+export { createElementWithClass, dragElement, toIsoStringLocale, padDigit, appendChildren}

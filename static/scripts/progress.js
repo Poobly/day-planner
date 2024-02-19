@@ -1,7 +1,7 @@
 // WIP: 
 // if user is logged in get data from backend else use local storage
 
-import { toIsoStringLocale } from "./helpers.js"
+import { toIsoStringLocale } from "./utils/helpers.js";
 
 const progress_table = document.getElementById("progress-table");
 const day_rows = progress_table.querySelectorAll("tbody > tr");
@@ -103,7 +103,7 @@ while (date.getFullYear() === year) {
 
 
     day.addEventListener("mouseenter", (e) => {
-        const tool_tip = document.createElement("tool-tip");
+        const tool_tip = document.createElement("span");
         day.appendChild(tool_tip);
         tool_tip.classList.add("tool-tip");
 
@@ -120,12 +120,4 @@ while (date.getFullYear() === year) {
 
 
 
-class Tooltip extends HTMLElement {
-    constructor() {
-        super();
-    }
-    connectedCallback() {
 
-    }
-}
-customElements.define("tool-tip", Tooltip);

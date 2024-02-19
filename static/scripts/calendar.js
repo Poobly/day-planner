@@ -4,7 +4,7 @@
  * maybe locations as well
  */ 
 
-import { createElementWithClass, dragElement, toIsoStringLocale } from "./helpers.js";
+import { createElementWithClass, dragElement, toIsoStringLocale } from "./utils/helpers.js";
 
 const main_con = document.querySelector("main");
 const table = document.getElementById("calendar-table");
@@ -225,7 +225,7 @@ function createModal(td, x, y, margin) {
             </div>
             <div class="modal-time-con">
                 <label for="end-date-time" class="modal-label">Ends</label>
-                <input id="end-date-time" name="end-date-time" class="modal-date-time" type="datetime-local" value="${iso_date}">
+                <input id="end-date-time" name="end-date-time" class="modal-date-time" min="2024-02-19T01:08" type="datetime-local" value="${iso_date}" required>
             </div>
             <button type="submit" id="modal-save" class="modal-save">Save</button>
         </form>
@@ -237,6 +237,20 @@ function createModal(td, x, y, margin) {
         const modal_header = document.getElementById("modal-header");
         const close_button = document.getElementById("modal-header-close");
         const modal_form = document.getElementById("modal-form");
+        const start_time_input = document.getElementById("start-date-time");
+        const end_time_input = document.getElementById("end-date-time");
+        
+        start_time_input.addEventListener("input", (e) => {
+            const start_time = new Date(start_time_input.value).getTime();
+            const end_time = new Date(end_time_input.value).getTime();
+            start_time_input.min = start_time_input.value;
+            console.log(start_time_input.value, end_time_input.value)
+
+            // if ()
+            // console.log(start_time);
+            // console.log(end_time);
+            // if (e.target.value >)
+        });
 
         dragElement(modal_con, modal_header, table);
 
@@ -253,6 +267,10 @@ function createModal(td, x, y, margin) {
             const form_data = Object.fromEntries(new FormData(e.target));
             console.log(form_data);
 
+            if (validateEvent(form_data)) {
+                console.log("test");
+                displayEvent(form_data)
+            }
 
             // saveDate(e);
             closeModal(e);
@@ -307,3 +325,38 @@ function createModal(td, x, y, margin) {
     }
 }
 
+
+function displayEvent(data) {
+    const title = data["modal-title"];
+
+    const start_time = data["start-date-time"].slice(-5);
+    const end_time = data["end-date-time"].slice(-5);
+    
+    const start_date = data["start-date-time"].slice(0, 10);
+    const end_date = data["end-date-time"].slice(0, 10);
+    
+    // for (let i = )
+
+    // console.log(title, start_date, start_time, end_date, end_time);
+
+    // const date_element = querySelectorZZ 
+
+}
+
+function validateEvent(data) {
+    const title = data["modal-title"];
+
+    const start_time = data["start-date-time"].slice(-5);
+    const end_time = data["end-date-time"].slice(-5);
+    
+    const start_date = data["start-date-time"].slice(0, 10);
+    const end_date = data["end-date-time"].slice(0, 10);
+    
+    Object.values(data).forEach((value) => {
+        if (value.length < 1) return false;
+    });
+
+    // console.log(title);
+
+    
+}
