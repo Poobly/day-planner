@@ -111,6 +111,7 @@
 .modal-date-time {
     display: flex;
     justify-content: right;
+    gap: 5px;
 }
 
 .modal-save {

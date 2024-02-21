@@ -33,17 +33,8 @@ class DateTime extends HTMLElement {
         const style = document.createElement("style");
 
         style.textContent = `
-            :host {
-                text-align: right;
-            }
-
-            
             * {
                 box-sizing: border-box;
-            }
-
-            .input-con:first-child {
-                margin-right: 5px;
             }
 
             .input-con {
@@ -52,15 +43,14 @@ class DateTime extends HTMLElement {
                 background-color: rgba(0, 0, 0, 0.1);
                 text-align: center;
                 padding: 5px 10px;
-                overflow: hidden;
-                white-space: nowrap;
-                max-width: max-content;
+
             }
 
             .input {
+                display: flex;
+                align-items: center;
+                justify-content: center;
                 overflow: hidden;
-                white-space: nowrap;
-                display: inline-block;
             }
 
             .date {
@@ -71,14 +61,6 @@ class DateTime extends HTMLElement {
             .time {
                 max-width: ${time.length}ch;
                 min-width: ${time.length}ch;
-            }
-
-            .date1 {
-                width: ${date.length}ch;
-            }
-
-            .time1 {
-                width: ${time.length}ch;
             }
 
         `
