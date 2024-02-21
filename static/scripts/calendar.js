@@ -221,7 +221,7 @@ function createModal(td, x, y, margin) {
             <input id="modal-title" name="modal-title" class="modal-title" placeholder="Add title">
             <div class="modal-time-con">
                 <label for="start-date-time" class="modal-label">Starts</label>
-                <input id="start-date-time" name="start-date-time" class="modal-date-time" type="datetime-local" value="${iso_date}">
+                <date-time id="start-date-time" name="start-date-time" class="modal-date-time" value="${iso_date}"></date-time>
             </div>
             <div class="modal-time-con">
                 <label for="end-date-time" class="modal-label">Ends</label>
