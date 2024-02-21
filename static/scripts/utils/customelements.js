@@ -19,50 +19,14 @@ class DateTime extends HTMLElement {
     }
     
     connectedCallback() {
-        this.value = this.getAttribute("value");
+        this.attachShadow({ mode: "open" });
 
-        const date_obj = new Date(this.value);
-        this.date = date_obj.toLocaleString(undefined, {month: "short", day: "2-digit", year: "numeric"});
-        this.time = date_obj.toLocaleString(undefined, {hour: "2-digit", minute: "2-digit"})
+        const value = this.getAttribute("value");
+        const date_obj = new Date(value);
+        const date = date_obj.toLocaleString(undefined, {month: "short", day: "2-digit", year: "numeric"});
+        const time = date_obj.toLocaleString(undefined, {hour: "2-digit", minute: "2-digit"});
 
-        const shadow = this.attachShadow({ mode: "open" });
-        const text_con = document.createElement("div");
-
-        const date_span = document.createElement("span");
-        const time_span = document.createElement("span");
-        date_span.classList.add("input");
-        time_span.classList.add("input");
-
-        date_span.contentEditable = true;
-        time_span.contentEditable = true;
-
-        // text.select();
-
-        // text.maxWidth = ""
-
-
-        // this.addEventListener("focusin", (e) => {
-        //     if (this.disabled) {
-        //         return;
-        //     }
-        //     else if (this.active) {
-                
-        //     }
-        //     this.focusElement();
-        // });
-
-        // this.addEventListener("focusout", (e) => {
-        //     this.unFocusElement();
-
-        // });
-
-
-        // this.addEventListener("keydown", (e) => {
-
-        // });
-    
-        date_span.textContent = this.date;
-        time_span.textContent = this.time;
+        this.createInputs(date, time);
         
         this.style.width = 100 + "%";
 
@@ -73,35 +37,73 @@ class DateTime extends HTMLElement {
                 text-align: right;
             }
 
-            .input:first-child {
+            
+            * {
+                box-sizing: border-box;
+            }
+
+            .input-con:first-child {
                 margin-right: 5px;
             }
 
-            .input {
-                border-radius: 5px;
+            .input-con {
                 display: inline-block;
+                border-radius: 5px;
                 background-color: rgba(0, 0, 0, 0.1);
+                text-align: center;
                 padding: 5px 10px;
+                overflow: hidden;
+                white-space: nowrap;
+                max-width: max-content;
             }
+
+            .input {
+                overflow: hidden;
+                white-space: nowrap;
+                display: inline-block;
+            }
+
+            .date {
+                max-width: ${date.length}ch;
+                min-width: ${date.length}ch;
+            }
+
+            .time {
+                max-width: ${time.length}ch;
+                min-width: ${time.length}ch;
+            }
+
+            .date1 {
+                width: ${date.length}ch;
+            }
+
+            .time1 {
+                width: ${time.length}ch;
+            }
+
         `
-        
-        shadow.appendChild(date_span);
-        shadow.appendChild(time_span);
-        shadow.appendChild(style);
+
+
+        this.shadowRoot.appendChild(style);
     }
 
-    // get date() {
-    //     return this.value.slice(0, 10);
-    // }
-    // set date(val) {
-    //     return val;
-    // }
+    attributeChangedCallback() {
+        console.log(value);
+    }
 
-
-    // get value() {
-    //     return this.getAttribute("value");
-    // }
-
+    selectText(element) {
+        if (document.body.createTextRange) {
+            const range = document.body.createTextRange();
+            range.moveToElementText(element);
+            range.select();
+        } else if (window.getSelection) {
+            const selection = window.getSelection();
+            const range = document.createRange();
+            range.selectNodeContents(element);
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
+    }
     get disabled() {
         return this.hasAttribute('disabled');
     }
@@ -123,8 +125,54 @@ class DateTime extends HTMLElement {
     //     this.style.outline = "";
     // }
     
-    select() {
-        const selection = Window.getSelection()
+
+    createInputs(date, time) {
+        const date_con = document.createElement("div");
+        const time_con = document.createElement("div");
+        const date_span = document.createElement("span");
+        const time_span = document.createElement("span");
+
+        date_con.classList.add("input-con", "date-con");
+        time_con.classList.add("input-con", "time-con");
+        date_span.classList.add("input", "date");
+        time_span.classList.add("input", "time");
+
+        date_con.contentEditable = true;
+        time_con.contentEditable = true;
+
+
+
+        date_span.textContent = date;
+        time_span.textContent = time;
+        date_span.max = date.length;
+        time_span.max = time.length;
+
+        date_con.addEventListener("focusin", (e) => {
+            if (this.disabled) {
+                return;
+            }
+            else if (this.active) {
+                
+            }
+            console.log(e.target);
+            this.selectText(e.target);
+        });
+        time_con.addEventListener("focusin", (e) => {
+            if (this.disabled) {
+                return;
+            }
+            else if (this.active) {
+                
+            }
+            console.log(e.target);
+            this.selectText(e.target);
+        });
+    
+        this.shadowRoot.appendChild(date_con);
+        this.shadowRoot.appendChild(time_con);
+        date_con.appendChild(date_span);
+        time_con.appendChild(time_span);
+
     }
 
     generateCalendar() {
