@@ -225,7 +225,7 @@ function createModal(td, x, y, margin) {
             </div>
             <div class="modal-time-con">
                 <label for="end-date-time" class="modal-label">Ends</label>
-                <input id="end-date-time" name="end-date-time" class="modal-date-time" min="2024-02-19T01:08" type="datetime-local" value="${iso_date}" required>
+                <date-time id="end-date-time" name="end-date-time" class="modal-date-time" min="2024-02-19T01:08" value="${iso_date}"></date-time>
             </div>
             <button type="submit" id="modal-save" class="modal-save">Save</button>
         </form>
