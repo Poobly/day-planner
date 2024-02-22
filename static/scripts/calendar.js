@@ -244,7 +244,6 @@ function createModal(td, x, y, margin) {
             const start_time = new Date(start_time_input.value).getTime();
             const end_time = new Date(end_time_input.value).getTime();
             start_time_input.min = start_time_input.value;
-            console.log(start_time_input.value, end_time_input.value)
 
             // if ()
             // console.log(start_time);
@@ -267,10 +266,10 @@ function createModal(td, x, y, margin) {
             const form_data = Object.fromEntries(new FormData(e.target));
             console.log(form_data);
 
-            if (validateEvent(form_data)) {
-                console.log("test");
-                displayEvent(form_data)
-            }
+            // if (validateEvent(form_data)) {
+            //     console.log("test");
+            //     displayEvent(form_data)
+            // }
 
             // saveDate(e);
             closeModal(e);

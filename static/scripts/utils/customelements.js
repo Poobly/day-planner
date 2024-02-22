@@ -11,6 +11,22 @@ customElements.define("tool-tip", Tooltip);
 
 class DateTime extends HTMLElement {
     static formAssociated = true;
+    static get observedAttributes() {
+        return ["required", "value"];
+    }
+   
+    get disabled() {
+        return this.hasAttribute('disabled');
+      }
+    
+    set disabled(v) {
+        if (v) {
+          this.setAttribute('disabled', '');
+        } else {
+          this.removeAttribute('disabled');
+        }
+    }
+
     constructor() {
         super();
         this.internals_ = this.attachInternals();
@@ -20,9 +36,10 @@ class DateTime extends HTMLElement {
     
     connectedCallback() {
         this.attachShadow({ mode: "open" });
+        this.addEventListener("input", this.updateValue);
+        this.value = this.getAttribute("value");
 
-        const value = this.getAttribute("value");
-        const date_obj = new Date(value);
+        const date_obj = new Date(this.value);
         const date = date_obj.toLocaleString(undefined, {month: "short", day: "2-digit", year: "numeric"});
         const time = date_obj.toLocaleString(undefined, {hour: "2-digit", minute: "2-digit"});
 
@@ -43,13 +60,13 @@ class DateTime extends HTMLElement {
                 background-color: rgba(0, 0, 0, 0.1);
                 text-align: center;
                 padding: 5px 10px;
-
             }
 
             .input {
                 display: flex;
                 align-items: center;
                 justify-content: center;
+
                 overflow: hidden;
             }
 
@@ -67,12 +84,34 @@ class DateTime extends HTMLElement {
 
 
         this.shadowRoot.appendChild(style);
+        const form = this.internals_.form;
+        if (form) {
+            form.addEventListener('submit', this.handleFormSubmit.bind(this));
+        }
+    }
+    
+    handleFormSubmit(event) {
+        // Prevent default form submission behavior
+        event.preventDefault();
+    
+        // Access the form data and perform any necessary actions
+        // this.value = this.getAttribute("")
+        this.internals_.setFormValue(this.value);
+
+        // console.log('Form submitted with data:', formData);
     }
 
-    attributeChangedCallback() {
-        console.log(value);
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (this.disabled) {
+
+        }
+        else {
+
+        }
+
     }
 
+    
     selectText(element) {
         if (document.body.createTextRange) {
             const range = document.body.createTextRange();
@@ -86,41 +125,20 @@ class DateTime extends HTMLElement {
             selection.addRange(range);
         }
     }
-    get disabled() {
-        return this.hasAttribute('disabled');
-    }
-
-    set disabled(val) {
-        if (val) {
-          this.setAttribute('disabled', '');
-        } else {
-          this.removeAttribute('disabled');
-        }
-    }
-
-    // focusElement() {
-
-    //     this.style.outline = "1px solid black";
-    // }
-
-    // unFocusElement() {
-    //     this.style.outline = "";
-    // }
-    
 
     createInputs(date, time) {
-        const date_con = document.createElement("div");
-        const time_con = document.createElement("div");
+        this.date_con = document.createElement("div");
+        this.time_con = document.createElement("div");
         const date_span = document.createElement("span");
         const time_span = document.createElement("span");
 
-        date_con.classList.add("input-con", "date-con");
-        time_con.classList.add("input-con", "time-con");
+        this.date_con.classList.add("input-con", "date-con");
+        this.time_con.classList.add("input-con", "time-con");
         date_span.classList.add("input", "date");
         time_span.classList.add("input", "time");
 
-        date_con.contentEditable = true;
-        time_con.contentEditable = true;
+        this.date_con.contentEditable = true;
+        this.time_con.contentEditable = true;
 
 
 
@@ -129,32 +147,34 @@ class DateTime extends HTMLElement {
         date_span.max = date.length;
         time_span.max = time.length;
 
-        date_con.addEventListener("focusin", (e) => {
+        this.date_con.addEventListener("focusin", (e) => {
             if (this.disabled) {
                 return;
             }
             else if (this.active) {
                 
             }
-            console.log(e.target);
             this.selectText(e.target);
         });
-        time_con.addEventListener("focusin", (e) => {
+        this.time_con.addEventListener("focusin", (e) => {
             if (this.disabled) {
                 return;
             }
             else if (this.active) {
                 
             }
-            console.log(e.target);
             this.selectText(e.target);
         });
     
-        this.shadowRoot.appendChild(date_con);
-        this.shadowRoot.appendChild(time_con);
-        date_con.appendChild(date_span);
-        time_con.appendChild(time_span);
+        this.shadowRoot.appendChild(this.date_con);
+        this.shadowRoot.appendChild(this.time_con);
+        this.date_con.appendChild(date_span);
+        this.time_con.appendChild(time_span);
 
+    }
+
+    updateValue() {
+        this.value = `${this.date_con.textContent} ${this.time_con.textContent}`;
     }
 
     generateCalendar() {
