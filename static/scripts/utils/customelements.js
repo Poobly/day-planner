@@ -30,8 +30,6 @@ class DateTime extends HTMLElement {
     constructor() {
         super();
         this.internals_ = this.attachInternals();
-
-        
     }
     
     connectedCallback() {
@@ -55,19 +53,24 @@ class DateTime extends HTMLElement {
             }
 
             .input-con {
-                display: inline-block;
+                display: block;
                 border-radius: 5px;
                 background-color: rgba(0, 0, 0, 0.1);
-                text-align: center;
+                overflow: auto;
+                scrollbar-width: none;
                 padding: 5px 10px;
             }
 
             .input {
-                display: flex;
-                align-items: center;
-                justify-content: center;
+                display: block;
+                text-align: center;
+                overflow: auto;
+                scrollbar-width: none;
+                white-space: nowrap;
+            }
 
-                overflow: hidden;
+            .input br {
+                display: none;
             }
 
             .date {
@@ -112,23 +115,12 @@ class DateTime extends HTMLElement {
     }
 
     
-    selectText(element) {
-        if (document.body.createTextRange) {
-            const range = document.body.createTextRange();
-            range.moveToElementText(element);
-            range.select();
-        } else if (window.getSelection) {
-            const selection = window.getSelection();
-            const range = document.createRange();
-            range.selectNodeContents(element);
-            selection.removeAllRanges();
-            selection.addRange(range);
-        }
-    }
 
     createInputs(date, time) {
         this.date_con = document.createElement("div");
         this.time_con = document.createElement("div");
+        const date_wrapper = document.createElement("span");
+        const time_wrapper = document.createElement("span");
         const date_span = document.createElement("span");
         const time_span = document.createElement("span");
 
@@ -137,8 +129,8 @@ class DateTime extends HTMLElement {
         date_span.classList.add("input", "date");
         time_span.classList.add("input", "time");
 
-        this.date_con.contentEditable = true;
-        this.time_con.contentEditable = true;
+        date_span.contentEditable = true;
+        time_span.contentEditable = true;
 
 
 
@@ -147,34 +139,22 @@ class DateTime extends HTMLElement {
         date_span.max = date.length;
         time_span.max = time.length;
 
-        this.date_con.addEventListener("focusin", (e) => {
-            if (this.disabled) {
-                return;
-            }
-            else if (this.active) {
-                
-            }
-            this.selectText(e.target);
-        });
-        this.time_con.addEventListener("focusin", (e) => {
-            if (this.disabled) {
-                return;
-            }
-            else if (this.active) {
-                
-            }
-            this.selectText(e.target);
-        });
-    
-        this.shadowRoot.appendChild(this.date_con);
-        this.shadowRoot.appendChild(this.time_con);
+
+        this.shadowRoot.appendChild(date_wrapper);
+        this.shadowRoot.appendChild(time_wrapper);
+        date_wrapper.appendChild(this.date_con);
+        time_wrapper.appendChild(this.time_con);
         this.date_con.appendChild(date_span);
         this.time_con.appendChild(time_span);
+
+        
+        this.addInputListeners(date_span);
+        this.addInputListeners(time_span);
 
     }
 
     updateValue() {
-        this.value = `${this.date_con.textContent} ${this.time_con.textContent}`;
+        this.value = `${this.date_con.innerText} ${this.time_con.innerText}`;
     }
 
     generateCalendar() {
@@ -185,7 +165,64 @@ class DateTime extends HTMLElement {
 
     }
 
+    // pasteText(element, text) {
+    //     const event = new ClipboardEvent('paste', {
+    //         bubbles: true,
+    //         cancelable: true,
+    //         composed: true,
+    //         data: text
+    //     });
+    //     element.dispatchEvent(event);
+    // }
 
+    // selects all text in an element
+    selectText(element) {
+        if (window.getSelection) {
+            const selection = window.getSelection();
+            const range = document.createRange();
+            console.log(selection);
+            range.selectNodeContents(element);
+            console.log(range);
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
+    }
+
+
+    addInputListeners(element) {
+
+
+  
+
+        element.addEventListener("focus", (e) => {
+            if (this.disabled) {
+                return;
+            }
+            else if (this.active) {
+                
+            }
+            element.addEventListener("paste", (e) => {
+                e.preventDefault();
+    
+                const pasted_text = e.clipboardData.getData("text/plain");
+                const text_node = document.createTextNode(pasted_text);
+                const selection = window.getSelection();
+                const range = selection.getRangeAt(0);
+
+                range.deleteContents(); // Clear the current selection
+                range.insertNode(text_node); // Insert the text node at the cursor position
+                selection.collapseToEnd();
+    
+    
+            });
+
+
+            this.selectText(e.target);
+        });
+
+    }
+    
+    
     // get form() { return this.internals_.form; }
     // get name() { return this.getAttribute('name'); }
     // get type() { return this.localName; }
