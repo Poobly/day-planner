@@ -33,7 +33,7 @@ class DateTime extends HTMLElement {
     }
     
     connectedCallback() {
-        this.attachShadow({ mode: "open" });
+        this.attachShadow({ mode: "open", delegatesFocus: true });
         this.addEventListener("input", this.updateValue);
         this.value = this.getAttribute("value");
 
@@ -52,6 +52,7 @@ class DateTime extends HTMLElement {
                 box-sizing: border-box;
             }
 
+
             .input-con {
                 display: block;
                 border-radius: 5px;
@@ -59,6 +60,7 @@ class DateTime extends HTMLElement {
                 overflow: auto;
                 scrollbar-width: none;
                 padding: 5px 10px;
+                white-space: nowrap;
             }
 
             .input {
@@ -140,10 +142,8 @@ class DateTime extends HTMLElement {
         time_span.max = time.length;
 
 
-        this.shadowRoot.appendChild(date_wrapper);
-        this.shadowRoot.appendChild(time_wrapper);
-        date_wrapper.appendChild(this.date_con);
-        time_wrapper.appendChild(this.time_con);
+        this.shadowRoot.appendChild(this.date_con);
+        this.shadowRoot.appendChild(this.time_con);
         this.date_con.appendChild(date_span);
         this.time_con.appendChild(time_span);
 
@@ -180,9 +180,7 @@ class DateTime extends HTMLElement {
         if (window.getSelection) {
             const selection = window.getSelection();
             const range = document.createRange();
-            console.log(selection);
             range.selectNodeContents(element);
-            console.log(range);
             selection.removeAllRanges();
             selection.addRange(range);
         }
@@ -191,8 +189,26 @@ class DateTime extends HTMLElement {
 
     addInputListeners(element) {
 
+        const pasteHandler = (e) => {
+            e.preventDefault();
 
-  
+            const paste = (e.clipboardData || window.clipboardData).getData("text");
+            const text_node = document.createTextNode(paste);
+            
+            const selection = this.shadowRoot.getSelection() || window.getSelection();
+            const range = selection.getRangeAt(0);
+            if (range) {
+                range.deleteContents();
+            }
+            range.insertNode(text_node);
+            range.setStartAfter(text_node);
+
+            selection.removeAllRanges();
+            selection.addRange(range);
+            
+        }
+
+        element.addEventListener("paste", pasteHandler);
 
         element.addEventListener("focus", (e) => {
             if (this.disabled) {
@@ -201,25 +217,12 @@ class DateTime extends HTMLElement {
             else if (this.active) {
                 
             }
-            element.addEventListener("paste", (e) => {
-                e.preventDefault();
-    
-                const pasted_text = e.clipboardData.getData("text/plain");
-                const text_node = document.createTextNode(pasted_text);
-                const selection = window.getSelection();
-                const range = selection.getRangeAt(0);
-
-                range.deleteContents(); // Clear the current selection
-                range.insertNode(text_node); // Insert the text node at the cursor position
-                selection.collapseToEnd();
-    
-    
-            });
-
 
             this.selectText(e.target);
         });
-
+        // element.addEventListener("blur", () => {
+        //     element.removeEventListener("paste", pasteHandler);
+        // });
     }
     
     
