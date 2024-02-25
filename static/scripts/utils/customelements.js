@@ -57,10 +57,8 @@ class DateTime extends HTMLElement {
                 display: block;
                 border-radius: 5px;
                 background-color: rgba(0, 0, 0, 0.1);
-                overflow: auto;
-                scrollbar-width: none;
+
                 padding: 5px 10px;
-                white-space: nowrap;
             }
 
             .input {
@@ -191,21 +189,29 @@ class DateTime extends HTMLElement {
 
         const pasteHandler = (e) => {
             e.preventDefault();
-
-            const paste = (e.clipboardData || window.clipboardData).getData("text");
+            const element = e.target;
+            const paste = (e.clipboardData || window.clipboardData).getData("text/plain");
+            const selection = (this.shadowRoot && this.shadowRoot.getSelection) ? this.shadowRoot.getSelection() : window.getSelection();
             const text_node = document.createTextNode(paste);
             
-            const selection = this.shadowRoot.getSelection() || window.getSelection();
             const range = selection.getRangeAt(0);
+            
             if (range) {
                 range.deleteContents();
             }
+            
             range.insertNode(text_node);
+            
+            const elementRect = element.getBoundingClientRect();
+            const caretRect = range.getBoundingClientRect();
+            
+            
             range.setStartAfter(text_node);
-
+            
             selection.removeAllRanges();
             selection.addRange(range);
             
+            element.scrollLeft += caretRect.right - elementRect.right;
         }
 
         element.addEventListener("paste", pasteHandler);
@@ -217,12 +223,8 @@ class DateTime extends HTMLElement {
             else if (this.active) {
                 
             }
-
             this.selectText(e.target);
         });
-        // element.addEventListener("blur", () => {
-        //     element.removeEventListener("paste", pasteHandler);
-        // });
     }
     
     
