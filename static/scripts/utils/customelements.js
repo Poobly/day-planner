@@ -1,3 +1,6 @@
+import { Calendar } from "./helpers.js";
+
+
 class Tooltip extends HTMLElement {
     constructor() {
         super();
@@ -42,6 +45,8 @@ class DateTime extends HTMLElement {
         const time = date_obj.toLocaleString(undefined, {hour: "2-digit", minute: "2-digit"});
 
         this.createInputs(date, time);
+
+        this.calendar_modal = new Calendar(this.date_con);
         
         this.style.width = 100 + "%";
 
@@ -81,6 +86,13 @@ class DateTime extends HTMLElement {
             .time {
                 max-width: ${time.length}ch;
                 min-width: ${time.length}ch;
+            }
+
+            .calendar-modal {
+                position: absolute;
+                border: 1px solid red;
+                width: 50px;
+                height: 50px;
             }
 
         `
@@ -155,37 +167,34 @@ class DateTime extends HTMLElement {
         this.value = `${this.date_con.innerText} ${this.time_con.innerText}`;
     }
 
-    generateCalendar() {
+    generateCalendar(e) {
+        this.calendar_modal.createModal();
+        
 
+        // document.createElement("div");
+        // document.createElement("table");
+        // document.createElement("thead");
+        // document.createElement("tbody");
     }
 
     displayCalendar() {
 
     }
 
-    // pasteText(element, text) {
-    //     const event = new ClipboardEvent('paste', {
-    //         bubbles: true,
-    //         cancelable: true,
-    //         composed: true,
-    //         data: text
-    //     });
-    //     element.dispatchEvent(event);
-    // }
-
-    // selects all text in an element
-    selectText(element) {
-        if (window.getSelection) {
-            const selection = window.getSelection();
-            const range = document.createRange();
-            range.selectNodeContents(element);
-            selection.removeAllRanges();
-            selection.addRange(range);
-        }
-    }
 
 
     addInputListeners(element) {
+
+        // selects all text in an element
+        const selectText = (e) => {
+            if (window.getSelection) {
+                const selection = window.getSelection();
+                const range = document.createRange();
+                range.selectNodeContents(element);
+                selection.removeAllRanges();
+                selection.addRange(range);
+            }
+        }
 
         const pasteHandler = (e) => {
             e.preventDefault();
@@ -223,7 +232,9 @@ class DateTime extends HTMLElement {
             else if (this.active) {
                 
             }
-            this.selectText(e.target);
+            this.generateCalendar(e);
+            selectText(e.target);
+
         });
     }
     
