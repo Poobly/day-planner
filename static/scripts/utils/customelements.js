@@ -169,7 +169,7 @@ class DateTime extends HTMLElement {
 
     generateCalendar = (e) => {
 
-        this.calendar_modal.createModal(e.target.parentNode);
+        this.calendar_modal.createModal(e.currentTarget);
         this.calendar_modal.displayModal();
 
 
@@ -234,8 +234,8 @@ class DateTime extends HTMLElement {
             else if (this.active) {
                 
             }
-            selectText(e.target);
-            element.addEventListener("click", this.generateCalendar, { once: true });
+            selectText(e.currentTarget);
+            element.parentNode.addEventListener("click", this.generateCalendar, { once: true });
         });
 
 
