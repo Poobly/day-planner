@@ -55,34 +55,41 @@ function appendChildren(parent, children) {
 
 
 class Calendar {
-    constructor(parent) {
-        this.parent = parent;
+    constructor() {
+
         this.date = new Date;
         this.year = this.date.getFullYear();
         this.month = this.date.getMonth();
+
     }
 
-    createModal() {
-        const ele = createElementWithClass("div", ["calendar-modal"]);
-        
+    createModal(parent) {
+        this.parent = parent;
+        this.element = createElementWithClass("div", ["calendar-modal"]);
+
         const x = this.parent.offsetLeft;
         const y = this.parent.offsetTop + this.parent.offsetHeight;
 
-        ele.style.top = y + "px";
-        ele.style.left = x + "px";
-        ele.style.width = this.parent.offsetWidth + "px";
-        this.parent.appendChild(ele);
+        this.element.style.top = y + "px";
+        this.element.style.left = x + "px";
+        this.element.style.width = this.parent.offsetWidth + "px";
+        this.parent.appendChild(this.element);
 
 
-        
+        document.addEventListener("mousedown", this.removeModal);
     }
     
-    displayModal() {
 
+
+    displayModal() {
+        console.log(this.parent);
     }
 
-    removeModal() {
+    removeModal = (e) => {
+        if (e.composedPath().includes(this.parent)) return;
 
+        this.parent.removeChild(this.element);
+        document.removeEventListener("mousedown", this.removeModal)
     } 
 
     test() {

@@ -46,7 +46,7 @@ class DateTime extends HTMLElement {
 
         this.createInputs(date, time);
 
-        this.calendar_modal = new Calendar(this.date_con);
+        this.calendar_modal = new Calendar();
         
         this.style.width = 100 + "%";
 
@@ -167,9 +167,11 @@ class DateTime extends HTMLElement {
         this.value = `${this.date_con.innerText} ${this.time_con.innerText}`;
     }
 
-    generateCalendar(e) {
-        this.calendar_modal.createModal();
-        
+    generateCalendar = (e) => {
+
+        this.calendar_modal.createModal(e.target.parentNode);
+        this.calendar_modal.displayModal();
+
 
         // document.createElement("div");
         // document.createElement("table");
@@ -232,10 +234,11 @@ class DateTime extends HTMLElement {
             else if (this.active) {
                 
             }
-            this.generateCalendar(e);
             selectText(e.target);
-
+            element.addEventListener("click", this.generateCalendar, { once: true });
         });
+
+
     }
     
     
