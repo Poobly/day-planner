@@ -62,7 +62,7 @@ class DateTime extends HTMLElement {
             .input-con {
                 display: block;
                 border-radius: 5px;
-                background-color: rgba(0, 0, 0, 0.1);
+                background-color: rgba(0, 0, 0, 0.05);
 
                 padding: 5px 10px;
             }
@@ -76,7 +76,13 @@ class DateTime extends HTMLElement {
             }
 
             .input:focus {
+
                 outline: none;
+            }
+
+            .input-con:focus-within {
+                background-color: rgba(0, 0, 0, 0.15);
+                outline: 2px solid blue;
             }
 
             .input br {
