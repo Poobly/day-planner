@@ -36,9 +36,10 @@ class DateTime extends HTMLElement {
     }
     
     connectedCallback() {
-        this.attachShadow({ mode: "open", delegatesFocus: true });
+        this.attachShadow({ mode: "open" });
         this.addEventListener("input", this.updateValue);
         this.value = this.getAttribute("value");
+        this.shadowRoot.activeElement
 
         const date_obj = new Date(this.value);
         const date = date_obj.toLocaleString(undefined, {month: "short", day: "2-digit", year: "numeric"});
@@ -188,7 +189,7 @@ class DateTime extends HTMLElement {
     addInputListeners(element) {
 
         // selects all text in an element
-        const selectText = (e) => {
+        const selectText = () => {
             if (window.getSelection) {
                 const selection = window.getSelection();
                 const range = document.createRange();
@@ -227,6 +228,13 @@ class DateTime extends HTMLElement {
 
         element.addEventListener("paste", pasteHandler);
 
+        element.parentNode.addEventListener("mousedown", (e) => {
+            if (element.parentNode !== e.target) return;
+            
+            e.preventDefault();
+            element.focus();
+        });
+
         element.addEventListener("focus", (e) => {
             if (this.disabled) {
                 return;
@@ -234,7 +242,7 @@ class DateTime extends HTMLElement {
             else if (this.active) {
                 
             }
-            selectText(e.currentTarget);
+            selectText();
             element.parentNode.addEventListener("click", this.generateCalendar, { once: true });
         });
 

@@ -82,7 +82,7 @@ class Calendar {
 
 
     displayModal() {
-        console.log(this.parent);
+
     }
 
     removeModal = (e) => {
