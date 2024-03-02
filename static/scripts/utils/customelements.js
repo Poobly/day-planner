@@ -75,6 +75,10 @@ class DateTime extends HTMLElement {
                 white-space: nowrap;
             }
 
+            .input:focus {
+                outline: none;
+            }
+
             .input br {
                 display: none;
             }
@@ -231,7 +235,7 @@ class DateTime extends HTMLElement {
         element.parentNode.addEventListener("mousedown", (e) => {
             if (element.parentNode !== e.target) return;
             e.preventDefault();
-            element.focus();
+            selectText();
         });
 
         element.addEventListener("focus", (e) => {
