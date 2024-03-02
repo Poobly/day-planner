@@ -86,7 +86,14 @@ class Calendar {
     }
 
     removeModal = (e) => {
-        if (e.composedPath().includes(this.parent)) return;
+        if (e.composedPath().includes(this.parent.firstChild)) {
+            return
+        }
+        else if (e.composedPath().includes(this.parent)) {
+            e.preventDefault();
+            return
+        }
+
 
         this.parent.removeChild(this.element);
         document.removeEventListener("mousedown", this.removeModal)

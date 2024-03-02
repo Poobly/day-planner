@@ -230,7 +230,6 @@ class DateTime extends HTMLElement {
 
         element.parentNode.addEventListener("mousedown", (e) => {
             if (element.parentNode !== e.target) return;
-            
             e.preventDefault();
             element.focus();
         });
