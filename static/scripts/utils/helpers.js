@@ -53,13 +53,38 @@ function appendChildren(parent, children) {
     parent.appendChild(frag);
 }
 
-
 class Calendar {
     constructor() {
-
         this.date = new Date;
         this.year = this.date.getFullYear();
         this.month = this.date.getMonth();
+    }
+
+    createCalendar() {
+        let date = new Date(0, 0, this.year)
+
+        const cal_con = createElementWithClass("div", ["modal-cal-con"]);
+        const cal_table = createElementWithClass("table", ["modal-cal"]);
+        const cal_thead = createElementWithClass("thead", ["modal-cal-thead"]);
+        const cal_tbody = createElementWithClass("tbody", ["modal-cal-tbody"]);
+
+        // make row object 
+        const weeks_obj = {};
+
+        for (let i = 0; i < 5; i++) {
+            weeks_obj[i] = createElementWithClass("tr", ["modal-cal-day"]);
+        }
+
+        this.element.appendChild(cal_con);
+        cal_con.appendChild(cal_table);
+        appendChildren(cal_table, [cal_thead, cal_tbody]);
+
+    }
+}
+
+class CalendarModal extends Calendar {
+    constructor() {
+        super();
 
     }
 
@@ -99,6 +124,8 @@ class Calendar {
         document.removeEventListener("mousedown", this.removeModal)
     } 
 
+
+
     test() {
         console.log(this);
 
@@ -106,4 +133,4 @@ class Calendar {
 }
 
 
-export { createElementWithClass, dragElement, toIsoStringLocale, padDigit, appendChildren, Calendar}
+export { createElementWithClass, dragElement, toIsoStringLocale, padDigit, appendChildren, Calendar, CalendarModal}

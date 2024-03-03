@@ -1,4 +1,4 @@
-import { Calendar } from "./helpers.js";
+import { CalendarModal } from "./helpers.js";
 
 
 class Tooltip extends HTMLElement {
@@ -47,7 +47,7 @@ class DateTime extends HTMLElement {
 
         this.createInputs(date, time);
 
-        this.calendar_modal = new Calendar();
+        this.calendar_modal = new CalendarModal();
         
         this.style.width = 100 + "%";
 
@@ -102,6 +102,7 @@ class DateTime extends HTMLElement {
             .calendar-modal {
                 position: absolute;
                 border: 1px solid red;
+                background-color: white;
                 width: 50px;
                 height: 50px;
             }
@@ -179,12 +180,11 @@ class DateTime extends HTMLElement {
     }
 
     generateCalendar = (e) => {
-
         this.calendar_modal.createModal(e.currentTarget);
-        this.calendar_modal.displayModal();
+        this.calendar_modal.createCalendar();
 
 
-        // document.createElement("div");
+        // documeone plant.createElement("div");
         // document.createElement("table");
         // document.createElement("thead");
         // document.createElement("tbody");
