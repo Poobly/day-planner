@@ -180,7 +180,7 @@ class DateTime extends HTMLElement {
     }
 
     generateCalendar = (e) => {
-        this.calendar_modal.createModal(e.currentTarget);
+        this.calendar_modal.createModal(e.currentTarget.parentNode);
         this.calendar_modal.createCalendar();
 
 
@@ -252,9 +252,13 @@ class DateTime extends HTMLElement {
                 
             }
             selectText();
-            element.parentNode.addEventListener("click", this.generateCalendar, { once: true });
+            this.generateCalendar(e);
+            // element.parentNode.addEventListener("click", this.generateCalendar, { once: true });
         });
 
+        // element.addEventListener("dragend", (e) => {
+        //     this.calendar_modal.removeModal(e);
+        // });
 
     }
     

@@ -100,10 +100,14 @@ class CalendarModal extends Calendar {
         this.element.style.width = this.parent.offsetWidth + "px";
         this.parent.appendChild(this.element);
 
+        this.parent.firstChild.addEventListener("blur", this.switchModals);
 
-        document.addEventListener("mousedown", this.removeModal);
     }
-    
+    switchModals = (e) => {
+        this.removeModal(e);
+
+        this.parent.firstChild.removeEventListener("blur", this.switchModals)
+    }
 
 
     displayModal() {
@@ -111,19 +115,25 @@ class CalendarModal extends Calendar {
     }
 
     removeModal = (e) => {
-        if (e.composedPath().includes(this.parent.firstChild)) {
-            return
-        }
-        else if (e.composedPath().includes(this.parent)) {
-            e.preventDefault();
-            return
-        }
+        // console.log(e.composedPath());
+        // console.log(this.element);
+        // console.log(e.target);
 
+        // if (e.target == this.element) {
 
-        this.parent.removeChild(this.element);
-        document.removeEventListener("mousedown", this.removeModal)
+        // }
+
+        e.target.parentNode.removeChild(this.element);
+        
+        // this.parent.firstChild.removeEventListener("blur", this.moveModal);
+        
     } 
-
+    moveModal = (e) => {
+        console.log("test");
+        e.target.parentNode.removeChild(this.element);
+        e.relatedTarget.focus();
+        e.relatedTarget.click();
+    }
 
 
     test() {
