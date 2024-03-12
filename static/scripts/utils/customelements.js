@@ -56,6 +56,8 @@ class DateTime extends HTMLElement {
         style.textContent = `
             * {
                 box-sizing: border-box;
+                margin: 0;
+                padding: 0;
             }
 
 
@@ -105,6 +107,30 @@ class DateTime extends HTMLElement {
                 background-color: white;
             }
 
+            .modal-cal-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .modal-cal-button {
+                cursor: pointer;
+            }
+
+            .cal-controls-svg {
+                display: block;
+                width: 25px;
+                height: 25px;
+            }
+
+            .modal-cal-title {
+                text-align: center;
+            }
+
+            .modal-cal-header-days {
+                font-size: 0.9rem;
+            }
+
             .day-con {
                 text-align: center;
                 border-radius: 20px;
@@ -125,8 +151,9 @@ class DateTime extends HTMLElement {
                 color: grey;
             }
             table {
-                border-spacing: 7px;
+                border-spacing: 5px;
             }
+            
         `
 
 

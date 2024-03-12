@@ -64,28 +64,56 @@ class Calendar {
     createCalendar() {
         let date = new Date(this.year, this.month, 1);
         let new_date = new Date(this.year, this.month, 1);
-
-        const cal_con = createElementWithClass("div", ["modal-cal-con"]);
-        const cal_table = createElementWithClass("table", ["modal-cal"]);
-        const cal_thead = createElementWithClass("thead", ["modal-cal-thead"]);
-        const cal_header = createElementWithClass("div", ["modal-cal-container"]);
-        const cal_title = createElementWithClass("h5", ["modal-cal-title"]);
-        const cal_tbody = createElementWithClass("tbody", ["modal-cal-tbody"]);
+        console.log(this.element)
+        this.element.innerHTML = `
+        <div class="modal-cal-con">
+            <div class="modal-cal-header">
+                <button id="prev-button" class="modal-cal-button">
+                    <svg class="cal-controls-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <title>chevron-left</title>
+                        <path d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z" />
+                    </svg>
+                </button>
+                <h4 id="modal-cal-title" class="modal-cal-title"><h5>
+                <button id="next-button" class="modal-cal-button">
+                    <svg class="cal-controls-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <title>chevron-right</title>
+                        <path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" />
+                    </svg>
+                </button>
+            </div>
+            <table class="modal-cal">
+                <thead id="modal-cal-thead" class="modal-cal-thead">
+                    <tr>
+                        <th class="modal-cal-header-days">Sun</th>
+                        <th class="modal-cal-header-days">Mon</th>
+                        <th class="modal-cal-header-days">Tue</th>
+                        <th class="modal-cal-header-days">Wed</th>
+                        <th class="modal-cal-header-days">Thu</th>
+                        <th class="modal-cal-header-days">Fri</th>
+                        <th class="modal-cal-header-days">Sat</th>
+                    </tr>
+                </thead>
+                <tbody id="modal-cal-tbody" class="modal-cal-tbody"><tbody>
+            </table>
+        </div>
+        `;
 
         let weeks = 0;
         const days_object = {};
         // make row object 
         const weeks_obj = {};
 
+        const cal_tbody = this.element.getRootNode().getElementById("modal-cal-tbody");
+        const cal_title = this.element.getRootNode().getElementById("modal-cal-title");
+
+        console.log(this.element.getRootNode())
+
         for (let i = 0; i <= 5; i++) {
             weeks_obj[i] = createElementWithClass("tr", ["modal-cal-day"]);
             cal_tbody.appendChild(weeks_obj[i]);
         }
-        console.log(weeks_obj)
 
-        this.element.appendChild(cal_con);
-        cal_con.appendChild(cal_table);
-        appendChildren(cal_table, [cal_thead, cal_tbody]);
 
         const createDayObj = (date, month, year, element, plans) => {
             return {date, month, year, element, plans};
@@ -95,11 +123,11 @@ class Calendar {
             const td = createElementWithClass("td", ["day-con"]);
             const span = createElementWithClass("span", ["day-date"]);
         
-            // td.addEventListener("click", selectCalendarElement);
+            td.addEventListener("click", selectCalendarElement);
             
             td.dataset.current_date = str_date;
             span.textContent = date.getDate();
-            
+            console.log(date.getMonth(), this.month)
             if (date.getMonth() !== this.month) span.classList.add("unactive-date");
             if (str_date === this.current_day) td.classList.add("current-day");
             
@@ -107,6 +135,12 @@ class Calendar {
             return td;
         }
 
+        function selectCalendarElement(e) {
+            const td = e.currentTarget;
+        
+            td.classList.add("active-day");
+        
+        }
 
         cal_title.textContent = date.toLocaleString(undefined, { month: "long" });
         while (date.getFullYear() === this.year && date.getMonth() === this.month) {
@@ -123,7 +157,7 @@ class Calendar {
                     const str_date = toIsoStringLocale(new_date).slice(0, 10);
                     
                     const last_month_element_con = createTableCell(new_date, str_date);
-                    last_month_element_con.classList.add("unactive-date");
+                    // last_month_element_con.classList.add("unactive-date");
     
                     days_object[str_date] = createDayObj(
                         new_date.getDate(), 
