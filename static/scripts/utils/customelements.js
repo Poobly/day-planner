@@ -103,8 +103,6 @@ class DateTime extends HTMLElement {
                 position: absolute;
                 border: 1px solid red;
                 background-color: white;
-                width: 50px;
-                height: 50px;
             }
 
         `
@@ -181,7 +179,7 @@ class DateTime extends HTMLElement {
 
     generateCalendar = (e) => {
         this.calendar_modal.createModal(e.currentTarget.parentNode);
-        this.calendar_modal.createCalendar();
+        // this.calendar_modal.createCalendar();
 
 
         // documeone plant.createElement("div");
@@ -261,7 +259,7 @@ class DateTime extends HTMLElement {
         // });
 
     }
-    
+
     
     // get form() { return this.internals_.form; }
     // get name() { return this.getAttribute('name'); }

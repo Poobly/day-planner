@@ -25,7 +25,7 @@ const weeks_obj = {
     5 : week_rows[5]
 }
 
-const days_object = {}
+const days_object = {};
 
 function createDayObj(date, month, year, element, plans) {
     return {date, month, year, element, plans};
@@ -39,11 +39,11 @@ let weeks = 0;
 const next_month_button = document.getElementById("calendar-asc-button");
 const previous_month_button = document.getElementById("calendar-desc-button");
 
-const table_title = document.getElementById("table-title")
+const table_title = document.getElementById("table-title");
 
 
 function loadCalendar() {
-    table_title.textContent = date.toLocaleString(undefined, {month: "long"});
+    table_title.textContent = date.toLocaleString(undefined, { month: "long" });
     while (date.getFullYear() === year && date.getMonth() === month) {
 
         /**
