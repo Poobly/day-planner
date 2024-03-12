@@ -107,12 +107,25 @@ class DateTime extends HTMLElement {
 
             .day-con {
                 text-align: center;
-                border-radius: 5px;
+                border-radius: 20px;
                 cursor: pointer;
+                padding: 5px;
             }
 
             .day-con:hover {
                 background-color: rgb(0, 0, 0, 0.2);
+            }
+
+            .day-date {
+                display: block;
+                font-size: 0.8rem;
+            }
+
+            .unactive-date {
+                color: grey;
+            }
+            table {
+                border-spacing: 7px;
             }
         `
 
@@ -269,16 +282,27 @@ class DateTime extends HTMLElement {
 
     }
 
-    
-    // get form() { return this.internals_.form; }
-    // get name() { return this.getAttribute('name'); }
-    // get type() { return this.localName; }
-    // get validity() { return this.internals_.validity; }
-    // get validationMessage() { return this.internals_.validationMessage; }
-    // get willValidate() { return this.internals_.willValidate; }
+    // Assume this is called whenever the internal value is updated
+    onUpdateValue() {
+        if (!this.matches(':disabled') && this.hasAttribute('required') &&
+            this.value_ < 0) {
+        this.internals_.setValidity({customError: true}, 'Value cannot be negative.');
+        }
+        else {
+        this.internals_.setValidity({});
+        }
+        this.internals.setFormValue(this.value_);
+    }
+        
+    get form() { return this.internals_.form; }
+    get name() { return this.getAttribute('name'); }
+    get type() { return this.localName; }
+    get validity() { return this.internals_.validity; }
+    get validationMessage() { return this.internals_.validationMessage; }
+    get willValidate() { return this.internals_.willValidate; }
   
-    // checkValidity() { return this.internals_.checkValidity(); }
-    // reportValidity() { return this.internals_.reportValidity(); }
+    checkValidity() { return this.internals_.checkValidity(); }
+    reportValidity() { return this.internals_.reportValidity(); }
 }
 
 customElements.define("date-time", DateTime);
