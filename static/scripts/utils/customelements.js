@@ -135,7 +135,9 @@ class DateTime extends HTMLElement {
                 text-align: center;
                 border-radius: 20px;
                 cursor: pointer;
-                padding: 5px;
+                padding: 2px;
+                width: 30px;
+                height: 30px;
             }
 
             .day-con:hover {
@@ -151,7 +153,8 @@ class DateTime extends HTMLElement {
                 color: grey;
             }
             table {
-                border-spacing: 5px;
+                border-spacing: 3px;
+                width: 100%;
             }
             
         `
