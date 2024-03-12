@@ -105,6 +105,15 @@ class DateTime extends HTMLElement {
                 background-color: white;
             }
 
+            .day-con {
+                text-align: center;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+
+            .day-con:hover {
+                background-color: rgb(0, 0, 0, 0.2);
+            }
         `
 
 
