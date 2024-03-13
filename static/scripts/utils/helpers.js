@@ -64,7 +64,7 @@ class Calendar {
     createCalendar() {
         let date = new Date(this.year, this.month, 1);
         let new_date = new Date(this.year, this.month, 1);
-        console.log(this.element)
+
         this.element.innerHTML = `
         <div class="modal-cal-con">
             <div class="modal-cal-header">
@@ -107,8 +107,6 @@ class Calendar {
         const cal_tbody = this.element.getRootNode().getElementById("modal-cal-tbody");
         const cal_title = this.element.getRootNode().getElementById("modal-cal-title");
 
-        console.log(this.element.getRootNode())
-
         for (let i = 0; i <= 5; i++) {
             weeks_obj[i] = createElementWithClass("tr", ["modal-cal-day"]);
             cal_tbody.appendChild(weeks_obj[i]);
@@ -127,7 +125,7 @@ class Calendar {
             
             td.dataset.current_date = str_date;
             span.textContent = date.getDate();
-            console.log(date.getMonth(), this.month)
+
             if (date.getMonth() !== this.month) span.classList.add("unactive-date");
             if (str_date === this.current_day) td.classList.add("current-day");
             
@@ -236,42 +234,44 @@ class CalendarModal extends Calendar {
     createModal(parent) {
         this.parent = parent;
         this.element = createElementWithClass("div", ["calendar-modal"]);
-
+        
         const x = this.parent.offsetLeft;
         const y = this.parent.offsetTop + this.parent.offsetHeight;
-
+        
         this.element.style.top = y + "px";
         this.element.style.left = x + "px";
         this.parent.appendChild(this.element);
-
+        
         this.createCalendar();
-        this.parent.firstChild.addEventListener("blur", this.switchModals);
+        // this.parent.firstChild.addEventListener("blur", this.switchModals);
+        
+        document.addEventListener("mousedown", this.switchModals, true);
 
 
-        console.log(this.parent);
 
     }
+
     switchModals = (e) => {
-        this.removeModal(e);
-
-        this.parent.firstChild.removeEventListener("blur", this.switchModals)
+        if (e.composedPath().includes(this.parent)) return;
+        this.removeModal();
+        document.removeEventListener("mousedown", this.switchModals, true);
     }
 
+    removeModal = () => {
+        this.parent.removeChild(this.element);
+    } 
 
     displayModal() {
 
     }
 
-    removeModal = (e) => {
-        e.target.parentNode.removeChild(this.element);
-        
-    } 
-    moveModal = (e) => {
-        console.log("test");
-        e.target.parentNode.removeChild(this.element);
-        e.relatedTarget.focus();
-        e.relatedTarget.click();
-    }
+
+    // moveModal = (e) => {
+    //     console.log("test");
+    //     e.target.parentNode.removeChild(this.element);
+    //     e.relatedTarget.focus();
+    //     e.relatedTarget.click();
+    // }
 
 
     test() {

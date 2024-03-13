@@ -231,13 +231,6 @@ class DateTime extends HTMLElement {
 
     generateCalendar = (e) => {
         this.calendar_modal.createModal(e.currentTarget.parentNode);
-        // this.calendar_modal.createCalendar();
-
-
-        // documeone plant.createElement("div");
-        // document.createElement("table");
-        // document.createElement("thead");
-        // document.createElement("tbody");
     }
 
     displayCalendar() {
@@ -289,9 +282,11 @@ class DateTime extends HTMLElement {
         element.addEventListener("paste", pasteHandler);
 
         element.parentNode.addEventListener("mousedown", (e) => {
+            
             if (element.parentNode !== e.target) return;
             e.preventDefault();
-            selectText();
+            element.focus();
+            // selectText();
         });
 
         element.addEventListener("focus", (e) => {
@@ -303,12 +298,7 @@ class DateTime extends HTMLElement {
             }
             selectText();
             this.generateCalendar(e);
-            // element.parentNode.addEventListener("click", this.generateCalendar, { once: true });
         });
-
-        // element.addEventListener("dragend", (e) => {
-        //     this.calendar_modal.removeModal(e);
-        // });
 
     }
 
