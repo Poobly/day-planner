@@ -137,6 +137,7 @@ class Calendar {
             const td = e.currentTarget;
         
             td.classList.add("active-day");
+            console.log("selected");
         
         }
 
@@ -234,6 +235,7 @@ class CalendarModal extends Calendar {
     createModal(parent) {
         this.parent = parent;
         this.element = createElementWithClass("div", ["calendar-modal"]);
+        this.active_element = this.parent.getRootNode().activeElement;
         
         const x = this.parent.offsetLeft;
         const y = this.parent.offsetTop + this.parent.offsetHeight;
@@ -243,22 +245,27 @@ class CalendarModal extends Calendar {
         this.parent.appendChild(this.element);
         
         this.createCalendar();
-        // this.parent.firstChild.addEventListener("blur", this.switchModals);
-        
-        document.addEventListener("mousedown", this.switchModals, true);
 
+        this.active_element.addEventListener("blur", this.removeModal);
+        // document.addEventListener("mousedown", this.switchModals, true);
+        this.parent.addEventListener("mousedown", this.removeBlur);
 
 
     }
 
-    switchModals = (e) => {
-        if (e.composedPath().includes(this.parent)) return;
-        this.removeModal();
-        document.removeEventListener("mousedown", this.switchModals, true);
+    // switchModals = (e) => {
+    //     if (e.composedPath().includes(this.parent)) return;
+    //     this.removeModal();
+    //     document.removeEventListener("mousedown", this.switchModals, true);
+    // }
+
+    removeBlur = (e) => {
+        if (e.composedPath().includes(this.parent) && e.target !== this.active_element) e.preventDefault();
     }
 
-    removeModal = () => {
+    removeModal = (e) => {
         this.parent.removeChild(this.element);
+        this.parent.removeEventListener("mousedown", this.removeBlur);
     } 
 
     displayModal() {
