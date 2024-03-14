@@ -121,9 +121,8 @@ class Calendar {
             const td = createElementWithClass("td", ["day-con"]);
             const span = createElementWithClass("span", ["day-date"]);
         
-            td.addEventListener("click", selectCalendarElement);
             
-            td.dataset.current_date = str_date;
+            td.dataset.date = str_date;
             span.textContent = date.getDate();
 
             if (date.getMonth() !== this.month) span.classList.add("unactive-date");
@@ -131,14 +130,6 @@ class Calendar {
             
             td.appendChild(span);
             return td;
-        }
-
-        function selectCalendarElement(e) {
-            const td = e.currentTarget;
-        
-            td.classList.add("active-day");
-            console.log("selected");
-        
         }
 
         cal_title.textContent = date.toLocaleString(undefined, { month: "long" });
@@ -156,7 +147,6 @@ class Calendar {
                     const str_date = toIsoStringLocale(new_date).slice(0, 10);
                     
                     const last_month_element_con = createTableCell(new_date, str_date);
-                    // last_month_element_con.classList.add("unactive-date");
     
                     days_object[str_date] = createDayObj(
                         new_date.getDate(), 
@@ -229,14 +219,16 @@ class Calendar {
 class CalendarModal extends Calendar {
     constructor() {
         super();
-
     }
 
     createModal(parent) {
         this.parent = parent;
+        this.shadowRoot = this.parent.getRootNode();
         this.element = createElementWithClass("div", ["calendar-modal"]);
         this.active_element = this.parent.getRootNode().activeElement;
-        
+        this.current_date = new Date(parent.textContent).toISOString().slice(0, 10);
+
+
         const x = this.parent.offsetLeft;
         const y = this.parent.offsetTop + this.parent.offsetHeight;
         
@@ -246,9 +238,14 @@ class CalendarModal extends Calendar {
         
         this.createCalendar();
 
+        // add class to current date in calendar popup 
+        this.shadowRoot.querySelector(`.modal-cal td[data-date="${this.current_date}"]`).classList.add("selected-date");
+        
         this.active_element.addEventListener("blur", this.removeModal);
         // document.addEventListener("mousedown", this.switchModals, true);
         this.parent.addEventListener("mousedown", this.removeBlur);
+
+        this.parent.addEventListener("click", this.handleClick);
 
 
     }
@@ -266,20 +263,24 @@ class CalendarModal extends Calendar {
     removeModal = (e) => {
         this.parent.removeChild(this.element);
         this.parent.removeEventListener("mousedown", this.removeBlur);
+        this.parent.removeEventListener("click", this.handleClick);
     } 
+
+    handleClick = (e) => {
+        const td = e.target.closest('td');
+
+        if (td) {
+            this.current_date = td.dataset.date;
+            const date = new Date(this.current_date + "T00:00");
+            this.active_element.textContent = date.toLocaleString(undefined, {month: "short", day: "2-digit", year: "numeric"});
+
+            this.active_element.blur();
+        }
+    }
 
     displayModal() {
 
     }
-
-
-    // moveModal = (e) => {
-    //     console.log("test");
-    //     e.target.parentNode.removeChild(this.element);
-    //     e.relatedTarget.focus();
-    //     e.relatedTarget.click();
-    // }
-
 
     test() {
         console.log(this);

@@ -141,7 +141,7 @@ class DateTime extends HTMLElement {
             }
 
             .day-con:hover {
-                background-color: rgb(0, 0, 0, 0.2);
+                background-color: rgba(0, 0, 0, 0.2);
             }
 
             .day-date {
@@ -152,6 +152,11 @@ class DateTime extends HTMLElement {
             .unactive-date {
                 color: grey;
             }
+
+            .selected-date {
+                background-color: rgba(25, 235, 255, 0.2);
+            }
+
             table {
                 border-spacing: 3px;
                 width: 100%;
