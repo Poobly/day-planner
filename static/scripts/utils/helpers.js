@@ -211,9 +211,8 @@ class Calendar {
                 }
             }
         }
-
-
     }
+
 }
 
 class CalendarModal extends Calendar {
@@ -226,9 +225,8 @@ class CalendarModal extends Calendar {
         this.shadowRoot = this.parent.getRootNode();
         this.element = createElementWithClass("div", ["calendar-modal"]);
         this.active_element = this.parent.getRootNode().activeElement;
-        this.current_date = new Date(parent.textContent).toISOString().slice(0, 10);
-
-
+        
+        
         const x = this.parent.offsetLeft;
         const y = this.parent.offsetTop + this.parent.offsetHeight;
         
@@ -236,10 +234,16 @@ class CalendarModal extends Calendar {
         this.element.style.left = x + "px";
         this.parent.appendChild(this.element);
         
-        this.createCalendar();
+        if (this.parent.classList.contains("date-con")) {
+            this.current_date = new Date(parent.textContent).toISOString().slice(0, 10);
+            this.createCalendar();
+            this.shadowRoot.querySelector(`.modal-cal td[data-date="${this.current_date}"]`).classList.add("selected-date");
+        }
+        else if (this.parent.classList.contains("time-con")) {
+            this.createTimeMenu();
+        }
 
         // add class to current date in calendar popup 
-        this.shadowRoot.querySelector(`.modal-cal td[data-date="${this.current_date}"]`).classList.add("selected-date");
         
         this.active_element.addEventListener("blur", this.removeModal);
         // document.addEventListener("mousedown", this.switchModals, true);
@@ -279,6 +283,22 @@ class CalendarModal extends Calendar {
     }
 
     displayModal() {
+
+    }
+
+
+    createTimeMenu() {
+        this.element.innerHTML = `
+        <div class="modal-time-con">
+            <table id="modal-time" class="modal-time"></table>
+        </div>
+        `;
+
+        const table = document.getElementById("modal-time");
+        let time = new Date();
+        for (let i = 0; i < 48; i++) {
+            console.log(time.getHours(), time.getMinutes());
+        }
 
     }
 
