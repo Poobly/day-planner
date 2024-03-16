@@ -1,6 +1,6 @@
 function createElementWithClass(tag, classes) {
     const element = document.createElement(tag);
-    element.classList.add(classes);
+    element.classList.add(...classes);
     return element
 }
 
@@ -274,9 +274,14 @@ class CalendarModal extends Calendar {
         const td = e.target.closest('td');
 
         if (td) {
-            this.current_date = td.dataset.date;
-            const date = new Date(this.current_date + "T00:00");
-            this.active_element.textContent = date.toLocaleString(undefined, {month: "short", day: "2-digit", year: "numeric"});
+            if (td.classList.contains("day-con")) {
+                this.current_date = td.dataset.date;
+                const date = new Date(this.current_date + "T00:00");
+                this.active_element.textContent = date.toLocaleString(undefined, {month: "short", day: "2-digit", year: "numeric"});
+            }
+            else {
+                
+            }
 
             this.active_element.blur();
         }
@@ -294,11 +299,46 @@ class CalendarModal extends Calendar {
         </div>
         `;
 
-        const table = document.getElementById("modal-time");
+        const table = this.element.getRootNode().getElementById("modal-time");
         let time = new Date();
-        for (let i = 0; i < 48; i++) {
-            console.log(time.getHours(), time.getMinutes());
+        time.setHours(0, 0, 0);
+
+        for (let i = 0; i < 60; i++) {
+            const time_row = createElementWithClass("tr", ["time-row"]);
+
+            const hours_td = createElementWithClass("td", ["time-text"]);
+            hours_td.textContent = (i <= 12) ? i : ""; // Adjust hours to 12-hour format
+            time_row.appendChild(hours_td);
+            
+            const minutes_td = createElementWithClass("td", ["time-text"]);
+            minutes_td.textContent = i;
+            time_row.appendChild(minutes_td);
+
+            const am_pm_td = createElementWithClass("td", ["time-text"]);
+            am_pm_td.textContent = (i === 0) ? "AM" : (i === 1) ? "PM" : "";
+            time_row.appendChild(am_pm_td);
+
+            table.appendChild(time_row);
         }
+
+        // for (let i = 0; i < 48; i++) {
+        //     console.log(time.getHours(), time.getMinutes());
+        //     time.setMinutes(time.getMinutes() + 30);
+        //     const time_row = createElementWithClass("tr", ["time-row"]);
+        //     const hours_td = createElementWithClass("td", ["time-text"]);
+        //     const minutes_td = createElementWithClass("td", ["time-text"]);
+        //     const am_pm_td = createElementWithClass("td", ["time-text"]);
+
+        //     const time_str = time.toLocaleTimeString(undefined, { hour:"2-digit", minute:"2-digit"});
+
+        //     hours_td.textContent = time_str.slice(0, 3);
+        //     minutes_td.textContent = time_str.slice(3, 5);
+        //     am_pm_td.textContent = time_str.slice(6)
+        //     appendChildren(time_row, [hours_td, minutes_td, am_pm_td]);
+
+        //     table.appendChild(time_row);
+        // }
+        // this.element.textContent
 
     }
 

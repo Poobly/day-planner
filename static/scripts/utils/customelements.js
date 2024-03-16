@@ -157,6 +157,12 @@ class DateTime extends HTMLElement {
                 background-color: rgba(25, 235, 255, 0.2);
             }
 
+
+            .modal-time-con {
+                overflow: auto;
+                height: 150px;
+            }
+
             table {
                 border-spacing: 3px;
                 width: 100%;
