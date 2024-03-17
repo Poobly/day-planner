@@ -101,7 +101,7 @@ class DateTime extends HTMLElement {
                 min-width: ${time.length}ch;
             }
 
-            .calendar-modal {
+            .datetime-modal {
                 position: absolute;
                 border: 1px solid red;
                 background-color: white;
@@ -159,15 +159,45 @@ class DateTime extends HTMLElement {
 
 
             .modal-time-con {
-                overflow: auto;
                 height: 150px;
+                width: max-content;
+            }
+            
+            .overflow {
+                overflow: auto;
             }
 
             table {
                 border-spacing: 3px;
                 width: 100%;
             }
+
+            .inline {
+                display: inline;
+            }
             
+            .inline-block {
+                display: inline-block;
+            }
+            .block {
+                display: block;
+            }
+
+            .flex {
+                display: flex;
+            }
+
+
+            .time-text {
+                margin-bottom: 5px; /* Add space between spans */
+                text-align: center; /* Center text horizontally */
+            }
+
+            .minute_con, .hour_con, .am_pm_con {
+                justify-content: center;
+                flex-direction: column;
+                word-break: break-word;
+            }
         `
 
 

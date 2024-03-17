@@ -223,7 +223,7 @@ class CalendarModal extends Calendar {
     createModal(parent) {
         this.parent = parent;
         this.shadowRoot = this.parent.getRootNode();
-        this.element = createElementWithClass("div", ["calendar-modal"]);
+        this.element = createElementWithClass("div", ["datetime-modal"]);
         this.active_element = this.parent.getRootNode().activeElement;
         
         
@@ -294,50 +294,39 @@ class CalendarModal extends Calendar {
 
     createTimeMenu() {
         this.element.innerHTML = `
-        <div class="modal-time-con">
-            <table id="modal-time" class="modal-time"></table>
-        </div>
+        <div id="modal-time-con" class="modal-time-con flex"></div>
         `;
 
-        const table = this.element.getRootNode().getElementById("modal-time");
+        const time_con = this.element.getRootNode().getElementById("modal-time-con");
+        const minute_con = createElementWithClass("div", ["minute_con", "overflow", "flex", "col", "center"]);
+        const hour_con = createElementWithClass("div", ["hour_con", "overflow", "flex", "col", "center"]);
+        const am_pm_con = createElementWithClass("div", ["am_pm_con", "overflow", "flex", "col", "center"]);
+
+        appendChildren(time_con, [hour_con, minute_con, am_pm_con]);
         let time = new Date();
         time.setHours(0, 0, 0);
 
+        // stop using tables use 3 container column elements with spans inside. 
+
         for (let i = 0; i < 60; i++) {
-            const time_row = createElementWithClass("tr", ["time-row"]);
 
-            const hours_td = createElementWithClass("td", ["time-text"]);
-            hours_td.textContent = (i <= 12) ? i : ""; // Adjust hours to 12-hour format
-            time_row.appendChild(hours_td);
+            if (i <= 12) {
+                const hours_span = createElementWithClass("span", ["time-text"]);
+                hours_span.textContent = i
+                hour_con.appendChild(hours_span);
+            }
             
-            const minutes_td = createElementWithClass("td", ["time-text"]);
-            minutes_td.textContent = i;
-            time_row.appendChild(minutes_td);
+            const minutes_span = createElementWithClass("span", ["time-text"]);
+            minutes_span.textContent = i;
+            minute_con.appendChild(minutes_span);
 
-            const am_pm_td = createElementWithClass("td", ["time-text"]);
-            am_pm_td.textContent = (i === 0) ? "AM" : (i === 1) ? "PM" : "";
-            time_row.appendChild(am_pm_td);
-
-            table.appendChild(time_row);
+            if (i < 2) {
+                const am_pm_span = createElementWithClass("span", ["time-text"]);
+                am_pm_span.textContent = (i === 0) ? "AM" : "PM";
+                am_pm_con.appendChild(am_pm_span);
+            }
         }
 
-        // for (let i = 0; i < 48; i++) {
-        //     console.log(time.getHours(), time.getMinutes());
-        //     time.setMinutes(time.getMinutes() + 30);
-        //     const time_row = createElementWithClass("tr", ["time-row"]);
-        //     const hours_td = createElementWithClass("td", ["time-text"]);
-        //     const minutes_td = createElementWithClass("td", ["time-text"]);
-        //     const am_pm_td = createElementWithClass("td", ["time-text"]);
-
-        //     const time_str = time.toLocaleTimeString(undefined, { hour:"2-digit", minute:"2-digit"});
-
-        //     hours_td.textContent = time_str.slice(0, 3);
-        //     minutes_td.textContent = time_str.slice(3, 5);
-        //     am_pm_td.textContent = time_str.slice(6)
-        //     appendChildren(time_row, [hours_td, minutes_td, am_pm_td]);
-
-        //     table.appendChild(time_row);
-        // }
         // this.element.textContent
 
     }
