@@ -240,6 +240,7 @@ class CalendarModal extends Calendar {
             this.shadowRoot.querySelector(`.modal-cal td[data-date="${this.current_date}"]`).classList.add("selected-date");
         }
         else if (this.parent.classList.contains("time-con")) {
+            this.current_time = parent.textContent.slice(0, 5);
             this.createTimeMenu();
         }
 
@@ -271,20 +272,41 @@ class CalendarModal extends Calendar {
     } 
 
     handleClick = (e) => {
-        const td = e.target.closest('td');
+        const td = e.target.closest("td");
+        const span = e.target.closest("span");
 
         if (td) {
             if (td.classList.contains("day-con")) {
                 this.current_date = td.dataset.date;
                 const date = new Date(this.current_date + "T00:00");
                 this.active_element.textContent = date.toLocaleString(undefined, {month: "short", day: "2-digit", year: "numeric"});
+                this.active_element.blur();
             }
-            else {
-                
-            }
-
-            this.active_element.blur();
         }
+        if (span) {
+            if (span.classList.contains("time-text")) {
+                const text = this.active_element.textContent;
+                let start, end;
+
+                if (span.parentNode.classList.contains("hour_con")) {
+                    console.log(text);
+                    start = text.substring(0, 0);
+                    end = text.substring(2);
+                }
+                else if (span.parentNode.classList.contains("minute_con")) {
+                    start = text.substring(0, 3);
+                    end = text.substring(5);
+                }
+                else if (span.parentNode.classList.contains("am_pm_con")) {
+                    start = text.substring(0, 6);
+                    end = text.substring(8);
+                }
+
+                this.active_element.textContent = start + padDigit(span.textContent) + end;
+                this.active_element.blur();
+            }
+        }
+
     }
 
     displayModal() {
@@ -326,6 +348,10 @@ class CalendarModal extends Calendar {
                 am_pm_con.appendChild(am_pm_span);
             }
         }
+        // minute_con.scrollTop += minute_con.offsetHeight;
+        // hour_con.scrollTop += hour_con.offsetHeight;
+        // console.log(minute_con.offsetHeight, hour_con.offsetHeight)
+
 
         // this.element.textContent
 
