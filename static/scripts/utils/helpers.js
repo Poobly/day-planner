@@ -94,14 +94,7 @@ class Calendar {
                         <th class="modal-cal-header-days">Sat</th>
                     </tr>
                 </thead>
-                <tbody id="modal-cal-tbody" class="modal-cal-tbody">
-                    <tr class="modal-cal-week"></tr>
-                    <tr class="modal-cal-week"></tr>
-                    <tr class="modal-cal-week"></tr>
-                    <tr class="modal-cal-week"></tr>
-                    <tr class="modal-cal-week"></tr>
-                    <tr class="modal-cal-week"></tr>
-                <tbody>
+                <tbody id="modal-cal-tbody" class="modal-cal-tbody"><tbody>
             </table>
         </div>
         `;
@@ -114,7 +107,7 @@ class Calendar {
 
         this.weeks_obj = {}
         for (let i = 0; i <= 5; i++) {
-            this.weeks_obj[i] = createElementWithClass("tr", ["modal-cal-day"]);
+            this.weeks_obj[i] = createElementWithClass("tr", ["modal-cal-week"]);
             cal_tbody.appendChild(this.weeks_obj[i]);
         }
 
@@ -244,9 +237,18 @@ class CalendarModal extends Calendar {
         this.parent.appendChild(this.element);
         
         if (this.parent.classList.contains("date-con")) {
-            this.current_date = new Date(parent.textContent).toISOString().slice(0, 10);
+            this.current_date = new Date(parent.textContent);
+
+            if (this.current_date == "Invalid Date") {
+                this.current_date = new Date;
+                console.log(this.current_date);
+            }
             this.createCalendar();
-            this.shadowRoot.querySelector(`.modal-cal td[data-date="${this.current_date}"]`).classList.add("selected-date");
+            if (this.month === this.current_date.getMonth()) {
+                this.shadowRoot.querySelector(
+                    `.modal-cal td[data-date="${this.current_date.toISOString().slice(0, 10)}"]`
+                    ).classList.add("selected-date");
+            }
         }
         else if (this.parent.classList.contains("time-con")) {
             this.current_time = parent.textContent.slice(0, 5);
@@ -264,17 +266,14 @@ class CalendarModal extends Calendar {
 
     }
 
-    // switchModals = (e) => {
-    //     if (e.composedPath().includes(this.parent)) return;
-    //     this.removeModal();
-    //     document.removeEventListener("mousedown", this.switchModals, true);
-    // }
 
     removeBlur = (e) => {
         if (e.composedPath().includes(this.parent) && e.target !== this.active_element) e.preventDefault();
     }
 
     removeModal = (e) => {
+        this.month = this.current_date.getMonth();
+        this.year = this.current_date.getFullYear();
         this.parent.removeChild(this.element);
         this.parent.removeEventListener("mousedown", this.removeBlur);
         this.parent.removeEventListener("click", this.handleClick);
@@ -314,9 +313,8 @@ class CalendarModal extends Calendar {
 
         if (td) {
             if (td.classList.contains("day-con")) {
-                this.current_date = td.dataset.date;
-                const date = new Date(this.current_date + "T00:00");
-                this.active_element.textContent = date.toLocaleString(undefined, {month: "short", day: "2-digit", year: "numeric"});
+                this.current_date = new Date(td.dataset.date + "T00:00");
+                this.active_element.textContent = this.current_date.toLocaleString(undefined, {month: "short", day: "2-digit", year: "numeric"});
                 this.active_element.blur();
             }
         }
@@ -356,11 +354,6 @@ class CalendarModal extends Calendar {
             this.month = 11;
         }
     }
-
-    displayModal() {
-
-    }
-
 
     createTimeMenu() {
         this.element.innerHTML = `
