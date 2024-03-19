@@ -223,6 +223,8 @@ class CalendarModal extends Calendar {
     }
 
     createModal(parent) {
+
+        
         this.parent = parent;
         this.shadowRoot = this.parent.getRootNode();
         this.element = createElementWithClass("div", ["datetime-modal"]);
@@ -241,14 +243,15 @@ class CalendarModal extends Calendar {
 
             if (this.current_date == "Invalid Date") {
                 this.current_date = new Date;
-                console.log(this.current_date);
             }
+            this.month = this.current_date.getMonth();
+            this.year = this.current_date.getFullYear();
+
             this.createCalendar();
-            if (this.month === this.current_date.getMonth()) {
-                this.shadowRoot.querySelector(
-                    `.modal-cal td[data-date="${this.current_date.toISOString().slice(0, 10)}"]`
-                    ).classList.add("selected-date");
-            }
+            this.activeDate();
+            // if (this.month === this.current_date.getMonth()) {
+
+            // }
         }
         else if (this.parent.classList.contains("time-con")) {
             this.current_time = parent.textContent.slice(0, 5);
@@ -271,9 +274,19 @@ class CalendarModal extends Calendar {
         if (e.composedPath().includes(this.parent) && e.target !== this.active_element) e.preventDefault();
     }
 
+    activeDate = () => {
+        const element = this.shadowRoot.querySelector(`.modal-cal td[data-date="${this.current_date.toISOString().slice(0, 10)}"]`);
+        if (element) {
+            element.classList.add("selected-date");
+        }
+    }
+
     removeModal = (e) => {
-        this.month = this.current_date.getMonth();
-        this.year = this.current_date.getFullYear();
+        if (this.current_date) {
+            this.month = this.current_date.getMonth();
+            this.year = this.current_date.getFullYear(); 
+        }
+
         this.parent.removeChild(this.element);
         this.parent.removeEventListener("mousedown", this.removeBlur);
         this.parent.removeEventListener("click", this.handleClick);
@@ -309,6 +322,7 @@ class CalendarModal extends Calendar {
                 this.new_date = new Date(this.year, this.month, 1);  
                 this.loadCalendar();
             }
+            this.activeDate();
         }
 
         if (td) {
