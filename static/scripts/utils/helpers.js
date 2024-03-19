@@ -55,15 +55,15 @@ function appendChildren(parent, children) {
 
 class Calendar {
     constructor() {
-        this.date = new Date;
-        this.year = this.date.getFullYear();
-        this.month = this.date.getMonth();
-        this.current_day = toIsoStringLocale(this.date).slice(0, 10);
+        const date = new Date;
+        this.year = date.getFullYear();
+        this.month = date.getMonth();
+        this.current_day = toIsoStringLocale(date).slice(0, 10);
     }
 
     createCalendar() {
-        let date = new Date(this.year, this.month, 1);
-        let new_date = new Date(this.year, this.month, 1);
+        this.date = new Date(this.year, this.month, 1);
+        this.new_date = new Date(this.year, this.month, 1);
 
         this.element.innerHTML = `
         <div class="modal-cal-con">
@@ -94,118 +94,127 @@ class Calendar {
                         <th class="modal-cal-header-days">Sat</th>
                     </tr>
                 </thead>
-                <tbody id="modal-cal-tbody" class="modal-cal-tbody"><tbody>
+                <tbody id="modal-cal-tbody" class="modal-cal-tbody">
+                    <tr class="modal-cal-week"></tr>
+                    <tr class="modal-cal-week"></tr>
+                    <tr class="modal-cal-week"></tr>
+                    <tr class="modal-cal-week"></tr>
+                    <tr class="modal-cal-week"></tr>
+                    <tr class="modal-cal-week"></tr>
+                <tbody>
             </table>
         </div>
         `;
 
-        let weeks = 0;
-        const days_object = {};
-        // make row object 
-        const weeks_obj = {};
+        this.weeks = 0;
+        this.days_object = {};
 
+        this.cal_title = this.element.getRootNode().getElementById("modal-cal-title");
         const cal_tbody = this.element.getRootNode().getElementById("modal-cal-tbody");
-        const cal_title = this.element.getRootNode().getElementById("modal-cal-title");
 
+        this.weeks_obj = {}
         for (let i = 0; i <= 5; i++) {
-            weeks_obj[i] = createElementWithClass("tr", ["modal-cal-day"]);
-            cal_tbody.appendChild(weeks_obj[i]);
+            this.weeks_obj[i] = createElementWithClass("tr", ["modal-cal-day"]);
+            cal_tbody.appendChild(this.weeks_obj[i]);
         }
 
+        this.loadCalendar();
+    } 
+    
 
-        const createDayObj = (date, month, year, element, plans) => {
-            return {date, month, year, element, plans};
-        }
+    createDayObj = (date, month, year, element, plans) => {
+        return {date, month, year, element, plans};
+    }
 
-        const createTableCell = (date, str_date) => {
-            const td = createElementWithClass("td", ["day-con"]);
-            const span = createElementWithClass("span", ["day-date"]);
+    createTableCell = (date, str_date) => {
+        const td = createElementWithClass("td", ["day-con"]);
+        const span = createElementWithClass("span", ["day-date"]);
+    
         
-            
-            td.dataset.date = str_date;
-            span.textContent = date.getDate();
+        td.dataset.date = str_date;
+        span.textContent = date.getDate();
 
-            if (date.getMonth() !== this.month) span.classList.add("unactive-date");
-            if (str_date === this.current_day) td.classList.add("current-day");
-            
-            td.appendChild(span);
-            return td;
-        }
+        if (date.getMonth() !== this.month) span.classList.add("unactive-date");
+        if (str_date === this.current_day) td.classList.add("current-day");
+        
+        td.appendChild(span);
+        return td;
+    }
 
-        cal_title.textContent = date.toLocaleString(undefined, { month: "long" });
-        while (date.getFullYear() === this.year && date.getMonth() === this.month) {
+    loadCalendar() {
+        this.cal_title.textContent = this.date.toLocaleString(undefined, { month: "long" });
+        while (this.date.getFullYear() === this.year && this.date.getMonth() === this.month) {
     
             /**
              * checks if it's first day of a month and if it isn't the first day of the week,
              * then it loops over how many days into the week the first day of the current month is
              * to then add in the previous month's days.
              */
-            if (date.getDate() === 1 && date.getDay() !== 0 ) {
-                for (let i = date.getDay(); i > 0; i--) {
-                    new_date.setDate(date.getDate() - i);
+            if (this.date.getDate() === 1 && this.date.getDay() !== 0 ) {
+                for (let i = this.date.getDay(); i > 0; i--) {
+                    this.new_date.setDate(this.date.getDate() - i);
                     
-                    const str_date = toIsoStringLocale(new_date).slice(0, 10);
+                    const str_date = toIsoStringLocale(this.new_date).slice(0, 10);
                     
-                    const last_month_element_con = createTableCell(new_date, str_date);
+                    const last_month_element_con = this.createTableCell(this.new_date, str_date);
     
-                    days_object[str_date] = createDayObj(
-                        new_date.getDate(), 
-                        new_date.getMonth(), 
-                        new_date.getFullYear(), 
+                    this.days_object[str_date] = this.createDayObj(
+                        this.new_date.getDate(), 
+                        this.new_date.getMonth(), 
+                        this.new_date.getFullYear(), 
                         last_month_element_con
                         );
+                    this.weeks_obj[this.weeks].appendChild(last_month_element_con);
         
-                    weeks_obj[weeks].appendChild(last_month_element_con);
-        
-                    new_date.setDate(new_date.getDate() + i);
+                    this.new_date.setDate(this.new_date.getDate() + i);
                 }
             }
         
-            const str_date = toIsoStringLocale(date).slice(0, 10);
+            const str_date = toIsoStringLocale(this.date).slice(0, 10);
             
     
-            const day_element_con = createTableCell(date, str_date);
+            const day_element_con = this.createTableCell(this.date, str_date);
             
-            weeks_obj[weeks].appendChild(day_element_con);
+            this.weeks_obj[this.weeks].appendChild(day_element_con);
         
-            days_object[str_date] = createDayObj(date.getDate(), date.getMonth(), date.getFullYear(), day_element_con);
+            this.days_object[str_date] = this.createDayObj(this.date.getDate(), this.date.getMonth(), this.date.getFullYear(), day_element_con);
         
-            if (date.getDay() === 6) {
-                weeks++;
+            if (this.date.getDay() === 6) {
+                this.weeks++;
             }
-            date.setDate(date.getDate() + 1);
+            this.date.setDate(this.date.getDate() + 1);
     
         }
     
     
         
         // checks if current month is not the same as starting month, and it will fill in the spaces in the calendar that belong to next month.
-        if (date.getMonth() !== this.month) {
-            new_date.setDate(date.getDate());
-            new_date.setMonth(date.getMonth());
+        if (this.date.getMonth() !== this.month) {
+            this.new_date.setDate(this.date.getDate());
+            this.new_date.setMonth(this.date.getMonth());
     
-            if (new_date.getMonth() === 0) new_date.setFullYear(new_date.getFullYear() + 1);
+            if (this.new_date.getMonth() === 0) this.new_date.setFullYear(this.new_date.getFullYear() + 1);
     
-            for (let i = weeks; i < 6 && new_date.getDay() <= 6; i++) {
+            for (let i = this.weeks; i < 6 && this.new_date.getDay() <= 6; i++) {
                 for (let j = 0; j < 7; j++) {
-                    if (new_date.getDay() >= j) {
-                        const str_date = toIsoStringLocale(new_date).slice(0, 10);
+                    if (this.new_date.getDay() >= j) {
+                        const str_date = toIsoStringLocale(this.new_date).slice(0, 10);
                         
-                        const new_month_element_con = createTableCell(new_date, str_date);
+                        const new_month_element_con = this.createTableCell(this.new_date, str_date);
     
-                        days_object[str_date] = createDayObj(
-                            new_date.getDate(), 
-                            new_date.getMonth(), 
-                            new_date.getFullYear(), 
+                        this.days_object[str_date] = this.createDayObj(
+                            this.new_date.getDate(), 
+                            this.new_date.getMonth(), 
+                            this.new_date.getFullYear(), 
                             new_month_element_con
                             );
                         
                         
-                        weeks_obj[i].appendChild(new_month_element_con);
+                        this.weeks_obj[i].appendChild(new_month_element_con);
     
     
     
-                        new_date.setDate(new_date.getDate() + 1); 
+                        this.new_date.setDate(this.new_date.getDate() + 1); 
                     }
         
                 }
@@ -274,6 +283,34 @@ class CalendarModal extends Calendar {
     handleClick = (e) => {
         const td = e.target.closest("td");
         const span = e.target.closest("span");
+        const button = e.target.closest("button");
+
+        if (button) {
+            if (button.id === "prev-button") {
+                this.month--;
+                this.weeks = 0;
+                this.checkYear();
+
+                Object.values(this.weeks_obj).forEach(element => {
+                    element.textContent = "";
+                });
+                this.date = new Date(this.year, this.month, 1);
+                this.new_date = new Date(this.year, this.month, 1);      
+                this.loadCalendar();      
+            }
+            else if (button.id === "next-button") {
+                this.month++;
+                this.weeks = 0;
+                this.checkYear();
+
+                Object.values(this.weeks_obj).forEach(element => {
+                    element.textContent = "";
+                });
+                this.date = new Date(this.year, this.month, 1);
+                this.new_date = new Date(this.year, this.month, 1);  
+                this.loadCalendar();
+            }
+        }
 
         if (td) {
             if (td.classList.contains("day-con")) {
@@ -307,6 +344,17 @@ class CalendarModal extends Calendar {
             }
         }
 
+    }
+
+    checkYear() {
+        if (this.month > 11) {
+            this.year++;
+            this.month = 0;
+        }
+        else if (this.month < 0) {
+            this.year--;
+            this.month = 11;
+        }
     }
 
     displayModal() {
