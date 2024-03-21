@@ -275,6 +275,7 @@ class CalendarModal extends Calendar {
             if (input_date == "Invalid Date") return;
             
             this.current_date = input_date;
+            this.activeDate();
         });
     }
 
@@ -284,9 +285,10 @@ class CalendarModal extends Calendar {
     }
 
     activeDate = () => {
-        const element = this.shadowRoot.querySelector(`.modal-cal td[data-date="${this.current_date.toISOString().slice(0, 10)}"]`);
-        if (element) {
-            element.classList.add("selected-date");
+        const elements = this.shadowRoot.querySelectorAll(".modal-cal td");
+        for (let element of elements) {
+            if (element.classList.contains("selected-date")) element.classList.remove("selected-date");
+            if (element.dataset.date === this.current_date.toISOString().slice(0, 10)) element.classList.add("selected-date");
         }
     }
 
