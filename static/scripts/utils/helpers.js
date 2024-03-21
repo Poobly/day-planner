@@ -291,6 +291,7 @@ class CalendarModal extends Calendar {
         const elements = this.shadowRoot.querySelectorAll(".modal-cal td");
         for (let element of elements) {
             if (element.classList.contains("selected-date")) element.classList.remove("selected-date");
+            if (element.dataset.date === this.current_day) element.classList.add("current-date");
             if (element.dataset.date === this.current_date.toISOString().slice(0, 10)) element.classList.add("selected-date");
         }
     }
@@ -384,6 +385,9 @@ class CalendarModal extends Calendar {
         }
     }
 
+
+
+    
     createTimeMenu() {
         this.element.innerHTML = `
         <div id="modal-time-con" class="modal-time-con flex"></div>
@@ -398,7 +402,6 @@ class CalendarModal extends Calendar {
         let time = new Date();
         time.setHours(0, 0, 0);
 
-        // stop using tables use 3 container column elements with spans inside. 
 
         for (let i = 0; i < 60; i++) {
 

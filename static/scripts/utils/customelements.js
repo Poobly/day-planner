@@ -156,6 +156,10 @@ class DateTime extends HTMLElement {
             .selected-date {
                 background-color: rgba(25, 235, 255, 0.2);
             }
+            .current-date {
+                background-color: rgb(255, 150, 150);
+                ;
+            }
 
 
             .modal-time-con {
@@ -189,8 +193,8 @@ class DateTime extends HTMLElement {
 
 
             .time-text {
-                margin-bottom: 5px; /* Add space between spans */
-                text-align: center; /* Center text horizontally */
+                margin-bottom: 5px;
+                text-align: center;
             }
 
             .minute_con, .hour_con, .am_pm_con {
