@@ -275,6 +275,9 @@ class CalendarModal extends Calendar {
             if (input_date == "Invalid Date") return;
             
             this.current_date = input_date;
+            this.month = this.current_date.getMonth();
+            this.year = this.current_date.getFullYear(); 
+            this.createCalendar();
             this.activeDate();
         });
     }
