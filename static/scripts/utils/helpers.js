@@ -239,10 +239,14 @@ class CalendarModal extends Calendar {
         this.parent.appendChild(this.element);
         
         if (this.parent.classList.contains("date-con")) {
-            this.current_date = new Date(parent.textContent);
 
+
+            this.current_date = new Date(parent.textContent);
+            
             if (this.current_date == "Invalid Date") {
-                this.current_date = new Date;
+
+                // this.current_date = new Date;
+                // this.active_element.textContent = this.current_date.toLocaleString(undefined, {month: "short", day: "2-digit", year: "numeric"});
             }
             this.month = this.current_date.getMonth();
             this.year = this.current_date.getFullYear();
@@ -266,7 +270,12 @@ class CalendarModal extends Calendar {
 
         this.parent.addEventListener("click", this.handleClick);
 
-
+        this.active_element.addEventListener("input", (e) => {
+            const input_date = new Date(this.active_element.textContent);
+            if (input_date == "Invalid Date") return;
+            
+            this.current_date = input_date;
+        });
     }
 
 
@@ -282,7 +291,9 @@ class CalendarModal extends Calendar {
     }
 
     removeModal = (e) => {
+
         if (this.current_date) {
+            this.active_element.textContent = this.current_date.toLocaleString(undefined, {month: "short", day: "2-digit", year: "numeric"});
             this.month = this.current_date.getMonth();
             this.year = this.current_date.getFullYear(); 
         }
@@ -328,7 +339,6 @@ class CalendarModal extends Calendar {
         if (td) {
             if (td.classList.contains("day-con")) {
                 this.current_date = new Date(td.dataset.date + "T00:00");
-                this.active_element.textContent = this.current_date.toLocaleString(undefined, {month: "short", day: "2-digit", year: "numeric"});
                 this.active_element.blur();
             }
         }
