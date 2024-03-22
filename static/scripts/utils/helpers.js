@@ -264,24 +264,33 @@ class CalendarModal extends Calendar {
 
         // add class to current date in calendar popup 
         
-        this.active_element.addEventListener("blur", this.removeModal);
-        // document.addEventListener("mousedown", this.switchModals, true);
+        this.active_element.addEventListener("blur", (e) => {
+            if (this.current_date && e.currentTarget.classList.contains("date")) {
+                this.active_element.textContent = this.current_date.toLocaleString(undefined, {month: "short", day: "2-digit", year: "numeric"});
+                this.month = this.current_date.getMonth();
+                this.year = this.current_date.getFullYear(); 
+            }
+            this.removeModal(e);
+        }, { once: true });
+        
         this.parent.addEventListener("mousedown", this.removeBlur);
 
         this.parent.addEventListener("click", this.handleClick);
 
-        this.active_element.addEventListener("input", (e) => {
-            const input_date = new Date(this.active_element.textContent);
-            if (input_date == "Invalid Date") return;
-            
-            this.current_date = input_date;
-            this.month = this.current_date.getMonth();
-            this.year = this.current_date.getFullYear(); 
-            this.createCalendar();
-            this.activeDate();
-        });
+        this.active_element.addEventListener("input", this.checkInput);
     }
 
+    checkInput = (e) => {
+        const input_date = new Date(this.active_element.textContent);
+        console.log("test");
+        if (input_date == "Invalid Date") return;
+        
+        this.current_date = input_date;
+        this.month = this.current_date.getMonth();
+        this.year = this.current_date.getFullYear(); 
+        this.createCalendar();
+        this.activeDate();
+    }
 
     removeBlur = (e) => {
         if (e.composedPath().includes(this.parent) && e.target !== this.active_element) e.preventDefault();
@@ -297,16 +306,10 @@ class CalendarModal extends Calendar {
     }
 
     removeModal = (e) => {
-
-        if (this.current_date) {
-            this.active_element.textContent = this.current_date.toLocaleString(undefined, {month: "short", day: "2-digit", year: "numeric"});
-            this.month = this.current_date.getMonth();
-            this.year = this.current_date.getFullYear(); 
-        }
-
         this.parent.removeChild(this.element);
         this.parent.removeEventListener("mousedown", this.removeBlur);
         this.parent.removeEventListener("click", this.handleClick);
+        this.active_element.removeEventListener("input", this.checkInput);
     } 
 
     handleClick = (e) => {
