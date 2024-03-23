@@ -59,6 +59,7 @@ class Calendar {
         this.year = date.getFullYear();
         this.month = date.getMonth();
         this.current_day = toIsoStringLocale(date).slice(0, 10);
+        this.focus = true;
     }
 
     createCalendar() {
@@ -98,12 +99,17 @@ class Calendar {
             </table>
         </div>
         `;
+        const root = this.element.getRootNode(); 
+        if (!this.focus) {
+            root.getElementById("prev-button").tabIndex = -1;
+            root.getElementById("next-button").tabIndex = -1;
+        } 
 
         this.weeks = 0;
         this.days_object = {};
 
-        this.cal_title = this.element.getRootNode().getElementById("modal-cal-title");
-        const cal_tbody = this.element.getRootNode().getElementById("modal-cal-tbody");
+        this.cal_title = root.getElementById("modal-cal-title");
+        const cal_tbody = root.getElementById("modal-cal-tbody");
 
         this.weeks_obj = {}
         for (let i = 0; i <= 5; i++) {
@@ -223,13 +229,14 @@ class CalendarModal extends Calendar {
     }
 
     createModal(parent) {
-
+        this.focus = false;
         
         this.parent = parent;
         this.shadowRoot = this.parent.getRootNode();
         this.element = createElementWithClass("div", ["datetime-modal"]);
         this.active_element = this.parent.getRootNode().activeElement;
         
+        this.element.tabIndex = -1;
         
         const x = this.parent.offsetLeft;
         const y = this.parent.offsetTop + this.parent.offsetHeight;
@@ -239,23 +246,17 @@ class CalendarModal extends Calendar {
         this.parent.appendChild(this.element);
         
         if (this.parent.classList.contains("date-con")) {
-
-
             this.current_date = new Date(parent.textContent);
             
-            if (this.current_date == "Invalid Date") {
-
-                // this.current_date = new Date;
-                // this.active_element.textContent = this.current_date.toLocaleString(undefined, {month: "short", day: "2-digit", year: "numeric"});
-            }
+            // if (this.current_date == "Invalid Date") {
+            //     this.current_date = new Date;
+            //     this.active_element.textContent = this.current_date.toLocaleString(undefined, {month: "short", day: "2-digit", year: "numeric"});
+            // }
             this.month = this.current_date.getMonth();
             this.year = this.current_date.getFullYear();
 
             this.createCalendar();
             this.activeDate();
-            // if (this.month === this.current_date.getMonth()) {
-
-            // }
         }
         else if (this.parent.classList.contains("time-con")) {
             this.current_time = parent.textContent.slice(0, 5);
@@ -263,8 +264,8 @@ class CalendarModal extends Calendar {
         }
 
         // add class to current date in calendar popup 
-        
         this.active_element.addEventListener("blur", (e) => {
+
             if (this.current_date && e.currentTarget.classList.contains("date")) {
                 this.active_element.textContent = this.current_date.toLocaleString(undefined, {month: "short", day: "2-digit", year: "numeric"});
                 this.month = this.current_date.getMonth();
