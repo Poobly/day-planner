@@ -403,20 +403,24 @@ class CalendarModal extends Calendar {
         const am_pm_con = createElementWithClass("div", ["am_pm_con", "overflow", "flex", "col", "center"]);
 
         appendChildren(time_con, [hour_con, minute_con, am_pm_con]);
-        let time = new Date();
-        time.setHours(0, 0, 0);
-
+        let time = new Date()
+        const current_time = time.getTime();
+        // time.setHours(0, 0, 0);
+        let temp = time.getTime();
 
         for (let i = 0; i < 60; i++) {
 
-            if (i <= 12) {
+            if (i <= 24) {
                 const hours_span = createElementWithClass("span", ["time-text"]);
                 hours_span.textContent = i
+                hours_span.dataset.hour = i;
                 hour_con.appendChild(hours_span);
+                
             }
             
             const minutes_span = createElementWithClass("span", ["time-text"]);
             minutes_span.textContent = i;
+            minutes_span.dataset.minute = i;
             minute_con.appendChild(minutes_span);
 
             if (i < 2) {
@@ -424,11 +428,19 @@ class CalendarModal extends Calendar {
                 am_pm_span.textContent = (i === 0) ? "AM" : "PM";
                 am_pm_con.appendChild(am_pm_span);
             }
+            
         }
-        // minute_con.scrollTop += minute_con.offsetHeight;
-        // hour_con.scrollTop += hour_con.offsetHeight;
-        // console.log(minute_con.offsetHeight, hour_con.offsetHeight)
+        console.log(this.shadowRoot);
+        console.log(time.getHours());
+        console.log(time.getMinutes());
+        const current_hour_span = this.shadowRoot.querySelector(`[data-hour="${time.getHours()}"]`);
+        const current_minute_span = this.shadowRoot.querySelector(`[data-minute="${time.getMinutes()}"]`);
+        current_hour_span.classList.add("active-time");
+        current_minute_span.classList.add("active-time");
 
+        
+        hour_con.scrollTop = current_hour_span.offsetTop;
+        minute_con.scrollTop = current_minute_span.offsetTop;
 
         // this.element.textContent
 

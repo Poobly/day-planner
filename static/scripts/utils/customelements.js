@@ -198,9 +198,12 @@ class DateTime extends HTMLElement {
             }
 
             .minute_con, .hour_con, .am_pm_con {
-                justify-content: center;
                 flex-direction: column;
                 word-break: break-word;
+            }
+
+            .active-time {
+                border: 2px solid black;
             }
         `
 
