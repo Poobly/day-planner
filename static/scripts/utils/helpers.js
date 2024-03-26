@@ -53,6 +53,23 @@ function appendChildren(parent, children) {
     parent.appendChild(frag);
 }
 
+
+function checkHalfOfDay(hours, time_of_day) {
+    let temp = "";
+    for (let i = 0; i < time_of_day.length; i++) {
+        if (time_of_day[i] === "a" || time_of_day[i] === "A") temp += "A";
+        else if (time_of_day[i] === "p" || time_of_day[i] === "P") temp += "P";
+    }
+    switch (temp) {
+        case "A":
+            break;
+        case "P":
+            hours = Number(hours) + 12;
+            break;
+    }
+    return hours;
+}
+
 class Calendar {
     constructor() {
         const date = new Date;
@@ -355,28 +372,30 @@ class CalendarModal extends Calendar {
         if (span) {
             if (span.classList.contains("time-text")) {
                 const text = this.active_element.textContent;
-                let start, end;
+                const time = new Date();
+                console.log(text.slice(5));
+                const hours = checkHalfOfDay(text.slice(0, 2), text.slice(6))
+
+                time.setHours(hours, text.slice(3, 5), 0);
+
 
                 if (span.parentNode.classList.contains("hour_con")) {
-                    console.log(text);
-                    start = text.substring(0, 0);
-                    end = text.substring(2);
+                    time.setHours(span.textContent);
                 }
                 else if (span.parentNode.classList.contains("minute_con")) {
-                    start = text.substring(0, 3);
-                    end = text.substring(5);
+                    time.setMinutes(span.textContent);
                 }
                 else if (span.parentNode.classList.contains("am_pm_con")) {
-                    start = text.substring(0, 6);
-                    end = text.substring(8);
+                    time.setHours(checkHalfOfDay(text.slice(0, 2), span.textContent));
                 }
 
-                this.active_element.textContent = start + padDigit(span.textContent) + end;
+                this.active_element.textContent = time.toLocaleString(undefined, {hour: "2-digit", minute: "2-digit"});
                 this.active_element.blur();
             }
         }
 
     }
+
 
     checkYear() {
         if (this.month > 11) {
@@ -403,10 +422,13 @@ class CalendarModal extends Calendar {
         const am_pm_con = createElementWithClass("div", ["am_pm_con", "overflow", "flex", "col", "center"]);
 
         appendChildren(time_con, [hour_con, minute_con, am_pm_con]);
-        let time = new Date()
-        const current_time = time.getTime();
-        // time.setHours(0, 0, 0);
-        let temp = time.getTime();
+
+        let hour = this.active_element.textContent.slice(0, 2);
+        let minute = this.active_element.textContent.slice(3, 5);
+        
+        const time = new Date()
+        time.setHours(hour, minute)
+
 
         for (let i = 0; i < 60; i++) {
 
@@ -430,9 +452,7 @@ class CalendarModal extends Calendar {
             }
             
         }
-        console.log(this.shadowRoot);
-        console.log(time.getHours());
-        console.log(time.getMinutes());
+
         const current_hour_span = this.shadowRoot.querySelector(`[data-hour="${time.getHours()}"]`);
         const current_minute_span = this.shadowRoot.querySelector(`[data-minute="${time.getMinutes()}"]`);
         current_hour_span.classList.add("active-time");
