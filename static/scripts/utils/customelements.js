@@ -200,7 +200,7 @@ class DateTime extends HTMLElement {
                 background-color: grey;
             }
 
-            .minute_con, .hour_con, .am_pm_con {
+            .time_input_con {
                 position: relative;
                 flex-direction: column;
                 padding: 0 5px;

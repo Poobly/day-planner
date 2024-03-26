@@ -379,13 +379,13 @@ class CalendarModal extends Calendar {
                 time.setHours(hours, text.slice(3, 5), 0);
 
 
-                if (span.parentNode.classList.contains("hour_con")) {
+                if (span.parentNode.id == "hour_con") {
                     time.setHours(span.textContent);
                 }
-                else if (span.parentNode.classList.contains("minute_con")) {
+                else if (span.parentNode.id == "minute_con") {
                     time.setMinutes(span.textContent);
                 }
-                else if (span.parentNode.classList.contains("am_pm_con")) {
+                else if (span.parentNode.id == "am_pm_con") {
                     time.setHours(checkHalfOfDay(text.slice(0, 2), span.textContent));
                 }
 
@@ -417,15 +417,17 @@ class CalendarModal extends Calendar {
         `;
 
         const time_con = this.element.getRootNode().getElementById("modal-time-con");
-        const minute_con = createElementWithClass("div", ["minute_con", "flex", "col", "center"]);
-        const hour_con = createElementWithClass("div", ["hour_con", "flex", "col", "center"]);
-        const am_pm_con = createElementWithClass("div", ["am_pm_con", "flex", "col", "center"]);
+        const hour_con = createElementWithClass("div", ["time_input_con", "flex", "col", "center"]);
+        hour_con.id = "hour_con";
+        const minute_con = createElementWithClass("div", ["time_input_con", "flex", "col", "center"]);
+        minute_con.id = "minute_con";
+        const am_pm_con = createElementWithClass("div", ["time_input_con", "flex", "col", "center"]);
+        am_pm_con.id = "am_pm_con";
         const select_bar = createElementWithClass("div", ["select-bar"]);
 
         appendChildren(time_con, [select_bar, hour_con, minute_con, am_pm_con]);
 
 
-        // minute_con.addEventListener("scroll")
 
         let hour = this.active_element.textContent.slice(0, 2);
         let minute = this.active_element.textContent.slice(3, 5);
@@ -459,6 +461,7 @@ class CalendarModal extends Calendar {
         }
 
         let current_am_pm_span;
+
         if (time.getHours() < 12) {
             current_am_pm_span = this.shadowRoot.querySelector(`[data-time-period="AM"]`);
         }
@@ -472,14 +475,35 @@ class CalendarModal extends Calendar {
         current_minute_span.classList.add("active-time");
 
 
-        console.log(current_am_pm_span);
         
         hour_con.style.top = (hour_con.offsetHeight / 2) - current_hour_span.offsetTop - (current_hour_span.offsetHeight / 2) + "px";
-        minute_con.style.top =  (minute_con.offsetHeight / 2) - current_minute_span.offsetTop - (current_minute_span.offsetHeight / 2) + "px";
+        minute_con.style.top = (minute_con.offsetHeight / 2) - current_minute_span.offsetTop - (current_minute_span.offsetHeight / 2) + "px";
         am_pm_con.style.top = (am_pm_con.offsetHeight / 2) - current_am_pm_span.offsetTop - (current_am_pm_span.offsetHeight / 2) + "px";
         
         
         select_bar.style.height = current_hour_span.offsetHeight + "px";
+
+
+        time_con.addEventListener("wheel", (e) => {
+            e.preventDefault(); 
+            console.log(e.target.closest("div"));
+            if (e.target.classList.contains("time_input_con") || e.target.parentNode.classList.contains("time_input_con")) {
+                const container = e.target.closest("div");
+                console.log(e);
+                if (e.deltaY > 0) {
+                    container.style.top = container.offsetTop + (container.firstChild.offsetHeight + 5) + "px";
+                }
+                else if (e.deltaY < 0){
+                    container.style.top = container.offsetTop - (container.firstChild.offsetHeight + 5) + "px";
+                }
+                
+            }
+            // console.log(e.target);
+
+        })
+
+
+
         // hour_con.style.height = current_hour_span.
         // hour_con.scrollTop = current_hour_span.offsetTop - (hour_con.offsetHeight / 2) - (current_hour_span.offsetHeight / 2) + "px";
         // minute_con.style.top = current_minute_span.offsetTop - (minute_con.offsetHeight / 2) - (current_minute_span.offsetHeight / 2) + "px";
