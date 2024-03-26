@@ -203,6 +203,7 @@ class DateTime extends HTMLElement {
             .minute_con, .hour_con, .am_pm_con {
                 position: relative;
                 flex-direction: column;
+                padding: 0 5px;
                 gap: 5px;
                 word-break: break-word;
                 scrollbar-width: none;
@@ -213,12 +214,12 @@ class DateTime extends HTMLElement {
                 top: 50%;
                 transform: translateY(-50%);
                 width: 100%;
-                border: 3px solid blue;
+                border: 1px solid blue;
                 z-index: 100;
             }
 
             .active-time {
-                border: 2px solid black;
+                
             }
         `
 
