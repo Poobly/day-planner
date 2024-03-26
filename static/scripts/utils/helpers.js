@@ -371,31 +371,36 @@ class CalendarModal extends Calendar {
         }
         if (span) {
             if (span.classList.contains("time-text")) {
-                const text = this.active_element.textContent;
-                const time = new Date();
-                console.log(text.slice(5));
-                const hours = checkHalfOfDay(text.slice(0, 2), text.slice(6))
-
-                time.setHours(hours, text.slice(3, 5), 0);
 
 
-                if (span.parentNode.id == "hour_con") {
-                    time.setHours(span.textContent);
-                }
-                else if (span.parentNode.id == "minute_con") {
-                    time.setMinutes(span.textContent);
-                }
-                else if (span.parentNode.id == "am_pm_con") {
-                    time.setHours(checkHalfOfDay(text.slice(0, 2), span.textContent));
-                }
 
-                this.active_element.textContent = time.toLocaleString(undefined, {hour: "2-digit", minute: "2-digit"});
+
+                this.setTimeText(span);
+
+                // this.active_element.textContent = time.toLocaleString(undefined, {hour: "2-digit", minute: "2-digit"});
                 this.active_element.blur();
             }
         }
 
     }
 
+    setTimeText(ele) {
+        const text = this.active_element.textContent;
+        const time = new Date();
+        const hours = checkHalfOfDay(text.slice(0, 2), text.slice(6))
+        time.setHours(hours, text.slice(3, 5), 0);
+
+        if (ele.parentNode.id == "hour_con") {
+            time.setHours(ele.textContent);
+        }
+        else if (ele.parentNode.id == "minute_con") {
+            time.setMinutes(ele.textContent);
+        }
+        else if (ele.parentNode.id == "am_pm_con") {
+            time.setHours(checkHalfOfDay(text.slice(0, 2), ele.textContent));
+        }
+        this.active_element.textContent = time.toLocaleString(undefined, {hour: "2-digit", minute: "2-digit"});
+    }
 
     checkYear() {
         if (this.month > 11) {
@@ -493,6 +498,7 @@ class CalendarModal extends Calendar {
         
         select_bar.style.height = current_hour_span.offsetHeight + "px";
 
+
         const select_bar_top = select_bar.offsetTop;
         const select_bar_bottom = select_bar.offsetTop + select_bar.offsetHeight;
 
@@ -511,13 +517,22 @@ class CalendarModal extends Calendar {
 
                     const y = Math.min(select_bar_top - (select_bar.offsetHeight / 2), container.offsetTop + (container.firstChild.offsetHeight + 5))
                     container.style.top = y + "px"; 
+                    console.log(container.id);
                 }
                 else if (e.deltaY > 0) {
                     //  choose bigger number between the position of last element and the position of next element relative to the top of the container.
-
+                    
+                    // console.log(container.id);
                     const y = Math.max((select_bar_top - container.offsetHeight) + (select_bar.offsetHeight / 2), container.offsetTop - (container.firstChild.offsetHeight + 5));
                     container.style.top = y + "px"; 
                 }
+                const selected_element = this.shadowRoot.elementFromPoint(
+                    container.getBoundingClientRect().left + (container.offsetWidth / 2), 
+                    select_bar.getBoundingClientRect().top + (select_bar.offsetHeight / 2)
+                    );
+
+                this.setTimeText(selected_element);
+
                 
             }
 
