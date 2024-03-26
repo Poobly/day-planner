@@ -194,16 +194,18 @@ class DateTime extends HTMLElement {
             .time-text {
                 text-align: center;
                 cursor: pointer;
+                border-radius: 25px;
+                padding: 4px;
             }
 
             .time-text:hover {
-                background-color: grey;
+                background-color: rgba(0, 0, 0, 0.3);
             }
 
             .time_input_con {
                 position: relative;
                 flex-direction: column;
-                padding: 0 5px;
+                padding: 0 2px;
                 gap: 5px;
                 word-break: break-word;
                 scrollbar-width: none;
@@ -214,8 +216,11 @@ class DateTime extends HTMLElement {
                 top: 50%;
                 transform: translateY(-50%);
                 width: 100%;
-                border: 1px solid blue;
+                border: 3px solid blue;
                 z-index: 100;
+                pointer-events: none;
+                border-radius: 25px;
+                background-color: rgba(25, 235, 255, 0.1);
             }
 
             .active-time {
