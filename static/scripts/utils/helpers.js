@@ -413,10 +413,19 @@ class CalendarModal extends Calendar {
     
     createTimeMenu() {
         this.element.innerHTML = `
-        <div id="modal-time-con" class="modal-time-con flex"></div>
+        <div id="modal-time-con" class="modal-time-con flex">
+            <div id="hour_outer_con" class="time_input_outer_con"></div>
+            <div id="minute_outer_con" class="time_input_outer_con"></div>
+            <div id="time_period_outer_con" class="time_input_outer_con"></div>
+        </div>
         `;
 
-        const time_con = this.element.getRootNode().getElementById("modal-time-con");
+        const time_con = this.shadowRoot.getElementById("modal-time-con");
+        const hour_outer_con = this.shadowRoot.getElementById("hour_outer_con");
+        const minute_outer_con = this.shadowRoot.getElementById("minute_outer_con");
+        const time_period_outer_con = this.shadowRoot.getElementById("time_period_outer_con");
+
+
         const hour_con = createElementWithClass("div", ["time_input_con", "flex", "col", "center"]);
         hour_con.id = "hour_con";
         const minute_con = createElementWithClass("div", ["time_input_con", "flex", "col", "center"]);
@@ -425,8 +434,10 @@ class CalendarModal extends Calendar {
         am_pm_con.id = "am_pm_con";
         const select_bar = createElementWithClass("div", ["select-bar"]);
 
-        appendChildren(time_con, [select_bar, hour_con, minute_con, am_pm_con]);
-
+        appendChildren(time_con, [select_bar, hour_outer_con, minute_outer_con, time_period_outer_con]);
+        hour_outer_con.appendChild(hour_con);
+        minute_outer_con.appendChild(minute_con);
+        time_period_outer_con.appendChild(am_pm_con);
 
 
         let hour = this.active_element.textContent.slice(0, 2);
@@ -475,33 +486,42 @@ class CalendarModal extends Calendar {
         current_minute_span.classList.add("active-time");
 
 
-        
-        hour_con.style.top = (hour_con.offsetHeight / 2) - current_hour_span.offsetTop - (current_hour_span.offsetHeight / 2) + "px";
-        minute_con.style.top = (minute_con.offsetHeight / 2) - current_minute_span.offsetTop - (current_minute_span.offsetHeight / 2) + "px";
-        am_pm_con.style.top = (am_pm_con.offsetHeight / 2) - current_am_pm_span.offsetTop - (current_am_pm_span.offsetHeight / 2) + "px";
+        hour_con.style.top = (hour_outer_con.offsetHeight / 2) - current_hour_span.offsetTop - (current_hour_span.offsetHeight / 2) + "px";
+        minute_con.style.top = (minute_outer_con.offsetHeight / 2) - current_minute_span.offsetTop - (current_minute_span.offsetHeight / 2) + "px";
+        am_pm_con.style.top = (time_period_outer_con.offsetHeight / 2) - current_am_pm_span.offsetTop - (current_am_pm_span.offsetHeight / 2) + "px";
         
         
         select_bar.style.height = current_hour_span.offsetHeight + "px";
 
+        const select_bar_top = select_bar.offsetTop;
+        const select_bar_bottom = select_bar.offsetTop + select_bar.offsetHeight;
 
         time_con.addEventListener("wheel", (e) => {
             e.preventDefault(); 
-            console.log(e.target.closest("div"));
-            if (e.target.classList.contains("time_input_con") || e.target.parentNode.classList.contains("time_input_con")) {
-                const container = e.target.closest("div");
-                console.log(e);
-                if (e.deltaY > 0) {
-                    container.style.top = container.offsetTop + (container.firstChild.offsetHeight + 5) + "px";
+            
+            if (e.target.querySelector(".time-text") || e.target.classList.contains("time-text")) {
+                const container = e.target.closest(".time_input_con") || e.target.firstChild;
+
+
+
+                // if (container.offsetTop + (container.firstChild.offsetHeight + 5) > select_bar_top || (container.offsetTop + container.offsetHeight) < select_bar_bottom) return;
+
+                if (e.deltaY < 0) {
+                    // choose smaller  number between container top + height of text element within + 5 for the gap and select bar center
+
+                    const y = Math.min(select_bar_top - (select_bar.offsetHeight / 2), container.offsetTop + (container.firstChild.offsetHeight + 5))
+                    container.style.top = y + "px"; 
                 }
-                else if (e.deltaY < 0){
-                    container.style.top = container.offsetTop - (container.firstChild.offsetHeight + 5) + "px";
+                else if (e.deltaY > 0) {
+                    //  choose bigger number between the position of last element and the position of next element relative to the top of the container.
+
+                    const y = Math.max((select_bar_top - container.offsetHeight) + (select_bar.offsetHeight / 2), container.offsetTop - (container.firstChild.offsetHeight + 5));
+                    container.style.top = y + "px"; 
                 }
                 
             }
-            // console.log(e.target);
 
         })
-
 
 
         // hour_con.style.height = current_hour_span.
