@@ -60,7 +60,6 @@ class DateTime extends HTMLElement {
                 padding: 0;
             }
 
-
             .input-con {
                 display: block;
                 border-radius: 5px;
@@ -158,7 +157,6 @@ class DateTime extends HTMLElement {
             }
             .current-date {
                 background-color: rgb(255, 150, 150);
-                ;
             }
 
 
@@ -197,13 +195,26 @@ class DateTime extends HTMLElement {
                 cursor: pointer;
             }
 
+            .time-text:hover {
+                background-color: grey;
+            }
+
             .minute_con, .hour_con, .am_pm_con {
+                overflow: hidden;
                 flex-direction: column;
                 gap: 5px;
                 word-break: break-word;
                 scrollbar-width: none;
             }
 
+            .select-bar {
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 100%;
+                border: 3px solid blue;
+
+            }
 
             .active-time {
                 border: 2px solid black;

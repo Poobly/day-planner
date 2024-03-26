@@ -417,11 +417,15 @@ class CalendarModal extends Calendar {
         `;
 
         const time_con = this.element.getRootNode().getElementById("modal-time-con");
-        const minute_con = createElementWithClass("div", ["minute_con", "overflow", "flex", "col", "center"]);
-        const hour_con = createElementWithClass("div", ["hour_con", "overflow", "flex", "col", "center"]);
-        const am_pm_con = createElementWithClass("div", ["am_pm_con", "overflow", "flex", "col", "center"]);
+        const minute_con = createElementWithClass("div", ["minute_con", "flex", "col", "center"]);
+        const hour_con = createElementWithClass("div", ["hour_con", "flex", "col", "center"]);
+        const am_pm_con = createElementWithClass("div", ["am_pm_con", "flex", "col", "center"]);
+        const select_bar = createElementWithClass("div", ["select-bar"]);
 
-        appendChildren(time_con, [hour_con, minute_con, am_pm_con]);
+        appendChildren(time_con, [select_bar, hour_con, minute_con, am_pm_con]);
+
+
+        // minute_con.addEventListener("scroll")
 
         let hour = this.active_element.textContent.slice(0, 2);
         let minute = this.active_element.textContent.slice(3, 5);
@@ -462,6 +466,8 @@ class CalendarModal extends Calendar {
         hour_con.scrollTop = current_hour_span.offsetTop;
         minute_con.scrollTop = current_minute_span.offsetTop;
 
+        console.log(current_hour_span.offsetHeight);
+        select_bar.style.height = current_hour_span.offsetHeight + "px";
         // this.element.textContent
 
     }
