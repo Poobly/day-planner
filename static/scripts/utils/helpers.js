@@ -452,22 +452,40 @@ class CalendarModal extends Calendar {
             if (i < 2) {
                 const am_pm_span = createElementWithClass("span", ["time-text"]);
                 am_pm_span.textContent = (i === 0) ? "AM" : "PM";
+                am_pm_span.dataset.timePeriod = am_pm_span.textContent;
                 am_pm_con.appendChild(am_pm_span);
             }
             
         }
 
+        let current_am_pm_span;
+        if (time.getHours() < 12) {
+            current_am_pm_span = this.shadowRoot.querySelector(`[data-time-period="AM"]`);
+        }
+        else {
+            current_am_pm_span = this.shadowRoot.querySelector(`[data-time-period="PM"]`);
+        }
         const current_hour_span = this.shadowRoot.querySelector(`[data-hour="${time.getHours()}"]`);
         const current_minute_span = this.shadowRoot.querySelector(`[data-minute="${time.getMinutes()}"]`);
+
         current_hour_span.classList.add("active-time");
         current_minute_span.classList.add("active-time");
 
-        
-        hour_con.scrollTop = current_hour_span.offsetTop;
-        minute_con.scrollTop = current_minute_span.offsetTop;
 
-        console.log(current_hour_span.offsetHeight);
+        console.log(current_am_pm_span);
+        
+        hour_con.style.top = (hour_con.offsetHeight / 2) - current_hour_span.offsetTop - (current_hour_span.offsetHeight / 2) + "px";
+        minute_con.style.top =  (minute_con.offsetHeight / 2) - current_minute_span.offsetTop - (current_minute_span.offsetHeight / 2) + "px";
+        am_pm_con.style.top = (am_pm_con.offsetHeight / 2) - current_am_pm_span.offsetTop - (current_am_pm_span.offsetHeight / 2) + "px";
+        
+        
         select_bar.style.height = current_hour_span.offsetHeight + "px";
+        // hour_con.style.height = current_hour_span.
+        // hour_con.scrollTop = current_hour_span.offsetTop - (hour_con.offsetHeight / 2) - (current_hour_span.offsetHeight / 2) + "px";
+        // minute_con.style.top = current_minute_span.offsetTop - (minute_con.offsetHeight / 2) - (current_minute_span.offsetHeight / 2) + "px";
+        // console.log(am_pm_con.offsetTop)
+
+
         // this.element.textContent
 
     }

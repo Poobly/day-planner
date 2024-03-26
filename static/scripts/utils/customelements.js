@@ -163,6 +163,7 @@ class DateTime extends HTMLElement {
             .modal-time-con {
                 height: 150px;
                 width: max-content;
+                overflow: hidden;
             }
             
             .overflow {
@@ -200,7 +201,7 @@ class DateTime extends HTMLElement {
             }
 
             .minute_con, .hour_con, .am_pm_con {
-                overflow: hidden;
+                position: relative;
                 flex-direction: column;
                 gap: 5px;
                 word-break: break-word;
@@ -213,7 +214,7 @@ class DateTime extends HTMLElement {
                 transform: translateY(-50%);
                 width: 100%;
                 border: 3px solid blue;
-
+                z-index: 100;
             }
 
             .active-time {
