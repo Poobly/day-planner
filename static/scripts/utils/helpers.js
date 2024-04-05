@@ -56,12 +56,11 @@ function appendChildren(parent, children) {
 
 function checkHalfOfDay(hours, time_of_day) {
     let temp = "";
+    hours = Number(hours);
     for (let i = 0; i < time_of_day.length; i++) {
-        console.log(time_of_day[i]);
-        if (time_of_day[i] === "a" || time_of_day[i] === "A") temp += "A";
-        else if (time_of_day[i] === "p" || time_of_day[i] === "P") temp += "P";
+        if (time_of_day[i] === "a" || time_of_day[i] === "A") temp = "A";
+        else if (time_of_day[i] === "p" || time_of_day[i] === "P") temp = "P";
     }
-    // console.log(temp);
     switch (temp) {
         case "A":
             break;
@@ -69,7 +68,6 @@ function checkHalfOfDay(hours, time_of_day) {
             hours = Number(hours) + 12;
             break;
     }
-    // console.log(hours);
     return hours;
 }
 
@@ -377,7 +375,6 @@ class CalendarModal extends Calendar {
 
 
 
-
                 this.setTimeText(span);
 
                 // this.active_element.textContent = time.toLocaleString(undefined, {hour: "2-digit", minute: "2-digit"});
@@ -490,7 +487,7 @@ class CalendarModal extends Calendar {
         else {
             current_time_period_span = this.shadowRoot.querySelector(`[data-time-period="PM"]`);
         }
-        console.log(current_time_period_span);
+
         const current_hour_span = this.shadowRoot.querySelector(`[data-hour="${time.getHours()}"]`);
         const current_minute_span = this.shadowRoot.querySelector(`[data-minute="${time.getMinutes()}"]`);
 
@@ -510,14 +507,14 @@ class CalendarModal extends Calendar {
                 const container = e.target.closest(".time_input_con") || e.target.firstChild;
 
                 if (e.deltaY < 0) {
-                    // choose smaller  number between container top + height of text element within + 5 for the gap and select bar center
 
+                    // choose smaller  number between container top + height of text element within + 5 for the gap and select bar center
                     const y = Math.min(select_bar.offsetTop - (select_bar.offsetHeight / 2), container.offsetTop + (container.firstChild.offsetHeight + 5))
                     container.style.top = y + "px"; 
                 }
                 else if (e.deltaY > 0) {
-                    //  choose bigger number between the position of last element and the position of next element relative to the top of the container.
 
+                    //  choose bigger number between the position of last element and the position of next element relative to the top of the container.
                     const y = Math.max((select_bar.offsetTop - container.offsetHeight) + (select_bar.offsetHeight / 2), container.offsetTop - (container.firstChild.offsetHeight + 5));
                     container.style.top = y + "px"; 
                 }
@@ -527,14 +524,25 @@ class CalendarModal extends Calendar {
                     );
 
                 this.setTimeText(selected_element);
+                // console.log(container);
+                if (container.id == "hour_con") {
 
-                
+                    time.setHours(checkHalfOfDay(selected_element.textContent, this.active_element.textContent.slice(6)));
+                    if (checkHalfOfDay(time.getHours(), this.active_element.textContent.slice(6)) < 12) {
+                        current_time_period_span = this.shadowRoot.querySelector(`[data-time-period="AM"]`);
+                    }
+                    else {
+                        current_time_period_span = this.shadowRoot.querySelector(`[data-time-period="PM"]`);
+                    }
+                    console.log(current_time_period_span);
+                    time_period_con.style.top = (time_period_outer_con.offsetHeight / 2) - current_time_period_span.offsetTop - (current_time_period_span.offsetHeight / 2) + "px";
+                }
             }
         })
     }
 
     test() {
-        console.log(this);
+
 
     }
 }
