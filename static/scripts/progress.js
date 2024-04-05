@@ -76,20 +76,21 @@ while (date.getFullYear() === year) {
 
     months_object[current_month].colSpan = colspan_count;
 
-    let new_date = toIsoStringLocale(date).slice(0, 10);
+    const new_date = new Date(date);
+    const new_date_str = toIsoStringLocale(date).slice(0, 10);
     date.setDate(date.getDate() + 1);
     current_month = date.getMonth();
 
     let day = document.createElement("td");
     day.classList.add("progress-tile");
-    day.dataset.date = new_date;
+    day.dataset.date = new_date_str;
     
-    days[new_date] = date_object(0, day);
+    days[new_date_str] = date_object(0, day);
     days_object[current_day].appendChild(day);
     
-    // check if user logged in and get data from db and insert into days object e.g. days[new_date] = database_data[new_date] 
+    // check if user logged in and get data from db and insert into days object e.g. days[new_date_str] = database_data[new_date_str] 
 
-    if (today == new_date) {
+    if (today == new_date_str) {
         for (let session in sessions) {
             days[session].sessions = sessions[session]
 
@@ -106,9 +107,9 @@ while (date.getFullYear() === year) {
         const tool_tip = document.createElement("span");
         day.appendChild(tool_tip);
         tool_tip.classList.add("tool-tip");
-
-        if (days[new_date].sessions > 0) tool_tip.textContent = `You have done ${days[new_date].sessions} work sessions.`; 
-        else tool_tip.textContent = `You have done no work sessions.`; 
+        const date_str = new_date.toLocaleString(undefined, { month: "long", day: "numeric" });
+        if (days[new_date_str].sessions > 0) tool_tip.textContent = `You have done ${days[new_date_str].sessions} work sessions on ${date_str}.`; 
+        else tool_tip.textContent = `You have done no work sessions on ${date_str}.`; 
 
     });
 
