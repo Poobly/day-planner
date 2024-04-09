@@ -141,6 +141,7 @@ const timer = (function () {
         _digits[3].textContent = _time[3]
 
         _timer_data.active_time = _time;
+        _timer_data[_timer_data.timer_type] = _time;
         localStorage.setItem("timer_data", JSON.stringify(_timer_data))
     }
 
@@ -183,10 +184,6 @@ const timer = (function () {
             _digits[_timer_digit_index].classList.remove("timer-digit-temp");
             _timer_digit_index--;
             
-
-            _timer_data[_timer_data.timer_type] = _time;
-            localStorage.setItem("timer_data", JSON.stringify(_timer_data))
-
             _updateTime();
         } 
     }
