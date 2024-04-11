@@ -7,7 +7,6 @@ let work_time = "2500";
 let break_time = "0500";
 let long_break_time = "3000";
 const current_date = toIsoStringLocale(new Date()).slice(0, 10);
-const xhttp = new XMLHttpRequest();
 
 
 
@@ -50,11 +49,6 @@ const timer = (function () {
     }
 
     function _tick() {
-        data = {"time" : _time};
-        xhttp.open("POST", "/api/data", true);
-        xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-
-        xhttp.send(JSON.stringify(data));
 
 
 
@@ -89,6 +83,21 @@ const timer = (function () {
         if (_timer_data.timer_counter === 4) _timer_data.timer_counter = 0;
         if (_timer_data.timer_type === "work") _timer_data.timer_counter++;
         localStorage.setItem("timer_data", JSON.stringify(_timer_data));
+
+        fetch("/pomodoro/timer", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(_elapsed_sessions),
+        })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log('Server response:', data);
+        })
+        .catch((error) => {
+          console.error('Error sending data:', error);
+        });
     }
     
 

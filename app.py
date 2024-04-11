@@ -2,6 +2,7 @@ import sqlite3
 from flask import Flask, render_template, request, redirect, session, make_response, send_from_directory
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
+from datetime import date
 
 from helpers import login_required, parseQuery
 
@@ -96,9 +97,32 @@ def planner_edit():
 @login_required
 def pomodoro():
     if request.method == "POST":
-        timer_type = request.form.get("timer_type")
-        print("hello");
-        return redirect("/")
+        data = request.get_json()
+        current_date = date.today().isoformat()
+         
+        if parseQuery(db, db.execute("SELECT COUNT(1) FROM pomodoro_details WHERE date = ?", (current_date,)).fetchall())["COUNT(1)"]:
+            print(parseQuery(db, db.execute("SELECT COUNT(1) FROM pomodoro_details WHERE date = ?", (current_date,)).fetchall())["COUNT(1)"])
+            db.execute("""
+                       UPDATE pomodoro_details 
+                       SET count = ?
+                       WHERE date = ? AND id in (SELECT pomodoro_id FROM pomodoros WHERE user_id = ?) 
+                       """, (data[current_date], current_date, session["user_id"],))
+        else:
+            db.execute("""
+                       INSERT INTO pomodoro_details (date, count)
+                       VALUES (?, ?)
+                       """, (current_date, data[current_date],))
+            pomodoro_id = db.lastrowid
+            db.execute("""
+                       INSERT INTO pomodoros (user_id, pomodoro_id) 
+                       VALUES (?, ?)
+                       """, (session["user_id"], pomodoro_id,))
+        return data, 201
+    # elif request.method == "GET":
+
+    #     # Get data from database
+    #     data = parseQuery(db, db.execute("SELECT * FROM users WHERE username = ?", (user,)).fetchone())
+    #     # return data
     else:
         return render_template("pomodoro/timer.html")
         
