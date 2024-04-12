@@ -7,6 +7,8 @@ from datetime import date
 from helpers import login_required, parseQuery
 
 app = Flask(__name__)
+
+# configuring session
 app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
 
@@ -14,6 +16,11 @@ conn = sqlite3.connect("planner.db", isolation_level=None, check_same_thread=Fal
 conn.row_factory = sqlite3.Row
 db = conn.cursor()
 
+@app.route("/api/user/loggedin", methods=["GET"])
+def logged():
+    if request.method == "GET":
+        if session.get("user_id"): return "1"
+        else: return "0"
 
 @app.route("/")
 def index():
@@ -99,9 +106,7 @@ def pomodoro():
     if request.method == "POST":
         data = request.get_json()
         current_date = date.today().isoformat()
-         
-        if parseQuery(db, db.execute("SELECT COUNT(1) FROM pomodoro_details WHERE date = ?", (current_date,)).fetchall())["COUNT(1)"]:
-            print(parseQuery(db, db.execute("SELECT COUNT(1) FROM pomodoro_details WHERE date = ?", (current_date,)).fetchall())["COUNT(1)"])
+        if parseQuery(db, db.execute("SELECT COUNT(1) FROM pomodoro_details WHERE date = ?", (current_date,)).fetchall())["COUNT(1)"] == 1:
             db.execute("""
                        UPDATE pomodoro_details 
                        SET count = ?
@@ -117,23 +122,28 @@ def pomodoro():
                        INSERT INTO pomodoros (user_id, pomodoro_id) 
                        VALUES (?, ?)
                        """, (session["user_id"], pomodoro_id,))
-        return data, 201
-    # elif request.method == "GET":
-
-    #     # Get data from database
-    #     data = parseQuery(db, db.execute("SELECT * FROM users WHERE username = ?", (user,)).fetchone())
-    #     # return data
+        return data
     else:
         return render_template("pomodoro/timer.html")
         
-@app.route("/pomodoro/progress", methods=["GET", "POST"])
+@app.route("/pomodoro/progress", methods=["GET"])
 @login_required
 def pomodoro_progress():
     if request.method == "POST":
         return redirect("/")
     else:
         return render_template("pomodoro/progress.html")
-    
+
+@app.route("/api/pomodoro/progress", methods=["GET"])
+def progress():
+    if request.method == "GET":
+        data = parseQuery(db, db.execute("""
+                                         SELECT * FROM pomodoro_details 
+                                         WHERE id IN (SELECT pomodoro_id FROM pomodoros WHERE user_id = ?)
+                                         """, (session["user_id"],)).fetchall()
+                                         )
+
+        return data
 
 
 @app.route("/logout")
@@ -147,5 +157,4 @@ def logout():
 @app.route("/api/data", methods=["GET", "POST"])
 def data():
     data = request.get_json()
-    print(data)
     return data

@@ -10,6 +10,18 @@ let year = current_date.getFullYear();
 
 const sessions = JSON.parse(localStorage.getItem("elapsed_sessions")); 
 
+let logged
+await fetch("/api/user/loggedin")
+.then(response => response.json())
+.then(python_data => logged = python_data);
+
+let data;
+await fetch("/api/pomodoro/progress")
+.then(response => response.json())
+.then(python_data => data = python_data);
+
+
+
 let total_days = (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0)) ? 366 : 365;
 
 const days_object = {
@@ -90,16 +102,30 @@ while (date.getFullYear() === year) {
     
     // check if user logged in and get data from db and insert into days object e.g. days[new_date_str] = database_data[new_date_str] 
 
-    if (today == new_date_str) {
-        for (let session in sessions) {
-            days[session].sessions = sessions[session]
-
-            if (days[session].sessions > 5) days[session].element.classList.add("progress-tile-4");
-            else if (days[session].sessions > 4) days[session].element.classList.add("progress-tile-3");
-            else if (days[session].sessions > 2) days[session].element.classList.add("progress-tile-2");
-            else if (days[session].sessions > 0) days[session].element.classList.add("progress-tile-1");
+    if (logged == "1"){
+        if (today == new_date_str) {
+            for (let session of data) {
+                session = session.date;
+                days[session].sessions = sessions[session]
+                if (days[session].sessions > 5) days[session].element.classList.add("progress-tile-4");
+                else if (days[session].sessions > 4) days[session].element.classList.add("progress-tile-3");
+                else if (days[session].sessions > 2) days[session].element.classList.add("progress-tile-2");
+                else if (days[session].sessions > 0) days[session].element.classList.add("progress-tile-1");
+            }        
         }
-    
+    }
+    else {
+        if (today == new_date_str) {
+
+            for (let session in sessions) {
+                days[session].sessions = sessions[session]
+                
+                if (days[session].sessions > 5) days[session].element.classList.add("progress-tile-4");
+                else if (days[session].sessions > 4) days[session].element.classList.add("progress-tile-3");
+                else if (days[session].sessions > 2) days[session].element.classList.add("progress-tile-2");
+                else if (days[session].sessions > 0) days[session].element.classList.add("progress-tile-1");
+            }        
+        }
     }
 
 

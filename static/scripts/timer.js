@@ -91,13 +91,6 @@ const timer = (function () {
             },
             body: JSON.stringify(_elapsed_sessions),
         })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log('Server response:', data);
-        })
-        .catch((error) => {
-          console.error('Error sending data:', error);
-        });
     }
     
 

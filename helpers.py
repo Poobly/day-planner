@@ -10,12 +10,17 @@ def login_required(f):
     return decorated_function
 
 def parseQuery(cursor, data):
+    if type(data) is list and len(data) > 1:
+        result = []
+        for i in range(len(data)):
+            row = data[i]
+            result.append({})
+            for j in range(len(row)):
+                result[i].update({cursor.description[j][0]: row[j]})
+    elif data:
         result = {}
-        if type(data) is list:
-            for row in data:
-                for i in range(len(row)):
-                    result.update({cursor.description[i][0]: row[i]})
-        else:
-            for i in range(len(data)):
-                result.update({cursor.description[i][0]: data[i]})
-        return result
+        for i in range(len(data)):
+            result.update({cursor.description[i][0]: data[i]})
+    else:
+        return data
+    return result
