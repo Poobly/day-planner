@@ -102,31 +102,7 @@ while (date.getFullYear() === year) {
     
     // check if user logged in and get data from db and insert into days object e.g. days[new_date_str] = database_data[new_date_str] 
 
-    if (logged == "1"){
-        if (today == new_date_str) {
-            for (let session of data) {
-                session = session.date;
-                days[session].sessions = sessions[session]
-                if (days[session].sessions > 5) days[session].element.classList.add("progress-tile-4");
-                else if (days[session].sessions > 4) days[session].element.classList.add("progress-tile-3");
-                else if (days[session].sessions > 2) days[session].element.classList.add("progress-tile-2");
-                else if (days[session].sessions > 0) days[session].element.classList.add("progress-tile-1");
-            }        
-        }
-    }
-    else {
-        if (today == new_date_str) {
 
-            for (let session in sessions) {
-                days[session].sessions = sessions[session]
-                
-                if (days[session].sessions > 5) days[session].element.classList.add("progress-tile-4");
-                else if (days[session].sessions > 4) days[session].element.classList.add("progress-tile-3");
-                else if (days[session].sessions > 2) days[session].element.classList.add("progress-tile-2");
-                else if (days[session].sessions > 0) days[session].element.classList.add("progress-tile-1");
-            }        
-        }
-    }
 
 
     day.addEventListener("mouseenter", (e) => {
@@ -145,6 +121,25 @@ while (date.getFullYear() === year) {
     
 }
 
-
+if (logged == "1"){
+    for (let session of data) {
+        session = session.date;
+        days[session].sessions = sessions[session]
+        if (days[session].sessions > 5) days[session].element.classList.add("progress-tile-4");
+        else if (days[session].sessions > 4) days[session].element.classList.add("progress-tile-3");
+        else if (days[session].sessions > 2) days[session].element.classList.add("progress-tile-2");
+        else if (days[session].sessions > 0) days[session].element.classList.add("progress-tile-1");
+    }        
+}
+else {
+    for (let session in sessions) {
+        days[session].sessions = sessions[session]
+        
+        if (days[session].sessions > 5) days[session].element.classList.add("progress-tile-4");
+        else if (days[session].sessions > 4) days[session].element.classList.add("progress-tile-3");
+        else if (days[session].sessions > 2) days[session].element.classList.add("progress-tile-2");
+        else if (days[session].sessions > 0) days[session].element.classList.add("progress-tile-1");
+    }        
+}
 
 
