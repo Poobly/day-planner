@@ -1,7 +1,7 @@
 // WIP: 
 // if user is logged in get data from backend else use local storage
 
-import { toIsoStringLocale } from "./utils/helpers.js";
+import { toIsoStringLocale, loggedIn } from "./utils/helpers.js";
 
 const progress_table = document.getElementById("progress-table");
 const day_rows = progress_table.querySelectorAll("tbody > tr");
@@ -9,18 +9,6 @@ const current_date = new Date;
 let year = current_date.getFullYear();
 
 const sessions = JSON.parse(localStorage.getItem("elapsed_sessions")); 
-
-let logged
-await fetch("/api/user/loggedin")
-.then(response => response.json())
-.then(python_data => logged = python_data);
-
-let data;
-await fetch("/api/pomodoro/progress")
-.then(response => response.json())
-.then(python_data => data = python_data);
-
-
 
 let total_days = (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0)) ? 366 : 365;
 
@@ -121,7 +109,11 @@ while (date.getFullYear() === year) {
     
 }
 
-if (logged == "1"){
+if (await loggedIn()){
+    let data;
+    await fetch("/api/pomodoro/progress")
+    .then(response => response.json())
+    .then(python_data => data = python_data);
     for (let session of data) {
         const session_date = session.date;
         days[session_date].sessions = session.count;
