@@ -46,7 +46,7 @@ def register():
         
         hash = generate_password_hash(password)
         db.execute("INSERT INTO users (username, hash) VALUES (?, ?)", (username, hash))
-        session["user_id"] = parseQuery(db, db.execute("SELECT id FROM users WHERE username = ?", (username,)).fetchone())["id"]
+        session["user_id"] = parseQuery(db, db.execute("SELECT id FROM users WHERE username = ?", (username,)).fetchall())["id"]
         return render_template("profile.html")
     else:
         return render_template("register.html")
@@ -63,7 +63,7 @@ def login():
         elif not password:
             return
         
-        user = parseQuery(db, db.execute("SELECT * FROM users WHERE username = ?", (username,)).fetchone())
+        user = parseQuery(db, db.execute("SELECT * FROM users WHERE username = ?", (username,)).fetchall())
         if user["username"] != username or not check_password_hash(user["hash"], password):
             return
 
