@@ -109,9 +109,9 @@ def pomodoro():
         if parseQuery(db, db.execute("SELECT COUNT(1) FROM pomodoro_details WHERE date = ?", (current_date,)).fetchall())["COUNT(1)"] == 1:
             db.execute("""
                        UPDATE pomodoro_details 
-                       SET count = ?
+                       SET count = count + 1
                        WHERE date = ? AND id in (SELECT pomodoro_id FROM pomodoros WHERE user_id = ?) 
-                       """, (data[current_date], current_date, session["user_id"],))
+                       """, (current_date, session["user_id"],))
         else:
             db.execute("""
                        INSERT INTO pomodoro_details (date, count)
