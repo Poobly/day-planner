@@ -123,12 +123,13 @@ while (date.getFullYear() === year) {
 
 if (logged == "1"){
     for (let session of data) {
-        session = session.date;
-        days[session].sessions = sessions[session]
-        if (days[session].sessions > 5) days[session].element.classList.add("progress-tile-4");
-        else if (days[session].sessions > 4) days[session].element.classList.add("progress-tile-3");
-        else if (days[session].sessions > 2) days[session].element.classList.add("progress-tile-2");
-        else if (days[session].sessions > 0) days[session].element.classList.add("progress-tile-1");
+        const session_date = session.date;
+        days[session_date].sessions = session.count;
+
+        if (days[session_date].sessions > 5) days[session_date].element.classList.add("progress-tile-4");
+        else if (days[session_date].sessions > 4) days[session_date].element.classList.add("progress-tile-3");
+        else if (days[session_date].sessions > 2) days[session_date].element.classList.add("progress-tile-2");
+        else if (days[session_date].sessions > 0) days[session_date].element.classList.add("progress-tile-1");
     }        
 }
 else {
