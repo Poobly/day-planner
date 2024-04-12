@@ -1,7 +1,7 @@
 // WIP:
 // backend integration
 
-import { toIsoStringLocale } from "./utils/helpers.js"
+import { toIsoStringLocale, loggedIn } from "./utils/helpers.js"
 
 let work_time = "2500";
 let break_time = "0500";
@@ -39,8 +39,6 @@ const timer = (function () {
     let _is_paused = true;
     let _digit_editing = false;
     let _digit_selection;
-    
-    let data = {"time" : _time};
 
     function _startTimer() {
         _timer_data.active = "true";
@@ -49,8 +47,6 @@ const timer = (function () {
     }
 
     function _tick() {
-
-
 
         if (_seconds > 0) {
             _nextSecond();
@@ -62,14 +58,11 @@ const timer = (function () {
                 _setTime();
             }
             else {
-
                 _endTimer();
-
             }
         }
     }
 
-    
     function _endTimer() {
         if (_timer_data.timer_type === "work") _elapseSession();
 
@@ -84,14 +77,6 @@ const timer = (function () {
         if (_timer_data.timer_type === "work") _timer_data.timer_counter++;
         localStorage.setItem("timer_data", JSON.stringify(_timer_data));
 
-        current_date = toIsoStringLocale(new Date()).slice(0, 10);
-        fetch("/pomodoro/timer", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(_elapsed_sessions),
-        })
     }
     
 
@@ -225,7 +210,7 @@ const timer = (function () {
                 digit.addEventListener("click", _selectDigits);
                 digit.classList.add("timer-digit-temp");
             });
-            
+
             _digit_selection = 3;
             _timer_focused = true;
 
@@ -258,6 +243,17 @@ const timer = (function () {
         _elapsed_sessions[current_date] = String(_elapsed_sessions[current_date]);
         
         localStorage.setItem("elapsed_sessions", JSON.stringify(_elapsed_sessions));
+
+        current_date = toIsoStringLocale(new Date()).slice(0, 10);
+        if (loggedIn()) {
+            fetch("/pomodoro/timer", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(_elapsed_sessions),
+            })
+        }
     }
 
     // start/pause button
@@ -286,11 +282,3 @@ const timer = (function () {
 
 
 }());
-
-// timer._updateTime();
-
-
-// xhttp.onload = () => {
-//     let data = JSON.parse(this.responseText)
-//     console.log(data);
-// }
