@@ -4,6 +4,14 @@ function createElementWithClass(tag, classes) {
     return element
 }
 
+async function loggedIn() {
+    let logged;
+    await fetch("/api/user/loggedin")
+    .then(response => response.json())
+    .then(python_data => logged = python_data);
+    if (logged == "1") return true;
+    else return false;
+}
 
 function dragElement(element, element_header, border_element) {
     let offsetX = 0, offsetY = 0;
@@ -548,4 +556,13 @@ class CalendarModal extends Calendar {
 }
 
 
-export { createElementWithClass, dragElement, toIsoStringLocale, padDigit, appendChildren, Calendar, CalendarModal}
+export { 
+    createElementWithClass, 
+    dragElement, 
+    toIsoStringLocale, 
+    padDigit, 
+    appendChildren, 
+    Calendar, 
+    CalendarModal, 
+    loggedIn
+}
