@@ -142,7 +142,8 @@ def progress():
                                          WHERE id IN (SELECT pomodoro_id FROM pomodoros WHERE user_id = ?)
                                          """, (session["user_id"],)).fetchall()
                                          )
-
+        
+        if type(data) is not list: data = [data]
         return data
 
 
