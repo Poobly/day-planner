@@ -20,7 +20,8 @@ def parseQuery(cursor, data):
     elif data:
         result = {}
         for i in range(len(data)):
-            result.update({cursor.description[i][0]: data[i]})
+            for j in range(len(data[i])):
+                result.update({cursor.description[j][0]: data[i][j]})
     else:
         return data
     return result
