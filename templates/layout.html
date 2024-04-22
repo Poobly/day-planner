@@ -9,36 +9,34 @@
         {% block head %}{% endblock %}
     </head>
     <body>
-        <div class="container">
-            <header class="">
-                <nav class="nav-bar">
-                    <a class="header-brand " href="/">Study Buddy</a>
-                    {% if session["user_id"] %}
-                    <a class="nav-item" href="/planner">Planner</a>
-                    <a class="nav-item" href="/pomodoro">Pomodoro</a>
-                    <a class="nav-item" href="/profile">
-                        <img alt="profile image" class="user-image"></img>            
-                    </a>
-                    <a class="nav-item" href="/logout">Log out</a>
-                    {% else %}
-                    <a class="nav-item user-login" href="/login">Log in</a>
-                    <a class="nav-item user-signup" href="/register">Sign up</a>
-                    {% endif %}
-                <nav/>
-                {% if session["user_id"] and request.path.startswith("/planner") %}
-                    <nav>
-                        <a class="lower-nav-item" href="/planner/calendar">Calendar</a>
-                        <a class="lower-nav-item" href="/planner/edit">Edit</a>
-                    </nav>
+        <header class="header-con">
+            <nav class="nav-bar">
+                <a class="header-brand nav-item" href="/">Study Buddy</a>
+                {% if session["user_id"] %}
+                <a class="nav-item" href="/planner">Planner</a>
+                <a class="nav-item" href="/pomodoro">Pomodoro</a>
+                <a class="nav-item" href="/profile">
+                    <img alt="profile image" class="user-image"></img>            
+                </a>
+                <a class="nav-item" href="/logout">Log out</a>
+                {% else %}
+                <a class="nav-item user-login" href="/login">Log in</a>
+                <a class="nav-item user-signup" href="/register">Sign up</a>
                 {% endif %}
-                {% if session["user_id"] and request.path.startswith("/pomodoro") %}
-                    <nav>
-                        <a class="lower-nav-item" href="/pomodoro/timer">Timer</a>
-                        <a class="lower-nav-item" href="/pomodoro/progress">Progress</a>
-                    </nav>
-                {% endif %}
-            </header>
-        </div>
+            </nav>
+            {% if session["user_id"] and request.path.startswith("/planner") %}
+                <nav class="lower-nav">
+                    <a class="lower-nav-item" href="/planner/calendar">Calendar</a>
+                    <a class="lower-nav-item" href="/planner/edit">Edit</a>
+                </nav>
+            {% endif %}
+            {% if session["user_id"] and request.path.startswith("/pomodoro") %}
+                <nav class="lower-nav">
+                    <a class="lower-nav-item" href="/pomodoro/timer">Timer</a>
+                    <a class="lower-nav-item" href="/pomodoro/progress">Progress</a>
+                </nav>
+            {% endif %}
+        </header>
         <main>
             {% block main %}{% endblock %}
         </main>

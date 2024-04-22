@@ -2,6 +2,7 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    font-family: inherit;
 }
 
 :root {
@@ -25,9 +26,10 @@ li {
     list-style: none;
 }
 
-.header {
+.header-con {
     background-color: aliceblue;
-    min-height: max-content;
+    box-shadow: 0 0 10px 0 black;
+
 }
 
 .container {
@@ -48,6 +50,27 @@ li {
     
 }
 
-.nav-item {
+.lower-nav {
+    /* background-color: rgb(1, 255, 242); */
+}
+
+.nav-item, .lower-nav-item {
+    display: inline-block;
+    margin-right: 1.3rem;
     padding: 1.2rem 1.8rem;
+    color: black;
+}
+
+.nav-item:hover, .lower-nav-item:hover {
+    background-color: antiquewhite;
+}
+
+/* .lower-nav-item {
+    display: inline-block;
+    padding: 1rem 1.3rem;
+} */
+
+main {
+    height: 100%;
+    text-align: center;
 }
