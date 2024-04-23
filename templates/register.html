@@ -2,13 +2,16 @@
 
 
 {% block main %}
-<form action="/register" method="post">
-    {% if username_taken %}
-        <span style="color: red;">Username is taken</span>
-    {% endif %}
-    <input class="input-form" id="username" type="text" name="username" placeholder="Username" autocomplete="off" autofocus>
-    <input class="input-form" id="password" type="password" name="password" placeholder="Password" autocomplete="off" autofocus>
-    <input class="input-form" id="confirmation" type="password" name="confirmation" placeholder="Confirm Password" autocomplete="off" autofocus>
-    <button class="form-button" type="submit">Register</button>
-</form>
+<div class="main-inner-con">
+    <h1 class="register-text">Register</h1>
+    <form class="register-form f-col" action="/register" method="post">
+        {% if username_taken %}
+            <span style="color: red;">Username is taken</span>
+        {% endif %}
+        <input class="register-input" id="username" type="text" name="username" placeholder="Username" autocomplete="off" autofocus>
+        <input class="register-input" id="password" type="password" name="password" placeholder="Password" autocomplete="off" autofocus>
+        <input class="register-input" id="confirmation" type="password" name="confirmation" placeholder="Confirm Password" autocomplete="off" autofocus>
+        <button class="register-submit" type="submit">Register</button>
+    </form>
+</div>
 {% endblock %}
