@@ -59,6 +59,14 @@ li {
     /* background-color: rgb(1, 255, 242); */
 }
 
+.nav-bar {
+
+}
+
+.nav-r {
+    margin-left: auto;
+}
+
 .nav-item, .lower-nav-item {
     display: inline-block;
     margin-right: 1.3rem;
@@ -77,8 +85,6 @@ li {
 
 main {
     height: 100%;
-    text-align: center;
-
 }
 
 svg {
@@ -99,6 +105,7 @@ button {
 
 .main-inner-con {
     /* background-color: rgb(186, 255, 255); */
+    text-align: center;
     position: relative;
     top: 50%;
     left: 50%;
@@ -134,7 +141,7 @@ button {
     font-size: 1.2rem;
 }
 
-.login-submit:hover {
+.login-submit:hover, .register-submit:hover {
     color: white;
     background-color: rgb(16, 167, 167);
 
