@@ -27,23 +27,28 @@ li {
 }
 
 .header-con {
+    position: static;
     background-color: aliceblue;
     box-shadow: 0 0 10px 0 black;
-
 }
 
 .container {
 
 }
 
-.flex-col {
+.f-col {
     display: flex;
     flex-direction: column;
 }
 
-.flex-row {
+.f {
     display: flex;
     flex-direction: row;
+}
+
+.f-centre {
+    justify-content: center;
+    align-items: center;
 }
 
 .header-brand {
@@ -73,4 +78,21 @@ li {
 main {
     height: 100%;
     text-align: center;
+
+}
+
+svg {
+    width: 30px;
+}
+
+.footer-con {
+    height: 100px;
+}
+
+.footer-icon-con {
+    gap: 25px;
+}
+
+button {
+    cursor: pointer;
 }

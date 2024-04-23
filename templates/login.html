@@ -9,14 +9,12 @@
 {% endblock %}
 
 {% block main %}
-<div class="main-con">
-    <div class="form-con">
-        <h1>Log In</h1>
-        <form class="login-form" action="/login" method="post">
-            <input class="login-input" type="text" name="username" placeholder="Username" autocomplete="off" autofocus>
-            <input class="login-input" type="password" name="password" placeholder="Password" autocomplete="off" autofocus>
-            <button class="login-submit" type="submit">Submit</button>
-        </form>
-    </div>
+<div class="main-inner-con">
+    <h1 class="login-text">Log In</h1>
+    <form class="login-form f-col" action="/login" method="post">
+        <input class="login-input" type="text" name="username" placeholder="Username" autocomplete="off" autofocus>
+        <input class="login-input" type="password" name="password" placeholder="Password" autocomplete="off" autofocus>
+        <button class="login-submit" type="submit">Submit</button>
+    </form>
 </div>
 {% endblock %}
