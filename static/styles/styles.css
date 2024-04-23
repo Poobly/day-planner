@@ -104,13 +104,8 @@ button {
 }
 
 .main-inner-con {
-    /* background-color: rgb(186, 255, 255); */
     text-align: center;
-    position: relative;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: min-content;
+    width: max-content;
 }
 
 .login-text, .register-text {
