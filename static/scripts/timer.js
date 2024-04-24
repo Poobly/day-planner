@@ -16,6 +16,10 @@ const timer = (function () {
     const _reset_button = document.getElementById("timer-reset-button");
     const _timer_text_con = document.getElementById("timer-text-con");
     const _digits = Array.from(document.querySelectorAll(".timer-digit"));
+
+    const button_svg = _timer_button.querySelector("path");
+
+
     let _timer_data = {
         "timer_type" : "work",
         "timer_counter" : 1,
@@ -135,7 +139,8 @@ const timer = (function () {
 
     function _pauseTimer() {
         clearInterval(_timer);
-        _timer_button.textContent = "Start";
+
+        button_svg.setAttribute("d", "M8,5.14V19.14L19,12.14L8,5.14Z")
         _is_paused = true;
     }
 
@@ -260,7 +265,7 @@ const timer = (function () {
     _timer_button.addEventListener("click", (e) => {
         if (_is_paused) {
             _startTimer();
-            _timer_button.textContent = "Pause";
+            button_svg.setAttribute("d", "M14,19H18V5H14M6,19H10V5H6V19Z")
         }
         else {
             _pauseTimer();

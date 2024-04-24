@@ -15,7 +15,7 @@ body {
 }
 
 body, html, head {
-    height: 100vh;
+    min-height: 100vh;
 }
 
 a {
@@ -26,8 +26,12 @@ li {
     list-style: none;
 }
 
+/* causes issues with calendar page */
 .header-con {
-    position: static;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1;
     background-color: aliceblue;
     box-shadow: 0 0 10px 0 black;
 }
@@ -63,28 +67,36 @@ li {
 
 }
 
+.nav-bar, .lower-nav {
+    padding: 0.5rem ;
+}
+
 .nav-r {
     margin-left: auto;
 }
 
 .nav-item, .lower-nav-item {
-    display: inline-block;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
     margin-right: 1.3rem;
-    padding: 1.2rem 1.8rem;
+    height: 3rem;
+    padding: 0 2rem;
     color: black;
+    cursor: pointer;
+    transition-duration: 0.4s;
+    border-radius: 10px;
 }
+
+
 
 .nav-item:hover, .lower-nav-item:hover {
-    background-color: antiquewhite;
+    background-color: rgb(126, 255, 126);
 }
-
-/* .lower-nav-item {
-    display: inline-block;
-    padding: 1rem 1.3rem;
-} */
 
 main {
     height: 100%;
+    flex-grow: 1;
 }
 
 svg {
