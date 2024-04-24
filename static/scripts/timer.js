@@ -3,12 +3,7 @@
 
 import { toIsoStringLocale, loggedIn } from "./utils/helpers.js"
 
-let work_time = "2500";
-let break_time = "0500";
-let long_break_time = "3000";
 let current_date = toIsoStringLocale(new Date()).slice(0, 10);
-
-
 
 const timer = (function () {
     const _timer_button = document.getElementById("timer-main-button");
@@ -44,18 +39,16 @@ const timer = (function () {
     let _digit_editing = false;
     let _digit_selection;
     
-    const start_time = Date.now() + 1000;
-    
+    _timer_data[_timer_data.timer_type] = _time;
+
     function _startTimer() {
-        _timer_data[_timer_data.timer_type] = _time;
         _timer_data.active = "true";
-        // _timer = setInterval(_tick, 1000);
         _is_paused = false;
         
         const interval = 1000;
         let expected_time = performance.now() + interval;
-        
         _timer = setTimeout(_tick, interval);
+
         function _tick() {
             const delay = performance.now() - expected_time;
 
@@ -70,6 +63,7 @@ const timer = (function () {
                 }
                 else {
                     _endTimer();
+                    return;
                 }
             }
             expected_time += interval;
@@ -81,7 +75,8 @@ const timer = (function () {
     function _endTimer() {
         if (_timer_data.timer_type === "work") _elapseSession();
 
-        _pauseTimer();
+        clearTimeout(_timer);
+
         _timer_data.timer_type = _timer_data.timer_type === "work" ? (_timer_data.timer_counter === 4 ? "long_break" : "break") : "work";
 
         _time = _getNextSequence();
@@ -91,7 +86,9 @@ const timer = (function () {
         if (_timer_data.timer_counter === 4) _timer_data.timer_counter = 0;
         if (_timer_data.timer_type === "work") _timer_data.timer_counter++;
         localStorage.setItem("timer_data", JSON.stringify(_timer_data));
-
+        _timer_data[_timer_data.timer_type] = _time;
+        
+        if (!_is_paused) _startTimer();
     }
     
 
