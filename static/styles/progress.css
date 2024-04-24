@@ -1,3 +1,8 @@
+.t-heading {
+    font-size: 4rem;
+    margin-bottom: 3rem;
+}
+
 .progress-table, .daily-rows {
     border-collapse: separate;
     border-spacing: 3px;

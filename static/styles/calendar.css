@@ -26,6 +26,7 @@
     outline: rgba(0, 0, 0, 0.05) solid 1px;
     vertical-align: top;
     cursor: pointer;
+    text-align: left;
 }
 
 .day-date {

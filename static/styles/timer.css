@@ -2,13 +2,23 @@
     width: max-content;
 }
 
-.timer-digit, .timer-colon {
-    font-size: 10rem;
-    text-align: center;
+.pomdoro-header {
+    font-size: 3rem;
+}
+
+.timer-text-con {
+    -moz-user-select: none;
+    -webkit-user-select: none;
     user-select: none;
+}
+
+.timer-digit, .timer-colon {
+    font-size: 15rem;
+    text-align: center;
     color: rgba(0, 0, 0);
     border-right: 1px solid transparent;
     height: min-content;
+    
 }
 
 .timer-digit-select {
@@ -44,4 +54,15 @@
 
 .timer-text-focus:hover {
     cursor: text;
+}
+
+.timer-button {
+    font-size: 2rem;
+    padding: 1.5rem 1.5rem;
+    border-radius: 250px;
+}
+
+.timer-button svg {
+    width: 75px;
+    display: block;
 }
