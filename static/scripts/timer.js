@@ -43,30 +43,40 @@ const timer = (function () {
     let _is_paused = true;
     let _digit_editing = false;
     let _digit_selection;
-
+    
+    const start_time = Date.now() + 1000;
+    
     function _startTimer() {
         _timer_data[_timer_data.timer_type] = _time;
         _timer_data.active = "true";
-        _timer = setInterval(_tick, 1000);
+        // _timer = setInterval(_tick, 1000);
         _is_paused = false;
-    }
+        
+        const interval = 1000;
+        let expected_time = performance.now() + interval;
+        
+        _timer = setTimeout(_tick, interval);
+        function _tick() {
+            const delay = performance.now() - expected_time;
 
-    function _tick() {
-
-        if (_seconds > 0) {
-            _nextSecond();
-            _setTime();
-        }
-        else {
-            if (_minutes > 0) {
-                _nextMinute();
+            if (_seconds > 0) {
+                _nextSecond();
                 _setTime();
             }
             else {
-                _endTimer();
+                if (_minutes > 0) {
+                    _nextMinute();
+                    _setTime();
+                }
+                else {
+                    _endTimer();
+                }
             }
+            expected_time += interval;
+            _timer = setTimeout(_tick, Math.max(0, interval - delay));
         }
     }
+
 
     function _endTimer() {
         if (_timer_data.timer_type === "work") _elapseSession();
@@ -138,7 +148,7 @@ const timer = (function () {
     }
 
     function _pauseTimer() {
-        clearInterval(_timer);
+        clearTimeout(_timer);
 
         button_svg.setAttribute("d", "M8,5.14V19.14L19,12.14L8,5.14Z")
         _is_paused = true;
