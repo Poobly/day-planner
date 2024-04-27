@@ -117,7 +117,7 @@ while (date.getFullYear() === year) {
             arrow_position =  tool_tip_rect.width / 2 - 7 - offset + e.currentTarget.offsetWidth / 2;
         }
         else {
-            arrow_position =  tool_tip_rect.width / 2 - 7
+            arrow_position =  tool_tip_rect.width / 2 - 7;
         }
         tool_tip.style.setProperty("--tool-tip-pos", arrow_position + "px");
     });
