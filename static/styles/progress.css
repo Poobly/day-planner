@@ -1,3 +1,7 @@
+:root {
+    --tool-tip-pos: -50%;
+}
+
 .t-heading {
     font-size: 4rem;
     margin-bottom: 3rem;
@@ -52,12 +56,15 @@
     z-index: 1;
 }
 
+
+
+
 .tool-tip::before {
     content: " ";
     position: absolute;
     top: 100%;
-    left: 50%;
-    transform: translate(-50%);
+    left: 0;
+    transform: translateX(var(--tool-tip-pos));
     border-color: black transparent transparent transparent;
     border-width: 6px;
     border-style: solid;
@@ -68,11 +75,14 @@
     content: " ";
     position: absolute;
     top: 99%;
-    left: 50%;
-    transform: translate(-50%);
+    left: 0;
+    transform: translateX(var(--tool-tip-pos));
     border-color: var(--tool-tip-color) transparent transparent transparent;
-    border-width: 5px;
+    border-width: 6px;
     border-style: solid;
 
   }
+
+
+
 

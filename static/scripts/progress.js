@@ -92,15 +92,34 @@ while (date.getFullYear() === year) {
 
 
 
-
     day.addEventListener("mouseenter", (e) => {
         const tool_tip = document.createElement("span");
         day.appendChild(tool_tip);
-        tool_tip.classList.add("tool-tip");
         const date_str = new_date.toLocaleString(undefined, { month: "long", day: "numeric" });
         if (days[new_date_str].sessions > 0) tool_tip.textContent = `You have done ${days[new_date_str].sessions} work sessions on ${date_str}.`; 
         else tool_tip.textContent = `You have done no work sessions on ${date_str}.`; 
+        
+        tool_tip.classList.add("tool-tip");
 
+        const tool_tip_rect = tool_tip.getBoundingClientRect();
+        const right_end = tool_tip_rect.left + tool_tip_rect.width;
+        let arrow_position;
+        let offset;
+
+        if (right_end + e.currentTarget.offsetWidth / 2 > window.innerWidth) {
+            offset = right_end - window.innerWidth - tool_tip.offsetLeft / 2;
+            tool_tip.style.left = offset * -1 + "px";
+            arrow_position =  tool_tip_rect.width / 2 - 7 + offset + e.currentTarget.offsetWidth / 2;
+        }
+        else if (tool_tip_rect.left < 0) {
+            offset = tool_tip.offsetLeft + tool_tip_rect.left * -1;
+            tool_tip.style.left = offset + "px";
+            arrow_position =  tool_tip_rect.width / 2 - 7 - offset + e.currentTarget.offsetWidth / 2;
+        }
+        else {
+            arrow_position =  tool_tip_rect.width / 2 - 7
+        }
+        tool_tip.style.setProperty("--tool-tip-pos", arrow_position + "px");
     });
 
     day.addEventListener("mouseleave", (e) => {
