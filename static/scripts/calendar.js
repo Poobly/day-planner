@@ -302,7 +302,6 @@ function createModal(td, x, y, margin) {
 
         const right_boundary = table.offsetLeft + table.offsetWidth;
         const max_left = right_boundary - modal_con.offsetWidth;
-        console.log(max_left, table.offsetLeft)
         
         if (x + modal_con.offsetWidth > right_boundary) {
             x = max_left;
